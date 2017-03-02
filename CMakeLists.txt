@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5)
 project(LighTorrent)
 
-set(CMAKE_CXX_COMPILER "g++")
+#set(CMAKE_CXX_COMPILER "g++")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
@@ -16,6 +16,7 @@ set(
   src/bencode/bencode-list.cc
   src/bencode/bencode-dico.cc
   src/bencode/bencode-driver.cc
+  src/network/tracker-connector.cc
   )
 
 add_executable(LighTorrent ${SOURCE_FILES})
