@@ -13,6 +13,8 @@ set(
   src/bencode/bencode-type.cc
   src/bencode/bencode-string.cc
   src/bencode/bencode-integer.cc
+  src/bencode/bencode-list.cc
+  src/bencode/bencode-dico.cc
   src/bencode/bencode-driver.cc
   )
 
