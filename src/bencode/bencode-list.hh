@@ -2,20 +2,28 @@
 
 #include "bencode-type.hh"
 #include <vector>
+#include <memory>
 
 namespace BEncode
 {
   class BEncodeList : public BEncodeType
   {
   public:
+    BEncodeList();
+    BEncodeList(std::vector<std::shared_ptr<BEncodeType>> list);
 
-    BEncodeList(const std::string& input);
     virtual ~BEncodeList() = default;
-    virtual std::string BEncode() override;
+    virtual std::string bEncode() override;
+    virtual void print(std::ostream& str) const override;
+
+    void addBType(std::shared_ptr<BEncodeType> ptr);
+
+    friend std::ostream& operator<<(std::ostream& str, const BEncodeList& obj);
+    friend std::ostream& operator<<(std::ostream& str,
+				    const std::shared_ptr<BEncodeList>& obj);
 
   private:
-    std::vector<BEncodeType> list_;
-    std::string value_;
+    std::vector<std::shared_ptr<BEncodeType>> list_;
   };
 
 } // namespace BEncode
