@@ -7,13 +7,21 @@ namespace BEncode
   class BEncodeInteger : public BEncodeType
   {
   public:
+    BEncodeInteger();
+    BEncodeInteger(long long int decode);
 
-    BEncodeInteger(const std::string& input);
     virtual ~BEncodeInteger() = default;
-    virtual std::string BEncode() override;
+    virtual std::string bEncode() override;
+    virtual void bDecode(std::string& bufferInput) override;
+    virtual void print(std::ostream& str) const override;
+
+    friend std::ostream& operator<<(std::ostream& str,
+				    const BEncodeInteger& obj);
+    friend std::ostream& operator<<(std::ostream& str,
+				    const std::shared_ptr<BEncodeInteger>& obj);
 
   private:
-    std::string value_;
+    long long int decode_;
   };
 
 } // namespace BEncode
