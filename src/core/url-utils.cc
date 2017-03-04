@@ -7,6 +7,23 @@
 namespace Core
 {
   URLUtils::URLUtils(BDico metaInfo)
+    : peerId_("-LHT01-1234568765011")
+    , port_("7689")
+
+  {
+    init(metaInfo);
+  }
+
+
+  URLUtils::URLUtils(BDico metaInfo, const std::string& peerId,
+		     const std::string& port)
+    : peerId_(peerId)
+    , port_(port)
+  {
+    init(metaInfo);
+  }
+
+  void URLUtils::init(const BDico& metaInfo)
   {
     trackerBaseURL_ = getFromMetaInfo<BString,
 				      std::string>(metaInfo, "announce");
@@ -22,10 +39,10 @@ namespace Core
     infoHash_ = percentEncode(getDecode<BType_ptr,
 			      BString, std::string>(tmp->second));
 
+
     std::cout << "Track = " << trackerBaseURL_ << std::endl;
     std::cout << "Hash = " << infoHash_ << std::endl;
   }
-
 
   std::string URLUtils::percentEncode(const std::string& str)
   {

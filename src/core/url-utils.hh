@@ -19,7 +19,11 @@ namespace Core
 
   public:
     URLUtils(BDico metaInfo);
+    URLUtils(BDico metaInfo, const std::string& peerId,
+	     const std::string& port);
     ~URLUtils() = default;
+
+    void init(const BDico& metaInfo);
 
     std::string percentEncode(const std::string& str);
 
