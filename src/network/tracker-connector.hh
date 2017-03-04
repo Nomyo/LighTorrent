@@ -23,6 +23,7 @@ namespace TrackerConnector
   private:
     int createSocket();
     int resolveHost(std::string host);
+    int sendRequest();
 
     int fd_;
     bool opened_;

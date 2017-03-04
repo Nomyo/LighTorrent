@@ -20,18 +20,6 @@ namespace TrackerConnector
 
     resolveHost("www.laginelle-france.com");
 
-    std::string request = REQUEST_PREFIX + "/" + REQUEST_SUFFIX + "Host: "
-      + host_ + "\r\n\r\n";
-    //request = "GET / HTTP/1.1\r\nHost: laginelle-france.com\r\nConnection: close\r\n\r\n";
-
-    std::cout << "Sending request \"" << request << "\"\n";
-
-    if (::connect(fd_, (struct sockaddr*)&servAddr_, sizeof(servAddr_)) < 0)
-      std::cout << "Error while connecting to the host\n";
-
-    if (write(fd_, request.c_str(), strlen(request.c_str())) < 0)
-      std::cout << "Error while writing to socket\n";
-
     char buffer[6000];
     int stop = 0;
     int recvN = recv(fd_, &buffer, 6000, 0);
@@ -86,6 +74,22 @@ namespace TrackerConnector
     servAddr_.sin_port = htons(80); // HTTP PROTOCOL
 
     host_ = host;
+
+    return 1;
+  }
+
+  int TrackerConnector::sendRequest()
+  {
+    std::string request = REQUEST_PREFIX + "/" + REQUEST_SUFFIX + "Host: "
+      + host_ + "\r\n\r\n";
+
+    std::cout << "Sending request \"" << request << "\"\n";
+
+    if (::connect(fd_, (struct sockaddr*)&servAddr_, sizeof(servAddr_)) < 0)
+      return -1;
+
+    if (write(fd_, request.c_str(), strlen(request.c_str())) < 0)
+      return -1;
 
     return 1;
   }
