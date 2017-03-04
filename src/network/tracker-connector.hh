@@ -1,15 +1,18 @@
 #pragma once
+#include <iostream>
 #include <string>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <sys/ioctl.h>
+#include <unistd.h>
 
 namespace TrackerConnector
 {
 
   static const std::string REQUEST_PREFIX = "GET ";
-  static const std::string REQUEST_SUFFIX = " HTTP/1.1\r\n\r\n";
+  static const std::string REQUEST_SUFFIX = " HTTP/1.1\r\nConnection: closed\r\n\r\n";
 
   class TrackerConnector
   {
