@@ -24,7 +24,7 @@ namespace BEncode
     virtual void print(std::ostream& str) const override;
 
     void addPair(std::string key, BEncodeType_ptr data);
-    BEncodeType get(const std::string& key);
+    std::shared_ptr<BEncodeType> get(const std::string& key);
 
     std::map<std::string, BEncodeType_ptr> getDecodedValue() const;
 

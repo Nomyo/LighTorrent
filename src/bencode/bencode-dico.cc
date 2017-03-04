@@ -44,13 +44,13 @@ namespace BEncode
     dico_.emplace(std::make_pair(key, data));
   }
 
-  BEncodeType BEncodeDictionnary::get(const std::string& key)
+  std::shared_ptr<BEncodeType> BEncodeDictionnary::get(const std::string& key)
   {
     auto pair = dico_.find(key);
     if (pair != dico_.end())
-      return *dico_.find(key)->second;
+      return dico_.find(key)->second;
 
-    throw std::out_of_range("");
+    return nullptr;
   }
 
   auto BEncodeDictionnary::getDecodedValue() const ->
