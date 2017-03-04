@@ -34,7 +34,7 @@ namespace TrackerConnector
 
   std::string TrackerConnector::getResult()
   {
-    std::cout << result_ << std::endl;
+    //std::cout << result_ << std::endl;
 
     bool isChunked = false;
 
@@ -44,7 +44,7 @@ namespace TrackerConnector
     while ((pos = result_.find(delimiter)) != std::string::npos)
     {
       token = result_.substr(0, pos);
-      std::cout << "lineh: \"" << token << "\"" << std::endl;
+      //std::cout << "lineh: \"" << token << "\"" << std::endl;
       result_.erase(0, pos + delimiter.length());
       result_header_ += token + '\n';
 
@@ -59,10 +59,11 @@ namespace TrackerConnector
 
     if (isChunked)
     {
+      deleteChunkInfo(result_);
       while ((pos = result_.find(delimiter)) != std::string::npos)
       {
         token = result_.substr(0, pos);
-        std::cout << "lineb: \"" << token << "\"" << std::endl;
+        //std::cout << "lineb: \"" << token << "\"" << std::endl;
         result_.erase(0, pos + delimiter.length());
         result_body_ += token + '\n';
       }
@@ -70,14 +71,14 @@ namespace TrackerConnector
 
     result_body_ += result_;
 
-    std::cout << "-- end of body\n";
+    //std::cout << "-- end of body\n";
 
-    std::cout << "rh: " << result_header_ << std::endl;
-    std::cout << "rb: " << result_body_ << std::endl;
+    //std::cout << "rh: " << result_header_ << std::endl;
+    //std::cout << "rb: " << result_body_ << std::endl;
 
     // result_ is now empty;
     return "";
-    return result_;
+    //return result_;
   }
 
   int TrackerConnector::createSocket()
@@ -201,5 +202,35 @@ namespace TrackerConnector
     std::cout << "host: " << host_ << std::endl;
     std::cout << "port: " << port_ << std::endl;
     std::cout << "request: " << request_ << std::endl;
+  }
+
+  void TrackerConnector::deleteChunkInfo(std::string& s)
+  {
+    std::cout << s << std::endl;
+
+    std::cout << "original -------\n";
+
+    int val = 2;
+    int start_pos = 0;
+    int next_pos = 0;
+    while (val != 0)
+    {
+      int endline = s.find("\r\n", start_pos);
+      std::string first_chunk = s.substr(start_pos, endline - start_pos);
+      std::stringstream ss;
+      ss << first_chunk.c_str();
+      ss >> std::hex >> val;
+
+      next_pos = start_pos + val + 2 + first_chunk.length();
+
+      next_pos += 2;
+
+      s.erase(start_pos, first_chunk.length() + 2);
+      next_pos -= (first_chunk.length() + 2);
+
+      start_pos = next_pos;
+    }
+
+    std::cout << s << std::endl;
   }
 }

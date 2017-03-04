@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <unistd.h>
+#include <iomanip>
 
 namespace TrackerConnector
 {
@@ -26,6 +27,7 @@ namespace TrackerConnector
     int craftRequest(std::string url);
     int readResult();
     void parseUrl(std::string url);
+    void deleteChunkInfo(std::string& s);
 
     int fd_;
     bool opened_;
