@@ -3,22 +3,20 @@
 
 namespace TrackerConnector
 {
-  TrackerConnector::TrackerConnector(std::string hostName)
+  TrackerConnector::TrackerConnector()
   {
-    hostName_ = hostName;
     opened_ = false;
+  }
+
+  TrackerConnector::~TrackerConnector()
+  {
+    if (opened_)
+      close(fd_);
   }
 
   int TrackerConnector::connect()
   {
-    if (opened_)
-      return -1;
-
-    fd_ = socket(AF_INET, SOCK_STREAM, 0);
-    if (fd_ == -1)
-      return -1;
-
-    opened_ = true;
+    createSocket();
 
     server_ = gethostbyname(hostName_.c_str());
     if (server_ == nullptr)
@@ -31,7 +29,11 @@ namespace TrackerConnector
           server_->h_length);
     servAddr_.sin_port = htons(80);
 
-    std::string request = REQUEST_PREFIX + "http://www.google.fr/" + REQUEST_SUFFIX;
+    std::string request = REQUEST_PREFIX + "/" + REQUEST_SUFFIX + "Host: "
+      + hostName_ + "\r\n\r\n";
+    //request = "GET / HTTP/1.1\r\nHost: laginelle-france.com\r\nConnection: close\r\n\r\n";
+
+    std::cout << "Sending request \"" << request << "\"\n";
 
     if (::connect(fd_, (struct sockaddr*)&servAddr_, sizeof(servAddr_)) < 0)
       std::cout << "Error while connecting to the host\n";
@@ -48,6 +50,8 @@ namespace TrackerConnector
       {
         std::cout << "\nrecvN : " << recvN << "\n";
         std::cout << buffer << std::endl;
+        if (buffer[recvN - 1] == '\n' && buffer[recvN - 2] == '\r')
+          break;
       }
       bzero((char*)buffer, 6000);
       recvN = recv(fd_, &buffer, 6000, 0);
@@ -57,5 +61,19 @@ namespace TrackerConnector
     std::cout << "\nFinal recvN: " << recvN << "\nErrno: " << errno << "\n";
 
     return fd_;
+  }
+
+  int TrackerConnector::createSocket()
+  {
+    if (opened_)
+      return -1;
+
+    fd_ = socket(AF_INET, SOCK_STREAM, 0);
+    if (fd_ == -1)
+      return -1;
+
+    opened_ = true;
+
+    return 1;
   }
 }

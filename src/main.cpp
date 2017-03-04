@@ -5,12 +5,7 @@
 
 int main(void)
 {
-  TrackerConnector::TrackerConnector tc("www.google.com");
-
-  std::cout << "connecting : " << tc.connect() << "\n";
-  // std::cout << "lol\n";
-  //
-  std::cout << "\n\n-----\n\n";
+  TrackerConnector::TrackerConnector tc();
 
   std::string filename("tests/secretFamilyRecipes.torrent");
 
