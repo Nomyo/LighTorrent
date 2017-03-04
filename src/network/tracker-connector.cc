@@ -18,19 +18,10 @@ namespace TrackerConnector
   {
     createSocket();
 
-    server_ = gethostbyname(hostName_.c_str());
-    if (server_ == nullptr)
-      return -2;
-
-    bzero((char *) &servAddr_, sizeof(servAddr_));
-    servAddr_.sin_family = AF_INET;
-    bcopy((char *)server_->h_addr,
-          (char *)&servAddr_.sin_addr.s_addr,
-          server_->h_length);
-    servAddr_.sin_port = htons(80);
+    resolveHost("www.laginelle-france.com");
 
     std::string request = REQUEST_PREFIX + "/" + REQUEST_SUFFIX + "Host: "
-      + hostName_ + "\r\n\r\n";
+      + host_ + "\r\n\r\n";
     //request = "GET / HTTP/1.1\r\nHost: laginelle-france.com\r\nConnection: close\r\n\r\n";
 
     std::cout << "Sending request \"" << request << "\"\n";
@@ -73,6 +64,28 @@ namespace TrackerConnector
       return -1;
 
     opened_ = true;
+
+    return 1;
+  }
+
+  int TrackerConnector::resolveHost(std::string host)
+  {
+    server_ = gethostbyname(host.c_str());
+
+    if (server_ == nullptr)
+      return -1;
+
+    bzero((char *) &servAddr_, sizeof(servAddr_));
+
+    servAddr_.sin_family = AF_INET;
+
+    bcopy((char *)server_->h_addr,
+          (char *)&servAddr_.sin_addr.s_addr,
+          server_->h_length);
+
+    servAddr_.sin_port = htons(80); // HTTP PROTOCOL
+
+    host_ = host;
 
     return 1;
   }

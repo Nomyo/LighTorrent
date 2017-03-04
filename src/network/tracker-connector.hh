@@ -22,10 +22,11 @@ namespace TrackerConnector
 
   private:
     int createSocket();
+    int resolveHost(std::string host);
 
     int fd_;
     bool opened_;
-    std::string hostName_;
+    std::string host_;
     struct sockaddr_in servAddr_;
     struct hostent *server_;
 
