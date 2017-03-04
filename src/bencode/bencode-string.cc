@@ -36,6 +36,11 @@ namespace BEncode
     str << "\"" << decode_ << "\"";
   }
 
+  std::string BEncodeString::getDecodedValue() const
+  {
+    return decode_;
+  }
+
   std::ostream& operator<<(std::ostream& str, const BEncodeString& obj)
   {
     obj.print(str);

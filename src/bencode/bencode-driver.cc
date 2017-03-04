@@ -81,7 +81,7 @@ namespace BEncode
 
     while (bufferInput[0] != 'e')
     {
-      auto key = bDecodeString(bufferInput);
+      auto key = bDecodeString(bufferInput)->getDecodedValue();
       auto data = bDecode(bufferInput);
       node->addPair(key, data);
     }

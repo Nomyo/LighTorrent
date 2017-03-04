@@ -59,6 +59,11 @@ namespace BEncode
     str << decode_;
   }
 
+  long long int BEncodeInteger::getDecodedValue() const
+  {
+    return decode_;
+  }
+
   std::ostream& operator<<(std::ostream& str, const BEncodeInteger& obj)
   {
     obj.print(str);

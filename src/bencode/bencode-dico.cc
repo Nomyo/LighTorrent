@@ -5,7 +5,7 @@ namespace BEncode
   BEncodeDictionnary::BEncodeDictionnary()
   { }
 
-  BEncodeDictionnary::BEncodeDictionnary(std::map<BEncodeString_ptr,
+  BEncodeDictionnary::BEncodeDictionnary(std::map<std::string,
 					 BEncodeType_ptr> dico)
   : dico_(dico)
   { }
@@ -16,7 +16,7 @@ namespace BEncode
 
     for (auto i : dico_)
     {
-      value_.append(i.first->getEncodedValue());
+      value_.append(i.first);
       value_.append(i.second->getEncodedValue());
     }
 
@@ -33,16 +33,30 @@ namespace BEncode
     {
       if (tmp++)
         str << ", ";
-      i.first->print(str);
-      str << " => ";
+      str << i.first << " => ";
       i.second->print(str);
     }
     str << " }";
   }
 
-  void BEncodeDictionnary::addPair(BEncodeString_ptr key, BEncodeType_ptr data)
+  void BEncodeDictionnary::addPair(std::string key, BEncodeType_ptr data)
   {
     dico_.emplace(std::make_pair(key, data));
+  }
+
+  BEncodeType BEncodeDictionnary::get(const std::string& key)
+  {
+    auto pair = dico_.find(key);
+    if (pair != dico_.end())
+      return *dico_.find(key)->second;
+
+    throw std::out_of_range("");
+  }
+
+  auto BEncodeDictionnary::getDecodedValue() const ->
+    std::map<std::string, BEncodeType_ptr>
+  {
+    return dico_;
   }
 
   std::ostream& operator<<(std::ostream& str, const BEncodeDictionnary& obj)

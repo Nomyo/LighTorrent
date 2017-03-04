@@ -40,6 +40,12 @@ namespace BEncode
     list_.push_back(ptr);
   }
 
+  std::vector<std::shared_ptr<BEncodeType>>
+  BEncodeList::getDecodedValue() const
+  {
+    return list_;
+  }
+
   std::ostream& operator<<(std::ostream& str, const BEncodeList& obj)
   {
     obj.print(str);

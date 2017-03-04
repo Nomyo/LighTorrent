@@ -19,6 +19,8 @@ namespace BEncode
     friend std::ostream& operator<<(std::ostream& str,
 				    const std::shared_ptr<BEncodeString>& obj);
 
+    std::string getDecodedValue() const;
+
   private:
     std::string decode_;
   };

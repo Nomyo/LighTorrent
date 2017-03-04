@@ -35,4 +35,5 @@ namespace BEncode
     return str;
   }
 
+
 } // namespace BEncode
