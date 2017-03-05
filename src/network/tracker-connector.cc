@@ -20,12 +20,11 @@ namespace TrackerConnector
   {
     urlParser_.parseUrl(url);
 
-    if (!createSocket())
-      return -1;
-
     if (!resolveHost(urlParser_.getHost()))
       return -1;
 
+    if (!createSocket())
+      return -1;
 
     if (urlParser_.getProtocol() == UrlProtocol::Http)
       return requestHttpTracker();
@@ -56,7 +55,11 @@ namespace TrackerConnector
       return -1;
     }
 
-    fd_ = socket(AF_INET, SOCK_STREAM, 0);
+    if (urlParser_.getProtocol() == UrlProtocol::Http)
+      fd_ = socket(AF_INET, SOCK_STREAM, 0); // Http
+    else
+      fd_ = socket(AF_INET, SOCK_DGRAM, 0); // Udp
+
     if (fd_ == -1)
     {
       std::cerr << "could not create socket" << std::endl;
@@ -154,6 +157,18 @@ namespace TrackerConnector
 
   int TrackerConnector::requestUdpTracker()
   {
+    std::cout << "requesting udp tracker..." << std::endl;
+    std::stringstream ss;
+    uint64_t protocolId = 0x41727101980; // magic constant
+    uint32_t action = 0;
+    uint32_t transactionId = 5645;
+    ss << protocolId << action << transactionId;
+    std::cout << ss.str().c_str() << std::endl;
+
+    int nbSend = sendto(fd_, ss.str().c_str(), strlen(ss.str().c_str()), 0,
+                        (struct sockaddr*)&servAddr_, sizeof (servAddr_));
+
+    std::cout << "sent = " << nbSend << " errno = " << strerror(errno) << std::endl;
     return -1;
   }
 
