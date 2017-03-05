@@ -26,23 +26,23 @@ namespace TrackerConnector
     if (!resolveHost(urlParser_.getHost()))
       return -1;
 
-    if (!craftRequest(url))
+    if (!craftRequest())
       return -1;
 
     return readResult();
   }
 
-  std::string TrackerConnector::getResult()
+  std::string TrackerConnector::getResult() const
   {
     return resultHeader_ + resultBody_;
   }
 
-  std::string TrackerConnector::getResultHeader()
+  std::string TrackerConnector::getResultHeader() const
   {
     return resultHeader_;
   }
 
-  std::string TrackerConnector::getResultBody()
+  std::string TrackerConnector::getResultBody() const
   {
     return resultBody_;
   }
@@ -67,7 +67,7 @@ namespace TrackerConnector
     return 1;
   }
 
-  int TrackerConnector::resolveHost(std::string host)
+  int TrackerConnector::resolveHost(const std::string& host)
   {
     server_ = gethostbyname(host.c_str());
 
@@ -90,7 +90,7 @@ namespace TrackerConnector
     return 1;
   }
 
-  int TrackerConnector::craftRequest(std::string url)
+  int TrackerConnector::craftRequest() const
   {
     std::string request = "GET " + urlParser_.getBody() + " HTTP/1.1\r\n";
     request += "Host: " + urlParser_.getHost() + "\r\n";
@@ -100,13 +100,13 @@ namespace TrackerConnector
 
     if (connect(fd_, (struct sockaddr*)&servAddr_, sizeof (servAddr_)) < 0)
     {
-      std::cerr << "Could not connect to url " << url << std::endl;
+      std::cerr << "Could not connect to url " << urlParser_.getBaseUrl() << std::endl;
       return -1;
     }
 
     if (write(fd_, request.c_str(), strlen(request.c_str())) < 0)
     {
-      std::cerr << "Could not write request to url " << url << std::endl;
+      std::cerr << "Could not write request to url " << urlParser_.getBaseUrl() << std::endl;
       return -1;
     }
 

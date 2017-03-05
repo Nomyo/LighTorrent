@@ -13,11 +13,9 @@ using namespace BEncode;
 
 int main(void)
 {
-  // TrackerConnector::TrackerConnector tc;
-  // if (tc.sendRequest("http://www.google.fr:80/"))
-  //   std::cout << "result: \"" << tc.getResult() << "\"" << std::endl;
+  std::string filename("tests/AliceInWonderlands.torrent"); // http torrent
+  //std::string filename("tests/let-it-be.torrent"); // udp torrent
 
-  std::string filename("tests/let-it-be.torrent");
 
   BEncodeDriver driver;
   auto node = driver.bDecodeFile(filename);
@@ -31,7 +29,14 @@ int main(void)
   std::cout << "URL REQUEST : " << url.generateURL() << std::endl;;
 
   UrlParser::UrlParser up(url.generateURL());
-
   up.dump();
+
+  TrackerConnector::TrackerConnector tc;
+  if (tc.sendRequest(url.generateURL()))
+  {
+    std::cout << "result: " << tc.getResult() << std::endl;
+    std::cout << "result_body: " << tc.getResultBody() << std::endl;
+  }
+
   return 0;
 }

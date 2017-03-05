@@ -13,9 +13,6 @@
 
 namespace TrackerConnector
 {
-  static const std::string REQUEST_PREFIX = "GET ";
-  static const std::string REQUEST_SUFFIX = " HTTP/1.1\r\n";
-
   class TrackerConnector
   {
 
@@ -30,14 +27,14 @@ namespace TrackerConnector
     int sendRequest(std::string url);
 
     // Accessors
-    std::string getResult();
-    std::string getResultHeader();
-    std::string getResultBody();
+    std::string getResult() const;
+    std::string getResultHeader() const;
+    std::string getResultBody() const;
 
   private:
     int createSocket();
-    int resolveHost(std::string host);
-    int craftRequest(std::string url);
+    int resolveHost(const std::string& host);
+    int craftRequest() const;
     int readResult();
     void formatResult(std::string& result);
     void deleteChunkInfo(std::string& s);
