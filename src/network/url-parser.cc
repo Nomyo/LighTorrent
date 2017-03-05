@@ -26,13 +26,18 @@ namespace UrlParser
 
     counter += 3; // we jump the '://'
 
-    while (url[counter] != ':')
+    while (url[counter] != ':' && url[counter] != '/')
       host += url[counter++];
 
-    counter += 1; // we jump the ':'
+    if (protocol == "udp")
+    {
+      counter += 1; // we jump the ':'
 
-    while (url[counter] != '/')
-      port += url[counter++];
+      while (url[counter] != '/')
+        port += url[counter++];
+    }
+    else
+      port = "80";
 
     body = url.substr(counter, url.length() - counter);
 
