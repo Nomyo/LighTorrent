@@ -18,6 +18,7 @@ set(
   src/bencode/bencode-dico.cc
   src/bencode/bencode-driver.cc
   src/network/tracker-connector.cc
+  src/network/url-parser.cc
   )
 
 

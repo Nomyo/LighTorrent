@@ -5,6 +5,7 @@
 #include "bencode/bencode-utils.hh"
 #include "bencode/fwd.hh"
 #include "core/url-utils.hh"
+#include "network/url-parser.hh"
 
 #include <stdio.h>
 
@@ -28,5 +29,8 @@ int main(void)
 
   Core::URLUtils url(dico);
   std::cout << "URL REQUEST : " << url.generateURL() << std::endl;;
+
+  UrlParser::UrlParser(url.generateURL());
+
   return 0;
 }
