@@ -15,14 +15,19 @@ namespace UrlParser
     while (url[counter] != ':')
       protocol += url[counter++];
 
-    counter += 2; // we jump the '://'
+    counter += 3; // we jump the '://'
 
-    while (url[counter] != ':' && url[counter] != '/')
+    while (url[counter] != ':')
       host += url[counter++];
 
+    counter += 1; // we jump the ':'
+
+    while (url[counter] != '/')
+      port += url[counter++];
 
     std::cout << "protocol: " << protocol << std::endl;
     std::cout << "host: " << host << std::endl;
+    std::cout << "port: " << port << std::endl;
 
     //int counterStart = 0;
     //bool hasHttp = false;
