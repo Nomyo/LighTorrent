@@ -20,4 +20,7 @@ set(
   src/network/tracker-connector.cc
   )
 
+
 add_executable(LighTorrent ${SOURCE_FILES})
+target_link_libraries(LighTorrent ssl)
+target_link_libraries(LighTorrent crypto)

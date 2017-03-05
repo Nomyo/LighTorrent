@@ -2,21 +2,31 @@
 
 #include "network/tracker-connector.hh"
 #include "bencode/bencode-driver.hh"
+#include "bencode/bencode-utils.hh"
+#include "bencode/fwd.hh"
 #include "core/url-utils.hh"
+
+#include <stdio.h>
+
+using namespace BEncode;
 
 int main(void)
 {
-  TrackerConnector::TrackerConnector tc;
-  if (tc.sendRequest("http://www.google.fr:80/"))
-    std::cout << "result: \"" << tc.getResult() << "\"" << std::endl;
+  // TrackerConnector::TrackerConnector tc;
+  // if (tc.sendRequest("http://www.google.fr:80/"))
+  //   std::cout << "result: \"" << tc.getResult() << "\"" << std::endl;
 
-  std::string filename("tests/secretFamilyRecipes.torrent");
+  std::string filename("tests/let-it-be.torrent");
 
-  BEncode::BEncodeDriver driver;
-
+  BEncodeDriver driver;
   auto node = driver.bDecodeFile(filename);
-  std::cout << node << std::endl;
 
-  Core::URLUtils url(*static_cast<BEncode::BEncodeDictionnary*>(&*node));
+  if (!node)
+    return 1;
+
+  BDico dico = getType<BType_ptr, BDico>(node);
+
+  Core::URLUtils url(dico);
+  std::cout << "URL REQUEST : " << url.generateURL() << std::endl;;
   return 0;
 }
