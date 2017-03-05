@@ -15,7 +15,7 @@ namespace BEncode
     value_ = "l";
 
     for (auto i : list_)
-      value_.append(i->getEncodedValue());
+      value_.append(i->bEncode());
 
     value_.append("e");
 

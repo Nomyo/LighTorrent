@@ -16,8 +16,10 @@ namespace BEncode
 
     for (auto i : dico_)
     {
+      value_ += std::to_string(i.first.size());
+      value_.append(":");
       value_.append(i.first);
-      value_.append(i.second->getEncodedValue());
+      value_.append(i.second->bEncode());
     }
 
     value_.append("e");
@@ -44,7 +46,7 @@ namespace BEncode
     dico_.emplace(std::make_pair(key, data));
   }
 
-  std::shared_ptr<BEncodeType> BEncodeDictionnary::get(const std::string& key)
+  std::shared_ptr<BEncodeType> BEncodeDictionnary::get(const std::string& key) const
   {
     auto pair = dico_.find(key);
     if (pair != dico_.end())

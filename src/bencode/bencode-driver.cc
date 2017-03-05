@@ -8,8 +8,21 @@ namespace BEncode
   BEncodeDriver::bDecodeFile(const std::string& filename)
   {
     std::ifstream file(filename);
+
+    if (!file.is_open())
+    {
+      std::cout << "Couldn't open file :" << filename << std::endl;
+      return nullptr;
+    }
+
     std::string result;
-    std::getline(file, result);
+    std::string line;
+
+    while (std::getline(file, line))
+    {
+      result += line;
+      result += "\n";
+    }
 
     return bDecode(result);
   }
@@ -59,17 +72,20 @@ namespace BEncode
     return node;
   }
 
-
   std::shared_ptr<BEncodeList>
   BEncodeDriver::bDecodeList(std::string& bufferInput)
   {
     auto node = std::make_shared<BEncodeList>();
     bufferInput.erase(0, 1);
 
-    while (bufferInput[0] != 'e')
+    while (bufferInput[0] != 'e' && bufferInput.size() != 0)
       node->addBType(bDecode(bufferInput));
 
-    bufferInput.erase(0, 1);
+    if (bufferInput.size() == 0)
+      std::cout << "decoding failed" << std::endl;
+    else
+      bufferInput.erase(0, 1);
+
     return node;
   }
 
@@ -79,14 +95,18 @@ namespace BEncode
     auto node = std::make_shared<BEncodeDictionnary>();
     bufferInput.erase(0, 1);
 
-    while (bufferInput[0] != 'e')
+    while (bufferInput[0] != 'e' && bufferInput.size() != 0)
     {
       auto key = bDecodeString(bufferInput)->getDecodedValue();
       auto data = bDecode(bufferInput);
       node->addPair(key, data);
     }
 
-    bufferInput.erase(0, 1);
+    if (bufferInput.size() == 0)
+      std::cout << "decoding failed" << std::endl;
+    else
+      bufferInput.erase(0, 1);
+
     return node;
   }
 
