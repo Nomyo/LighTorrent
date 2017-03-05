@@ -18,12 +18,14 @@ namespace TrackerConnector
 
   int TrackerConnector::sendRequest(std::string url)
   {
-    parseUrl(url);
+    //parseUrl(url);
+    urlParser_.parseUrl(url);
+    //urlParser_(url);
 
     if (!createSocket())
       return -1;
 
-    if (!resolveHost(host_))
+    if (!resolveHost(urlParser_.getHost()))
       return -1;
 
     if (!craftRequest(url))
@@ -119,17 +121,15 @@ namespace TrackerConnector
           (char *)&servAddr_.sin_addr.s_addr,
           server_->h_length);
 
-    servAddr_.sin_port = htons(port_);
-
-    host_ = host;
+    servAddr_.sin_port = htons(urlParser_.getPort());
 
     return 1;
   }
 
   int TrackerConnector::craftRequest(std::string url)
   {
-    std::string request = "GET " + request_ + " HTTP/1.1\r\n";
-    request += "Host: " + host_ + "\r\n\r\n";
+    std::string request = "GET " + urlParser_.getBody() + " HTTP/1.1\r\n";
+    request += "Host: " + urlParser_.getHost() + "\r\n\r\n";
 
     if (connect(fd_, (struct sockaddr*)&servAddr_, sizeof (servAddr_)) < 0)
     {
@@ -172,37 +172,37 @@ namespace TrackerConnector
     return 1;
   }
 
-  void TrackerConnector::parseUrl(std::string url)
-  {
-    int counterStart = 0;
-    bool hasHttp = false;
-    if (url.substr(0, 7) == "http://")
-    {
-      counterStart = 7;
-      hasHttp = true;
-    }
-    while (url[counterStart] != '/' && url[counterStart] != ':')
-      counterStart++;
+  //void TrackerConnector::parseUrl(std::string url)
+  //{
+  //  int counterStart = 0;
+  //  bool hasHttp = false;
+  //  if (url.substr(0, 7) == "http://")
+  //  {
+  //    counterStart = 7;
+  //    hasHttp = true;
+  //  }
+  //  while (url[counterStart] != '/' && url[counterStart] != ':')
+  //    counterStart++;
 
-    host_ = url.substr(hasHttp ? 7 : 0, counterStart - (hasHttp ? 7 : 0));
+  //  host_ = url.substr(hasHttp ? 7 : 0, counterStart - (hasHttp ? 7 : 0));
 
-    if (url[counterStart] == ':')
-    {
-      int left = ++counterStart;
-      while (url[counterStart] != '/')
-        counterStart++;
-      std::string num = url.substr(left, counterStart - left);
-      port_ = atoi(num.c_str());
-    }
-    else
-      port_ = 80;
+  //  if (url[counterStart] == ':')
+  //  {
+  //    int left = ++counterStart;
+  //    while (url[counterStart] != '/')
+  //      counterStart++;
+  //    std::string num = url.substr(left, counterStart - left);
+  //    port_ = atoi(num.c_str());
+  //  }
+  //  else
+  //    port_ = 80;
 
-    request_ = url.substr(counterStart, url.length() - counterStart);
+  //  request_ = url.substr(counterStart, url.length() - counterStart);
 
-    std::cout << "host: " << host_ << std::endl;
-    std::cout << "port: " << port_ << std::endl;
-    std::cout << "request: " << request_ << std::endl;
-  }
+  //  std::cout << "host: " << host_ << std::endl;
+  //  std::cout << "port: " << port_ << std::endl;
+  //  std::cout << "request: " << request_ << std::endl;
+  //}
 
   void TrackerConnector::deleteChunkInfo(std::string& s)
   {
