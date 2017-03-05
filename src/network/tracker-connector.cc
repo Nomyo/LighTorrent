@@ -18,9 +18,7 @@ namespace TrackerConnector
 
   int TrackerConnector::sendRequest(std::string url)
   {
-    //parseUrl(url);
     urlParser_.parseUrl(url);
-    //urlParser_(url);
 
     if (!createSocket())
       return -1;
@@ -171,38 +169,6 @@ namespace TrackerConnector
 
     return 1;
   }
-
-  //void TrackerConnector::parseUrl(std::string url)
-  //{
-  //  int counterStart = 0;
-  //  bool hasHttp = false;
-  //  if (url.substr(0, 7) == "http://")
-  //  {
-  //    counterStart = 7;
-  //    hasHttp = true;
-  //  }
-  //  while (url[counterStart] != '/' && url[counterStart] != ':')
-  //    counterStart++;
-
-  //  host_ = url.substr(hasHttp ? 7 : 0, counterStart - (hasHttp ? 7 : 0));
-
-  //  if (url[counterStart] == ':')
-  //  {
-  //    int left = ++counterStart;
-  //    while (url[counterStart] != '/')
-  //      counterStart++;
-  //    std::string num = url.substr(left, counterStart - left);
-  //    port_ = atoi(num.c_str());
-  //  }
-  //  else
-  //    port_ = 80;
-
-  //  request_ = url.substr(counterStart, url.length() - counterStart);
-
-  //  std::cout << "host: " << host_ << std::endl;
-  //  std::cout << "port: " << port_ << std::endl;
-  //  std::cout << "request: " << request_ << std::endl;
-  //}
 
   void TrackerConnector::deleteChunkInfo(std::string& s)
   {
