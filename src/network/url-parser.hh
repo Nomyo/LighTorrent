@@ -18,7 +18,10 @@ namespace UrlParser
       int getPort() const;
       std::string getBody() const;
 
+      void dump() const;
+
     private:
+      std::string baseUrl_;
       urlProtocol protocol_;
       std::string host_;
       int port_;

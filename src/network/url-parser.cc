@@ -4,6 +4,8 @@ namespace UrlParser
 {
   UrlParser::UrlParser(std::string url)
   {
+    baseUrl_ = url;
+
     std::string protocol;
     std::string host;
     std::string port;
@@ -54,5 +56,14 @@ namespace UrlParser
   std::string UrlParser::getBody() const
   {
     return body_;
+  }
+
+  void UrlParser::dump() const
+  {
+    std::cout << "url : " << baseUrl_ << std::endl;
+    std::cout << "protocol : " << protocol_ << " (0 is Http, 1 is Udp)" << std::endl;
+    std::cout << "host : " << host_ << std::endl;
+    std::cout << "port : " << port_ << std::endl;
+    std::cout << "body : " << body_ << std::endl;
   }
 }

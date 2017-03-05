@@ -30,7 +30,8 @@ int main(void)
   Core::URLUtils url(dico);
   std::cout << "URL REQUEST : " << url.generateURL() << std::endl;;
 
-  UrlParser::UrlParser(url.generateURL());
+  UrlParser::UrlParser up(url.generateURL());
 
+  up.dump();
   return 0;
 }
