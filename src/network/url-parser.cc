@@ -2,7 +2,15 @@
 
 namespace UrlParser
 {
-  UrlParser::UrlParser(std::string url)
+  UrlParser::UrlParser()
+  {}
+
+  UrlParser::UrlParser(const std::string& url)
+  {
+    parseUrl(url);
+  }
+
+  void UrlParser::parseUrl(const std::string url)
   {
     baseUrl_ = url;
 
