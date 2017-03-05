@@ -2,31 +2,18 @@
 
 namespace Core
 {
-  URLUtils::URLUtils(BEncode::BDico metaInfo)
+  URLUtils::URLUtils()
     : peerId_("-LHT01-1234568765011")
-    , port_("7689")
-    , downloaded_("0")
-    , left_("1000000")
-  {
-    init(metaInfo);
-  }
+  { }
 
 
-  URLUtils::URLUtils(BEncode::BDico metaInfo, const std::string& peerId,
-		     const std::string& port)
+  URLUtils::URLUtils(const std::string& peerId)
     : peerId_(peerId)
-    , port_(port)
-    , downloaded_("0")
-    , left_("1000000")
-  {
-    init(metaInfo);
-  }
+  { }
 
-  void URLUtils::init(const BEncode::BDico& metaInfo)
+  void URLUtils::init(const BDico& metaInfo)
   {
-    trackerBaseUrl_ = BEncode::getFromDico<BEncode::BString,
-					   std::string>(metaInfo, "announce");
-
+    trackerBaseUrl_ = getFromDico<BString, std::string>(metaInfo, "announce");
     infoHash_ = percentEncode(getInfoHash(metaInfo));
   }
 
@@ -55,10 +42,9 @@ namespace Core
     return tmp.str();
   }
 
-  std::string URLUtils::getInfoHash(const BEncode::BDico& metaInfo)
+  std::string URLUtils::getInfoHash(const BDico& metaInfo)
   {
-    BEncode::BDico infDico =
-      BEncode::getType<BEncode::BType_ptr, BEncode::BDico>(metaInfo.get("info"));
+    BDico infDico = getType<BType_ptr, BDico>(metaInfo.get("info"));
 
     std::string encodedDico = infDico.bEncode();
     std::string hash;
@@ -74,14 +60,17 @@ namespace Core
     return hash;
   }
 
-  std::string URLUtils::generateURL()
+  std::string URLUtils::generateURL(const Torrent& torrent)
   {
+    init(torrent.getMetaInfo());
+
     std::stringstream url;
+
     url << trackerBaseUrl_  << "?";
     url << "info_hash=" << infoHash_ << "&";
     url << "peer_id=" << peerId_ << "&";
-    url << "downloaded=" << downloaded_ << "&";
-    url << "left=" << left_ << "&";
+    url << "left=" << torrent.getLeft() << "&";
+    url << "compact=1" << "&";
     url << "event=started";
 
     return url.str();
