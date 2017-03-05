@@ -22,17 +22,24 @@ namespace TrackerConnector
     using UrlParser = UrlParser::UrlParser;
 
   public:
+    // Ctor & Dtor
     TrackerConnector();
     ~TrackerConnector();
+
+    // Actions
     int sendRequest(std::string url);
+
+    // Accessors
     std::string getResult();
+    std::string getResultHeader();
+    std::string getResultBody();
 
   private:
     int createSocket();
     int resolveHost(std::string host);
     int craftRequest(std::string url);
     int readResult();
-    //void parseUrl(std::string url);
+    void formatResult(std::string& result);
     void deleteChunkInfo(std::string& s);
 
     int fd_;
@@ -40,14 +47,11 @@ namespace TrackerConnector
 
     UrlParser urlParser_;
 
-    //std::string host_;
-    //std::string request_;
-    //int port_;
     struct sockaddr_in servAddr_;
     struct hostent *server_;
 
-    std::string result_;
-    std::string result_header_;
-    std::string result_body_;
+    //std::string result_;
+    std::string resultHeader_;
+    std::string resultBody_;
   };
 }

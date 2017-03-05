@@ -34,51 +34,17 @@ namespace TrackerConnector
 
   std::string TrackerConnector::getResult()
   {
-    //std::cout << result_ << std::endl;
+    return resultHeader_ + resultBody_;
+  }
 
-    bool isChunked = false;
+  std::string TrackerConnector::getResultHeader()
+  {
+    return resultHeader_;
+  }
 
-    std::string delimiter = "\r\n";
-    size_t pos = 0;
-    std::string token;
-    while ((pos = result_.find(delimiter)) != std::string::npos)
-    {
-      token = result_.substr(0, pos);
-      //std::cout << "lineh: \"" << token << "\"" << std::endl;
-      result_.erase(0, pos + delimiter.length());
-      result_header_ += token + '\n';
-
-      if (token == "Transfer-Encoding: chunked")
-        isChunked = true;
-
-      if (token == "")
-        break;
-    }
-
-    std::cout << "chunked = " << isChunked << " -- end of header\n";
-
-    if (isChunked)
-    {
-      deleteChunkInfo(result_);
-      while ((pos = result_.find(delimiter)) != std::string::npos)
-      {
-        token = result_.substr(0, pos);
-        //std::cout << "lineb: \"" << token << "\"" << std::endl;
-        result_.erase(0, pos + delimiter.length());
-        result_body_ += token + '\n';
-      }
-    }
-
-    result_body_ += result_;
-
-    //std::cout << "-- end of body\n";
-
-    //std::cout << "rh: " << result_header_ << std::endl;
-    //std::cout << "rb: " << result_body_ << std::endl;
-
-    // result_ is now empty;
-    return "";
-    //return result_;
+  std::string TrackerConnector::getResultBody()
+  {
+    return resultBody_;
   }
 
   int TrackerConnector::createSocket()
@@ -127,7 +93,10 @@ namespace TrackerConnector
   int TrackerConnector::craftRequest(std::string url)
   {
     std::string request = "GET " + urlParser_.getBody() + " HTTP/1.1\r\n";
-    request += "Host: " + urlParser_.getHost() + "\r\n\r\n";
+    request += "Host: " + urlParser_.getHost() + "\r\n";
+    request += "Accept: */*\r\n";
+    request += "Content-Length: 0\r\n";
+    request += "\r\n";
 
     if (connect(fd_, (struct sockaddr*)&servAddr_, sizeof (servAddr_)) < 0)
     {
@@ -141,12 +110,13 @@ namespace TrackerConnector
       return -1;
     }
 
+    std::cout << "Tracker GET request: " << request << std::endl;
+
     return 1;
   }
 
   int TrackerConnector::readResult()
   {
-    result_ = "";
     std::string res = "";
     char *buffer = (char*)calloc(sizeof (char), READ_BUF_SIZE);
     int recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
@@ -165,17 +135,47 @@ namespace TrackerConnector
 
     free(buffer);
 
-    result_ = res;
+    formatResult(res);
 
     return 1;
   }
 
+  void TrackerConnector::formatResult(std::string& result)
+  {
+    bool isChunked = false;
+
+    std::string delimiter = "\r\n";
+    size_t pos = 0;
+    std::string token;
+    while ((pos = result.find(delimiter)) != std::string::npos)
+    {
+      token = result.substr(0, pos);
+      result.erase(0, pos + delimiter.length());
+      resultHeader_ += token + '\n';
+
+      if (token == "Transfer-Encoding: chunked")
+        isChunked = true;
+
+      if (token == "")
+        break;
+    }
+
+    if (isChunked)
+    {
+      deleteChunkInfo(result);
+      while ((pos = result.find(delimiter)) != std::string::npos)
+      {
+        token = result.substr(0, pos);
+        result.erase(0, pos + delimiter.length());
+        resultBody_ += token + '\n';
+      }
+    }
+
+    resultBody_ += result;
+  }
+
   void TrackerConnector::deleteChunkInfo(std::string& s)
   {
-    std::cout << s << std::endl;
-
-    std::cout << "original -------\n";
-
     int val = 2;
     int start_pos = 0;
     int next_pos = 0;
@@ -196,7 +196,5 @@ namespace TrackerConnector
 
       start_pos = next_pos;
     }
-
-    std::cout << s << std::endl;
   }
 }
