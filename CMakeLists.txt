@@ -11,6 +11,7 @@ set(
 
   src/main.cpp
   src/core/url-utils.cc
+  src/core/torrent.cc
   src/bencode/bencode-type.cc
   src/bencode/bencode-string.cc
   src/bencode/bencode-integer.cc
