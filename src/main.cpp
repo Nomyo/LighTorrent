@@ -13,7 +13,7 @@ using namespace BEncode;
 
 int main(void)
 {
-  std::string filename("tests/.torrent"); // http torrent
+  std::string filename("tests/AliceInWonderlands.torrent"); // http torrent
   //std::string filename("tests/let-it-be.torrent"); // udp torrent
 
 
