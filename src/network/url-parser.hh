@@ -3,7 +3,7 @@
 
 namespace UrlParser
 {
-  enum UrlProtocol
+  enum urlProtocol
   {
     Http,
     Udp
@@ -14,9 +14,13 @@ namespace UrlParser
     public:
       UrlParser(std::string url);
       std::string getHost() const;
-      std::string getProtocol() const;
+      urlProtocol getProtocol() const;
       std::string getPort() const;
 
     private:
+      urlProtocol protocol_;
+      std::string host_;
+      int port_;
+      std::string body_;
   };
 }
