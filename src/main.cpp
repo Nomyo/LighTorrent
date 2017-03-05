@@ -13,7 +13,7 @@ using namespace BEncode;
 
 int main(void)
 {
-  std::string filename("tests/AliceInWonderlands.torrent"); // http torrent
+  std::string filename("tests/.torrent"); // http torrent
   //std::string filename("tests/let-it-be.torrent"); // udp torrent
 
 
@@ -37,6 +37,14 @@ int main(void)
     //std::cout << "result: " << tc.getResult() << std::endl;
     std::cout << "result_body: " << tc.getResultBody() << std::endl;
   }
+
+  std::cout << std::endl;
+
+  std::string result = tc.getResultBody();
+  auto result_node = driver.bDecode(result);
+
+  std::cout << result_node << std::endl;
+
 
   return 0;
 }

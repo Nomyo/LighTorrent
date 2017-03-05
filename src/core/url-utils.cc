@@ -80,8 +80,6 @@ namespace Core
     url << trackerBaseUrl_  << "?";
     url << "info_hash=" << infoHash_ << "&";
     url << "peer_id=" << peerId_ << "&";
-    url << "ip=" << "255.255.255.255" << "&";
-    url << "port=" << port_ << "&";
     url << "downloaded=" << downloaded_ << "&";
     url << "left=" << left_ << "&";
     url << "event=started";

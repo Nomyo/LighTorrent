@@ -1,4 +1,5 @@
 #include "bencode-dico.hh"
+#include "../core/color.hh"
 
 namespace BEncode
 {
@@ -29,16 +30,20 @@ namespace BEncode
 
   void BEncodeDictionnary::print(std::ostream& str) const
   {
-    str << "{ ";
+    core::ColorModifier clgreen(core::ColorCode::FG_LIGHT_GREEN);
+    core::ColorModifier clred(core::ColorCode::FG_LIGHT_YELLOW);
+    core::ColorModifier cldef(core::ColorCode::FG_DEFAULT);
+
+    str << "{\n\t";
     int tmp = 0;
     for (auto i : dico_)
     {
       if (tmp++)
-        str << ", ";
-      str << i.first << " => ";
+        str << ",\n\t";
+      str << clgreen << i.first << cldef << " => " << clred;
       i.second->print(str);
     }
-    str << " }";
+    str << cldef << "\n}";
   }
 
   void BEncodeDictionnary::addPair(std::string key, BEncodeType_ptr data)
