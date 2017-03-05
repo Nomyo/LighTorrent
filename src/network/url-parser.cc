@@ -25,9 +25,12 @@ namespace UrlParser
     while (url[counter] != '/')
       port += url[counter++];
 
+    body = url.substr(counter, url.length() - counter);
+
     std::cout << "protocol: " << protocol << std::endl;
     std::cout << "host: " << host << std::endl;
     std::cout << "port: " << port << std::endl;
+    std::cout << "body: " << body << std::endl;
 
     //int counterStart = 0;
     //bool hasHttp = false;
