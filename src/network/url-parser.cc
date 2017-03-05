@@ -58,6 +58,11 @@ namespace UrlParser
     return body_;
   }
 
+  std::string UrlParser::getBaseUrl() const
+  {
+    return baseUrl_;
+  }
+
   void UrlParser::dump() const
   {
     std::cout << "url : " << baseUrl_ << std::endl;
