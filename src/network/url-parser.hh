@@ -15,7 +15,8 @@ namespace UrlParser
       UrlParser(std::string url);
       std::string getHost() const;
       urlProtocol getProtocol() const;
-      std::string getPort() const;
+      int getPort() const;
+      std::string getBody() const;
 
     private:
       urlProtocol protocol_;

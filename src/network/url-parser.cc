@@ -35,4 +35,24 @@ namespace UrlParser
     port_ = atoi(port.c_str());
     body_ = body;
   }
+
+  urlProtocol UrlParser::getProtocol() const
+  {
+    return protocol_;
+  }
+
+  std::string UrlParser::getHost() const
+  {
+    return host_;
+  }
+
+  int UrlParser::getPort() const
+  {
+    return port_;
+  }
+
+  std::string UrlParser::getBody() const
+  {
+    return body_;
+  }
 }
