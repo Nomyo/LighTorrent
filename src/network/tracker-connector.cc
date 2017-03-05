@@ -135,8 +135,9 @@ namespace TrackerConnector
       buffer[READ_BUF_SIZE - 1] = '\0';
       if (recvN > 0)
       {
-        std::cout << buffer << std::endl;
-        res += buffer;
+        for (int i = 0; i < recvN; i++)
+          res += buffer[i];
+
         if (buffer[recvN - 1] == '\n' && buffer[recvN - 2] == '\r')
           break;
       }
@@ -146,9 +147,7 @@ namespace TrackerConnector
 
     free(buffer);
 
-    //formatResult(res);
-    //std::cout << res << std::endl;
-
+    formatResult(res);
 
     return 1;
   }
