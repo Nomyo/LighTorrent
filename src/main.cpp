@@ -34,7 +34,7 @@ int main(void)
   TrackerConnector::TrackerConnector tc;
   if (tc.sendRequest(url.generateURL()))
   {
-    std::cout << "result: " << tc.getResult() << std::endl;
+    //std::cout << "result: " << tc.getResult() << std::endl;
     std::cout << "result_body: " << tc.getResultBody() << std::endl;
   }
 

@@ -16,7 +16,7 @@ namespace TrackerConnector
       close(fd_);
   }
 
-  int TrackerConnector::sendRequest(std::string url)
+  int TrackerConnector::sendRequest(const std::string& url)
   {
     urlParser_.parseUrl(url);
 
@@ -26,10 +26,11 @@ namespace TrackerConnector
     if (!resolveHost(urlParser_.getHost()))
       return -1;
 
-    if (!craftRequest())
-      return -1;
 
-    return readResult();
+    if (urlParser_.getProtocol() == UrlProtocol::Http)
+      return requestHttpTracker();
+    else
+      return requestUdpTracker();
   }
 
   std::string TrackerConnector::getResult() const
@@ -90,6 +91,15 @@ namespace TrackerConnector
     return 1;
   }
 
+  int TrackerConnector::requestHttpTracker()
+  {
+    std::cout << "requesting http tracker...\n";
+    if (!craftRequest())
+      return -1;
+
+    return readResult();
+  }
+
   int TrackerConnector::craftRequest() const
   {
     std::string request = "GET " + urlParser_.getBody() + " HTTP/1.1\r\n";
@@ -110,7 +120,7 @@ namespace TrackerConnector
       return -1;
     }
 
-    std::cout << "Tracker GET request: " << request << std::endl;
+    //std::cout << "Tracker GET request: " << request << std::endl;
 
     return 1;
   }
@@ -125,6 +135,7 @@ namespace TrackerConnector
       buffer[READ_BUF_SIZE - 1] = '\0';
       if (recvN > 0)
       {
+        std::cout << buffer << std::endl;
         res += buffer;
         if (buffer[recvN - 1] == '\n' && buffer[recvN - 2] == '\r')
           break;
@@ -135,9 +146,16 @@ namespace TrackerConnector
 
     free(buffer);
 
-    formatResult(res);
+    //formatResult(res);
+    //std::cout << res << std::endl;
+
 
     return 1;
+  }
+
+  int TrackerConnector::requestUdpTracker()
+  {
+    return -1;
   }
 
   void TrackerConnector::formatResult(std::string& result)

@@ -15,7 +15,7 @@ namespace TrackerConnector
 {
   class TrackerConnector
   {
-
+    using UrlProtocol = UrlParser::urlProtocol;
     using UrlParser = UrlParser::UrlParser;
 
   public:
@@ -24,7 +24,7 @@ namespace TrackerConnector
     ~TrackerConnector();
 
     // Actions
-    int sendRequest(std::string url);
+    int sendRequest(const std::string& url);
 
     // Accessors
     std::string getResult() const;
@@ -34,8 +34,15 @@ namespace TrackerConnector
   private:
     int createSocket();
     int resolveHost(const std::string& host);
+
+    // Http tracker related
+    int requestHttpTracker();
     int craftRequest() const;
     int readResult();
+
+    // Udp tracker related
+    int requestUdpTracker();
+
     void formatResult(std::string& result);
     void deleteChunkInfo(std::string& s);
 
@@ -47,7 +54,6 @@ namespace TrackerConnector
     struct sockaddr_in servAddr_;
     struct hostent *server_;
 
-    //std::string result_;
     std::string resultHeader_;
     std::string resultBody_;
   };
