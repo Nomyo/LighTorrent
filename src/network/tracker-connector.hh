@@ -2,12 +2,6 @@
 
 #include <iostream>
 #include <string>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <unistd.h>
-#include <iomanip>
 
 #include "url-parser.hh"
 #include "tracker-info.hh"

@@ -1,8 +1,6 @@
 #include <string.h>
 #include "tracker-connector.hh"
 
-#define READ_BUF_SIZE 6000
-
 namespace TrackerConnector
 {
   TrackerConnector::TrackerConnector()
