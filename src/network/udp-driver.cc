@@ -3,11 +3,7 @@
 namespace NetworkDriver
 {
   UdpDriver::UdpDriver()
-  {
-    fd_ = socket(AF_INET, SOCK_DGRAM, 0);
-    if (fd_ == -1)
-      std::cerr << "Could not create udp socket..." << std::endl;
-  }
+  {}
 
   UdpDriver::~UdpDriver()
   {
@@ -15,43 +11,58 @@ namespace NetworkDriver
       close(fd_);
   }
 
-struct cir_t {
-    uint64_t connectionId;
-    uint32_t action;
-    uint32_t transactionId;
-  };
-
-  struct cire_t {
-    uint32_t action;
-    uint32_t transactionId;
-    uint64_t connectionId;
-  };
-
   int UdpDriver::sendRequest(const TrackerInfo& trackerInfo)
   {
     std::cout << "requesting udp tracker..." << std::endl;
 
-    struct cir_t cir;
-    cir.connectionId = __builtin_bswap64(0x41727101980);
-    cir.action = 0;
-    cir.transactionId = 1500;
+    auto request = createRequestAnnounce(1500);
+    struct connectionResponse response;
 
-    int nbSend = sendto(fd_, &cir, sizeof (cir), 0,
-                        (struct sockaddr *)&trackerInfo.getServerAddress(),
-                        sizeof (trackerInfo.getServerAddress()));
-    std::cout << "sent " << nbSend << " bytes..." << std::endl;
+    bool receivedPackets = false;
+    int nbAttempt = 0;
 
-    struct cire_t cire;
-    socklen_t res;
-    int nbRecv = recvfrom(fd_, &cire, sizeof (cire), 0,
+    while (!receivedPackets && nbAttempt > -1)
+    {
+      fd_ = socket(AF_INET, SOCK_DGRAM, 0);
+      struct timeval tv;
+      tv.tv_sec = 0;
+      tv.tv_usec = 100000;
+      if (setsockopt(fd_, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
+        std::cerr << "Could not set timeout to udp socket..." << std::endl;
+
+      nbAttempt++;
+      int nbSend = sendto(fd_, &request, sizeof (request), 0,
                           (struct sockaddr *)&trackerInfo.getServerAddress(),
-                          &res);
+                          sizeof (trackerInfo.getServerAddress()));
+      std::cout << "sent " << nbSend << " bytes... (attempt " << nbAttempt << "...)" << std::endl;
 
-    std::cout << "received " << nbRecv << "bytes!" << std::endl;
-    std::cout << "action: " << cire.action << "\n";
-    std::cout << "transacitonId: " << cire.transactionId << "\n";
-    std::cout << "connectionId: " << cire.connectionId << "\n";
+      socklen_t res = 4;
+      int nbRecv = recvfrom(fd_, &response, sizeof (response), 0,
+                            (struct sockaddr *)&trackerInfo.getServerAddress(),
+                            &res);
+
+      if (nbRecv != -1)
+        receivedPackets = true;
+      close(fd_);
+    }
+    if (receivedPackets)
+    {
+      std::cout << "received response!" << std::endl;
+      std::cout << "action: " << response.action << "\n";
+      std::cout << "transacitonId: " << response.transactionId << "\n";
+      std::cout << "connectionId: " << response.connectionId << "\n";
+    }
 
     return -1;
+  }
+
+  struct connectionRequest createRequestAnnounce(int transactionId)
+  {
+    struct connectionRequest cr;
+    cr.connectionId = __builtin_bswap64(0x41727101980); // magic number
+    cr.action = 0; // announce
+    cr.transactionId = transactionId;
+
+    return cr;
   }
 }
