@@ -6,10 +6,7 @@ namespace NetworkDriver
   {}
 
   UdpDriver::~UdpDriver()
-  {
-    if (fd_ != -1)
-      close(fd_);
-  }
+  {}
 
   int UdpDriver::sendRequest(const TrackerInfo& trackerInfo)
   {
