@@ -15,8 +15,11 @@ namespace TrackerInfo
       ~TrackerInfo();
 
       void setTrackerInfo(const std::string& host, int port);
+
+      // Getters
       const struct sockaddr_in& getServerAddress() const;
       const struct hostent *getServer() const;
+      bool isResolved() const;
 
     private:
       struct sockaddr_in serverAddress_;

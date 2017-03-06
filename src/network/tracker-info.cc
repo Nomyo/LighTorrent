@@ -40,4 +40,9 @@ namespace TrackerInfo
   {
     return server_;
   }
+
+  bool TrackerInfo::isResolved() const
+  {
+    return (server_ != nullptr);
+  }
 }
