@@ -11,6 +11,7 @@
 
 #include "url-parser.hh"
 #include "tracker-info.hh"
+#include "http-driver.hh"
 
 namespace TrackerConnector
 {
@@ -19,6 +20,7 @@ namespace TrackerConnector
     using UrlProtocol = UrlParser::urlProtocol;
     using UrlParser = UrlParser::UrlParser;
     using TrackerInfo = TrackerInfo::TrackerInfo;
+    using HttpDriver = NetworkDriver::HttpDriver;
 
   public:
     // Ctor & Dtor

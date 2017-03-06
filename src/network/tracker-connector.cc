@@ -25,7 +25,13 @@ namespace TrackerConnector
       return -1;
 
     if (urlParser_.getProtocol() == UrlProtocol::Http)
-      return requestHttpTracker();
+    {
+      HttpDriver httpDriver;
+      httpDriver.sendRequest(urlParser_, trackerInfo_);
+      //std::cout << "http returned " << httpDriver.readResult() << std::endl << std::endl;
+      resultBody_ = httpDriver.getResult();
+      return 1; //requestHttpTracker();
+    }
     else
       return requestUdpTracker();
   }

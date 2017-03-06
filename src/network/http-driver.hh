@@ -24,11 +24,11 @@ namespace NetworkDriver
       ~HttpDriver();
 
       int sendRequest(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
-      std::string readResult();
+      std::string getResult();
 
     private:
       void formatResult(std::string& result);
-      void deleteChunkInfo(std::string& s);
+      //void deleteChunkInfo(std::string& s);
 
       int fd_;
       std::string resultHeader_;
