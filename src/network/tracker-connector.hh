@@ -54,9 +54,6 @@ namespace TrackerConnector
     UrlParser urlParser_;
     TrackerInfo trackerInfo_;
 
-    //struct sockaddr_in servAddr_;
-    //struct hostent *server_;
-
     std::string resultHeader_;
     std::string resultBody_;
   };
