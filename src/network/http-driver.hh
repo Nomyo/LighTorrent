@@ -28,6 +28,7 @@ namespace NetworkDriver
 
     private:
       void formatResult(std::string& result);
+      void buildResult();
       //void deleteChunkInfo(std::string& s);
 
       int fd_;

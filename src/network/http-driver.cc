@@ -36,10 +36,17 @@ namespace NetworkDriver
       return -1;
     }
 
+    buildResult();
+
     return 1;
   }
 
   std::string HttpDriver::getResult()
+  {
+    return resultBody_;
+  }
+
+  void HttpDriver::buildResult()
   {
     std::string res = "";
     char *buffer = (char*)calloc(sizeof (char), READ_BUF_SIZE);
@@ -64,8 +71,6 @@ namespace NetworkDriver
     std::cout << "RESULT = " << res << std::endl;
 
     formatResult(res);
-
-    return resultBody_;
   }
 
   void HttpDriver::formatResult(std::string& result)
