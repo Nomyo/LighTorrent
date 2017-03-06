@@ -2,7 +2,18 @@
 
 namespace TrackerInfo
 {
+  TrackerInfo::TrackerInfo()
+  {}
+
   TrackerInfo::TrackerInfo(const std::string& host, int port)
+  {
+    setTrackerInfo(host, port);
+  }
+
+  TrackerInfo::~TrackerInfo()
+  {}
+
+  void TrackerInfo::setTrackerInfo(const std::string& host, int port)
   {
     server_ = gethostbyname(host.c_str());
 
@@ -19,9 +30,6 @@ namespace TrackerInfo
 
     serverAddress_.sin_port = htons(port);
   }
-
-  TrackerInfo::~TrackerInfo()
-  {}
 
   const struct sockaddr_in& TrackerInfo::getServerAddress() const
   {

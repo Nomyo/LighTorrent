@@ -19,9 +19,7 @@ namespace TrackerConnector
   int TrackerConnector::sendRequest(const std::string& url)
   {
     urlParser_.parseUrl(url);
-
-    if (!resolveHost(urlParser_.getHost()))
-      return -1;
+    trackerInfo_.setTrackerInfo(urlParser_.getHost(), urlParser_.getPort());
 
     if (!createSocket())
       return -1;
@@ -71,29 +69,6 @@ namespace TrackerConnector
     return 1;
   }
 
-  int TrackerConnector::resolveHost(const std::string& host)
-  {
-    server_ = gethostbyname(host.c_str());
-
-    if (server_ == nullptr)
-    {
-      std::cerr << "Could not resolve host " << host << std::endl;
-      return -1;
-    }
-
-    bzero((char *) &servAddr_, sizeof (servAddr_));
-
-    servAddr_.sin_family = AF_INET;
-
-    bcopy((char *)server_->h_addr,
-          (char *)&servAddr_.sin_addr.s_addr,
-          server_->h_length);
-
-    servAddr_.sin_port = htons(urlParser_.getPort());
-
-    return 1;
-  }
-
   int TrackerConnector::requestHttpTracker()
   {
     std::cout << "requesting http tracker...\n";
@@ -111,7 +86,7 @@ namespace TrackerConnector
     request += "Content-Length: 0\r\n";
     request += "\r\n";
 
-    if (connect(fd_, (struct sockaddr*)&servAddr_, sizeof (servAddr_)) < 0)
+    if (connect(fd_, (struct sockaddr*)&trackerInfo_.getServerAddress(), sizeof (trackerInfo_.getServerAddress())) < 0)
     {
       std::cerr << "Could not connect to url " << urlParser_.getBaseUrl() << std::endl;
       return -1;
@@ -176,13 +151,15 @@ namespace TrackerConnector
     cir.action = 0;
     cir.transactionId = 1500;
 
-    int nbSend = sendto(fd_, &cir, sizeof (cir), 0, (struct sockaddr *)&servAddr_,
-                        sizeof (servAddr_));
+    int nbSend = sendto(fd_, &cir, sizeof (cir), 0,
+                        (struct sockaddr *)&trackerInfo_.getServerAddress(),
+                        sizeof (trackerInfo_.getServerAddress()));
     std::cout << "sent " << nbSend << " bytes..." << std::endl;
 
     struct cire_t cire;
     socklen_t res;
-    int nbRecv = recvfrom(fd_, &cire, sizeof (cire), 0, (struct sockaddr *)&servAddr_,
+    int nbRecv = recvfrom(fd_, &cire, sizeof (cire), 0,
+                          (struct sockaddr *)&trackerInfo_.getServerAddress(),
                           &res);
 
     std::cout << "received " << nbRecv << "bytes!" << std::endl;

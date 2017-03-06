@@ -10,9 +10,11 @@ namespace TrackerInfo
   {
     public:
       // Ctor & Dtor
+      TrackerInfo();
       TrackerInfo(const std::string& host, int port);
       ~TrackerInfo();
 
+      void setTrackerInfo(const std::string& host, int port);
       const struct sockaddr_in& getServerAddress() const;
       const struct hostent *getServer() const;
 

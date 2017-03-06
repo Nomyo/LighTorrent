@@ -8,9 +8,9 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <iomanip>
-#include <arpa/inet.h>
 
 #include "url-parser.hh"
+#include "tracker-info.hh"
 
 namespace TrackerConnector
 {
@@ -18,6 +18,7 @@ namespace TrackerConnector
   {
     using UrlProtocol = UrlParser::urlProtocol;
     using UrlParser = UrlParser::UrlParser;
+    using TrackerInfo = TrackerInfo::TrackerInfo;
 
   public:
     // Ctor & Dtor
@@ -34,7 +35,7 @@ namespace TrackerConnector
 
   private:
     int createSocket();
-    int resolveHost(const std::string& host);
+    //int resolveHost(const std::string& host);
 
     // Http tracker related
     int requestHttpTracker();
@@ -51,9 +52,10 @@ namespace TrackerConnector
     bool opened_;
 
     UrlParser urlParser_;
+    TrackerInfo trackerInfo_;
 
-    struct sockaddr_in servAddr_;
-    struct hostent *server_;
+    //struct sockaddr_in servAddr_;
+    //struct hostent *server_;
 
     std::string resultHeader_;
     std::string resultBody_;
