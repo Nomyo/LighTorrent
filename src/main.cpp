@@ -17,7 +17,7 @@ using namespace BEncode;
 int main(void)
 {
   std::string filename("tests/secretFamilyRecipes.torrent"); // http torrent
-  //std::string filename("tests/let-it-be.torrent"); // udp torrent
+  //std::string filename("tests/l.torrent"); // udp torrent
 
   BEncodeDriver driver;
   auto node = driver.bDecodeFile(filename);
