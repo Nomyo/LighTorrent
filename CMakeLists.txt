@@ -20,6 +20,7 @@ set(
   src/bencode/bencode-driver.cc
   src/network/tracker-connector.cc
   src/network/url-parser.cc
+  src/network/http-driver.cc
   )
 
 
