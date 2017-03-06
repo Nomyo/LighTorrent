@@ -155,20 +155,41 @@ namespace TrackerConnector
     return 1;
   }
 
+  struct cir_t {
+    uint64_t connectionId;
+    uint32_t action;
+    uint32_t transactionId;
+  };
+
+  struct cire_t {
+    uint32_t action;
+    uint32_t transactionId;
+    uint64_t connectionId;
+  };
+
   int TrackerConnector::requestUdpTracker()
   {
     std::cout << "requesting udp tracker..." << std::endl;
-    std::stringstream ss;
-    uint64_t protocolId = 0x41727101980; // magic constant
-    uint32_t action = 0;
-    uint32_t transactionId = 5645;
-    ss << protocolId << action << transactionId;
-    std::cout << ss.str().c_str() << std::endl;
 
-    int nbSend = sendto(fd_, ss.str().c_str(), strlen(ss.str().c_str()), 0,
-                        (struct sockaddr*)&servAddr_, sizeof (servAddr_));
+    struct cir_t cir;
+    cir.connectionId = __builtin_bswap64(0x41727101980);
+    cir.action = 0;
+    cir.transactionId = 1500;
 
-    std::cout << "sent = " << nbSend << " errno = " << strerror(errno) << std::endl;
+    int nbSend = sendto(fd_, &cir, sizeof (cir), 0, (struct sockaddr *)&servAddr_,
+                        sizeof (servAddr_));
+    std::cout << "sent " << nbSend << " bytes..." << std::endl;
+
+    struct cire_t cire;
+    socklen_t res;
+    int nbRecv = recvfrom(fd_, &cire, sizeof (cire), 0, (struct sockaddr *)&servAddr_,
+                          &res);
+
+    std::cout << "received " << nbRecv << "bytes!" << std::endl;
+    std::cout << "action: " << cire.action << "\n";
+    std::cout << "transacitonId: " << cire.transactionId << "\n";
+    std::cout << "connectionId: " << cire.connectionId << "\n";
+
     return -1;
   }
 

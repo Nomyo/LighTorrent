@@ -8,6 +8,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <iomanip>
+#include <arpa/inet.h>
 
 #include "url-parser.hh"
 
