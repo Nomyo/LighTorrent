@@ -37,9 +37,9 @@ int main(void)
 
   TrackerConnector::TrackerConnector tc;
   if (tc.sendRequest(urlGenerated))
-    std::cout << "result_body: " << tc.getResultBody() << "\n" << std::endl;
+    std::cout << "result_body: " << tc.getResult() << "\n" << std::endl;
 
-  std::string result = tc.getResultBody();
+  std::string result = tc.getResult();
 
   auto result_node = getType<BType_ptr, BDico>(driver.bDecode(result));
   std::cout << result_node << std::endl;

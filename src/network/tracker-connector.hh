@@ -32,31 +32,16 @@ namespace TrackerConnector
 
     // Accessors
     std::string getResult() const;
-    std::string getResultHeader() const;
-    std::string getResultBody() const;
 
   private:
     int createSocket();
-    //int resolveHost(const std::string& host);
-
-    // Http tracker related
-    int requestHttpTracker();
-    int craftRequest() const;
-    int readResult();
 
     // Udp tracker related
     int requestUdpTracker();
 
-    void formatResult(std::string& result);
-    void deleteChunkInfo(std::string& s);
-
-    int fd_;
-    bool opened_;
-
     UrlParser urlParser_;
     TrackerInfo trackerInfo_;
 
-    std::string resultHeader_;
-    std::string resultBody_;
+    std::string result_;
   };
 }
