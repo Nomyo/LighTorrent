@@ -20,27 +20,27 @@ namespace NetworkDriver
 
     while (!receivedPackets && nbAttempt > -1)
     {
-      fd_ = socket(AF_INET, SOCK_DGRAM, 0);
+      int fd = socket(AF_INET, SOCK_DGRAM, 0);
       struct timeval tv;
       tv.tv_sec = 0;
       tv.tv_usec = 100000;
-      if (setsockopt(fd_, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
+      if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
         std::cerr << "Could not set timeout to udp socket..." << std::endl;
 
       nbAttempt++;
-      int nbSend = sendto(fd_, &request, sizeof (request), 0,
+      int nbSend = sendto(fd, &request, sizeof (request), 0,
                           (struct sockaddr *)&trackerInfo.getServerAddress(),
                           sizeof (trackerInfo.getServerAddress()));
       std::cout << "sent " << nbSend << " bytes... (attempt " << nbAttempt << "...)" << std::endl;
 
       socklen_t res = 4;
-      int nbRecv = recvfrom(fd_, &response, sizeof (response), 0,
+      int nbRecv = recvfrom(fd, &response, sizeof (response), 0,
                             (struct sockaddr *)&trackerInfo.getServerAddress(),
                             &res);
 
       if (nbRecv != -1)
         receivedPackets = true;
-      close(fd_);
+      close(fd);
     }
     if (receivedPackets)
     {

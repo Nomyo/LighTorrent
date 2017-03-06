@@ -33,10 +33,6 @@ namespace NetworkDriver
       ~UdpDriver();
 
       int sendRequest(const TrackerInfo& trackerInfo);
-
-    private:
-      int fd_;
-
   };
 
   struct connectionRequest createRequestAnnounce(int transactionId);
