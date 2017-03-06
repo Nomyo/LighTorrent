@@ -21,6 +21,7 @@ set(
   src/network/tracker-connector.cc
   src/network/url-parser.cc
   src/network/http-driver.cc
+  src/network/udp-driver.cc
   src/network/tracker-info.cc
   )
 

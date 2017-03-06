@@ -12,6 +12,7 @@
 #include "url-parser.hh"
 #include "tracker-info.hh"
 #include "http-driver.hh"
+#include "udp-driver.hh"
 
 namespace TrackerConnector
 {
@@ -21,6 +22,7 @@ namespace TrackerConnector
     using UrlParser = UrlParser::UrlParser;
     using TrackerInfo = TrackerInfo::TrackerInfo;
     using HttpDriver = NetworkDriver::HttpDriver;
+    using UdpDriver = NetworkDriver::UdpDriver;
 
   public:
     // Ctor & Dtor
@@ -34,11 +36,6 @@ namespace TrackerConnector
     std::string getResult() const;
 
   private:
-    int createSocket();
-
-    // Udp tracker related
-    int requestUdpTracker();
-
     UrlParser urlParser_;
     TrackerInfo trackerInfo_;
 
