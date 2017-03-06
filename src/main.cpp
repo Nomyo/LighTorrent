@@ -29,6 +29,7 @@ int main(void)
   Core::Torrent torrent(getType<BType_ptr, BDico>(node));
   Core::URLUtils url;
   std::string urlGenerated = url.generateURL(torrent);
+
   std::cout << "URL REQUEST : " << urlGenerated << std::endl;;
 
   UrlParser::UrlParser up(urlGenerated);
@@ -36,18 +37,45 @@ int main(void)
 
   TrackerConnector::TrackerConnector tc;
   if (tc.sendRequest(urlGenerated))
-  {
-    //std::cout << "result: " << tc.getResult() << std::endl;
-    std::cout << "result_body: " << tc.getResultBody() << std::endl;
-  }
-
-  std::cout << std::endl;
+    std::cout << "result_body: " << tc.getResultBody() << "\n" << std::endl;
 
   std::string result = tc.getResultBody();
-  auto result_node = driver.bDecode(result);
 
+  auto result_node = getType<BType_ptr, BDico>(driver.bDecode(result));
   std::cout << result_node << std::endl;
 
+  std::string peers = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
+  const unsigned char *str = (const unsigned char *) peers.c_str();
+
+  std::cout << "peers size : " << peers.size() / 6 << std::endl;
+
+  int j = 0;
+  int port = 0;
+
+  std::cout << peers << std::endl;
+
+  for (int i = 0; i < peers.size(); ++i, ++j)
+  {
+    unsigned int b = str[i];
+    if (j == 4)
+    {
+      std::cout << ":";
+      port = 256 * str[i];
+    }
+    else if (j == 5)
+    {
+      port += str[i];
+      std::cout << port << "\n";
+      port = 0;
+      j = -1;
+    }
+    else
+    {
+      if (i % 6)
+	std::cout << ".";
+      std::cout << b;
+    }
+  }
 
   return 0;
 }
