@@ -40,6 +40,7 @@ namespace NetworkDriver
 
       if (nbRecv != -1)
         receivedPackets = true;
+
       close(fd);
     }
     if (receivedPackets)

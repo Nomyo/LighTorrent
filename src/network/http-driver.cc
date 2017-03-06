@@ -75,8 +75,6 @@ namespace NetworkDriver
 
   void HttpDriver::formatResult(std::string& result)
   {
-    //bool isChunked = false;
-
     std::string delimiter = "\r\n";
     size_t pos = 0;
     std::string token;
@@ -86,49 +84,10 @@ namespace NetworkDriver
       result.erase(0, pos + delimiter.length());
       resultHeader_ += token + '\n';
 
-      //if (token == "Transfer-Encoding: chunked")
-        //isChunked = true;
-
       if (token == "")
         break;
     }
 
-    //if (isChunked)
-    //{
-    //  deleteChunkInfo(result);
-    //  while ((pos = result.find(delimiter)) != std::string::npos)
-    //  {
-    //    token = result.substr(0, pos);
-    //    result.erase(0, pos + delimiter.length());
-    //    resultBody_ += token + '\n';
-    //  }
-    //}
-
     resultBody_ += result;
   }
-
-  //void HttpDriver::deleteChunkInfo(std::string& s)
-  //{
-  //  int val = 2;
-  //  int start_pos = 0;
-  //  int next_pos = 0;
-  //  while (val != 0)
-  //  {
-  //    int endline = s.find("\r\n", start_pos);
-  //    std::string first_chunk = s.substr(start_pos, endline - start_pos);
-  //    std::stringstream ss;
-  //    ss << first_chunk.c_str();
-  //    ss >> std::hex >> val;
-
-  //    next_pos = start_pos + val + 2 + first_chunk.length();
-
-  //    next_pos += 2;
-
-  //    s.erase(start_pos, first_chunk.length() + 2);
-  //    next_pos -= (first_chunk.length() + 2);
-
-  //    start_pos = next_pos;
-  //  }
-  //}
-
 }
