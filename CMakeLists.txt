@@ -25,6 +25,7 @@ set(
   src/network/torrent.cc
   src/network/peer.cc
   src/network/client.cc
+  src/network/tracker-driver.cc
   )
 
 

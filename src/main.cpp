@@ -43,5 +43,6 @@ int main(void)
   client.getPeersFromBinary(peersBinary);
   client.dumpPeers();
   client.connectToPeers();
+
   return 0;
 }
