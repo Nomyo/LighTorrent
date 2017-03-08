@@ -3,8 +3,10 @@
 
 namespace TrackerConnector
 {
-  TrackerConnector::TrackerConnector()
-  {}
+  TrackerConnector::TrackerConnector(Torrent *t)
+  {
+    torrent_ = t;
+  }
 
   TrackerConnector::~TrackerConnector()
   {}
@@ -23,7 +25,7 @@ namespace TrackerConnector
     }
     else
     {
-      UdpDriver udpDriver;
+      UdpDriver udpDriver(torrent_);
       udpDriver.sendRequest(trackerInfo_);
       return 1;
     }

@@ -7,6 +7,7 @@
 #include "tracker-info.hh"
 #include "http-driver.hh"
 #include "udp-driver.hh"
+#include "../core/torrent.hh"
 
 namespace TrackerConnector
 {
@@ -17,10 +18,11 @@ namespace TrackerConnector
     using TrackerInfo = TrackerInfo::TrackerInfo;
     using HttpDriver = NetworkDriver::HttpDriver;
     using UdpDriver = NetworkDriver::UdpDriver;
+    using Torrent = Core::Torrent;
 
   public:
     // Ctor & Dtor
-    TrackerConnector();
+    TrackerConnector(Torrent *t);
     ~TrackerConnector();
 
     // Actions
@@ -32,6 +34,7 @@ namespace TrackerConnector
   private:
     UrlParser urlParser_;
     TrackerInfo trackerInfo_;
+    Torrent *torrent_;
 
     std::string result_;
   };
