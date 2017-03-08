@@ -35,13 +35,13 @@ int main(void)
   std::cout << std::endl;
 
   TrackerConnector::TrackerConnector tc(&torrent);
-  tc.announce(urlGenerated);
+  std::string result = tc.announce(urlGenerated);
+  auto result_node = getType<BType_ptr, BDico>(driver.bDecode(result));
+  std::string peersBinary = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
 
-  // std::string result = tc.getResult();
-
-  // auto result_node = getType<BType_ptr, BDico>(driver.bDecode(result));
-
-  // std::string peers = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
+  Network::Client client(torrent);
+  client.getPeersFromBinary(peersBinary);
+  client.dumpPeers();
 
   return 0;
 }
