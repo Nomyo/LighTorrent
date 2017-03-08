@@ -2,6 +2,16 @@
 
 #include "peer.hh"
 #include "torrent.hh"
+#include "tracker-connector.hh"
+#include "url-parser.hh"
+
+#include "../bencode/bencode-driver.hh"
+#include "../bencode/bencode-utils.hh"
+#include "../bencode/fwd.hh"
+
+#include "../core/url-utils.hh"
+
+
 #include <iostream>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -10,6 +20,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+
+using namespace BEncode;
 
 namespace Network
 {
@@ -21,11 +33,14 @@ namespace Network
     Client(Torrent torrent);
     ~Client();
 
+    void download(const std::string& filename);
     void getPeersFromBinary(const std::string& binaryPeers);
     void connectToPeers();
     void dumpPeers();
 
   private:
+    // laters we would have a list of torrent
+    // each torrent mapped to a list of peer
     std::vector<Peer> peers_;
     Torrent torrent_;
   };

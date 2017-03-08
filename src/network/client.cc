@@ -2,12 +2,45 @@
 
 namespace Network
 {
+
+  Client::Client()
+  { }
+
   Client::Client(Torrent torrent)
     : torrent_(torrent)
   { }
 
   Client::~Client()
   { }
+
+  void Client::download(const std::string& filename)
+  {
+    BEncodeDriver driver;
+    auto decodedFile = driver.bDecodeFile(filename);
+
+    if (!decodedFile)
+    {
+      std::cerr << filename << " is not a valid torrent file" << std::endl;
+      return;
+    }
+
+    Network::Torrent torrent(getType<BType_ptr, BDico>(decodedFile));
+
+    Core::URLUtils url;
+    std::string urlGenerated = url.generateURL(torrent);
+    UrlParser::UrlParser up(urlGenerated);
+    up.dump();
+    std::cout << std::endl;
+
+    TrackerConnector::TrackerConnector tc(&torrent);
+    std::string result = tc.announce(urlGenerated);
+    auto result_node = getType<BType_ptr, BDico>(driver.bDecode(result));
+    std::string peersBinary = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
+
+    getPeersFromBinary(peersBinary);
+    dumpPeers();
+    connectToPeers();
+  }
 
   void Client::getPeersFromBinary(const std::string& binaryPeers)
   {
