@@ -78,6 +78,8 @@ namespace NetworkDriver
   };
 
   struct connectionRequest createRequestAnnounce(int transactionId);
-  struct announceRequest createAnnounceRequest(Network::Torrent *t, uint64_t connectionId,
-                                               uint32_t transactionId);
+  struct announceRequest createAnnounceRequest(Network::Torrent *t,
+                                                uint64_t connectionId,
+                                                uint32_t transactionId);
+  void setSocketTimeout(int fd);
 }

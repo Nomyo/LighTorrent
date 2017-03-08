@@ -1,5 +1,9 @@
 #include "udp-driver.hh"
 
+#define TR_ID 1500
+#define NB_RETRY 15
+#define TIMEOUT_SEC 2
+
 namespace NetworkDriver
 {
   using Peer = Network::Peer;
@@ -14,9 +18,7 @@ namespace NetworkDriver
 
   uint64_t UdpDriver::tryConnect()
   {
-    std::cout << "requesting udp tracker..." << std::endl;
-
-    auto request = createRequestAnnounce(1500);
+    auto request = createRequestAnnounce(TR_ID);
     struct connectionResponse response;
 
     bool receivedPackets = false;
@@ -25,11 +27,7 @@ namespace NetworkDriver
     while (!receivedPackets && nbAttempt > -1)
     {
       fd_ = socket(AF_INET, SOCK_DGRAM, 0);
-      struct timeval tv;
-      tv.tv_sec = 2;
-      tv.tv_usec = 0;
-      if (setsockopt(fd_, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
-        std::cerr << "Could not set timeout to udp socket..." << std::endl;
+      setSocketTimeout(fd_);
 
       nbAttempt++;
       int nbSend = sendto(fd_, &request, sizeof (request), 0,
@@ -67,7 +65,7 @@ namespace NetworkDriver
   {
     std::list<Peer> peers;
     struct announceRequest ar = createAnnounceRequest(torrent_, connectionId,
-        1500);
+        TR_ID);
     struct announceResponse response;
 
     bool received2 = false;
@@ -123,14 +121,11 @@ namespace NetworkDriver
       {
         close(fd_);
         fd_ = socket(AF_INET, SOCK_DGRAM, 0);
-        struct timeval tv;
-        tv.tv_sec = 2;
-        tv.tv_usec = 0;
-        if (setsockopt(fd_, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
-          std::cerr << "Could not set timeout to udp socket..." << std::endl;
+        setSocketTimeout(fd_);
       }
       nbAnnounce++;
     }
+    close(fd_);
     return peers;
   }
 
@@ -179,5 +174,14 @@ namespace NetworkDriver
     ar.port = 0;
 
     return ar;
+  }
+
+  void setSocketTimeout(int fd)
+  {
+    struct timeval tv;
+    tv.tv_sec = TIMEOUT_SEC;
+    tv.tv_usec = 0;
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
+      std::cerr << "Could not set timeout to udp socket..." << std::endl;
   }
 }
