@@ -131,7 +131,7 @@ namespace NetworkDriver
         if (j != 3)
           ip += ".";
       }
-      port += peer_info[i * 6 + 4];
+      port += peer_info[i * 6 + 4] * 256;
       port += peer_info[i * 6 + 5];
       peers.push_front(Peer(ip, port));
     }

@@ -2,12 +2,14 @@
 
 #include <iostream>
 #include <string>
+#include <list>
 
 #include "url-parser.hh"
 #include "tracker-info.hh"
 #include "http-driver.hh"
 #include "udp-driver.hh"
 #include "torrent.hh"
+#include "peer.hh"
 
 namespace TrackerConnector
 {
@@ -19,6 +21,7 @@ namespace TrackerConnector
     using HttpDriver = NetworkDriver::HttpDriver;
     using UdpDriver = NetworkDriver::UdpDriver;
     using Torrent = Network::Torrent;
+    using Peer = Network::Peer;
 
   public:
     // Ctor & Dtor
@@ -26,16 +29,11 @@ namespace TrackerConnector
     ~TrackerConnector();
 
     // Actions
-    std::string announce(const std::string& url);
-
-    // Accessors
-    std::string getResult() const;
+    std::list<Peer> announce(const std::string& url);
 
   private:
     UrlParser urlParser_;
     TrackerInfo trackerInfo_;
     Torrent *torrent_;
-
-    std::string result_;
   };
 }

@@ -2,6 +2,8 @@
 
 namespace NetworkDriver
 {
+  using Peer = Network::Peer;
+
   HttpDriver::HttpDriver()
   {
     fd_ = socket(AF_INET, SOCK_STREAM, 0);
@@ -13,6 +15,42 @@ namespace NetworkDriver
   {
     if (fd_ != -1)
       close(fd_);
+  }
+
+  std::list<Peer> HttpDriver::announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo)
+  {
+    using namespace BEncode;
+    std::list<Peer> peers;
+
+    if (sendRequest(urlParser, trackerInfo) != -1)
+    {
+      BEncodeDriver driver;
+      auto result_node = getType<BType_ptr, BDico>(driver.bDecode(resultBody_));
+      std::string peersBinary = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
+      std::cout << peersBinary << std::endl;
+
+      const unsigned char *peer_info = (const unsigned char *)peersBinary.c_str();
+      for (size_t i = 0; i < ((peersBinary.length() - 1) / 6); i++)
+      {
+        std::string ip;
+        unsigned int port;
+        for (int j = 0; j < 4; j++)
+        {
+          unsigned int b = peer_info[i * 6 + j];
+          ip += std::to_string(b);
+          if (j != 3)
+            ip += ".";
+        }
+        port += peer_info[i * 6 + 4] * 256;
+        port += peer_info[i * 6 + 5];
+        peers.push_front(Peer(ip, port));
+      }
+    }
+
+    for (auto peer : peers)
+      peer.dump();
+
+    return peers;
   }
 
   int HttpDriver::sendRequest(const UrlParser& urlParser, const TrackerInfo& trackerInfo)
