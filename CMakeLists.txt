@@ -26,6 +26,7 @@ set(
   src/network/peer.cc
   src/network/client.cc
   src/network/tracker-driver.cc
+  src/network/utils.cc
   )
 
 
