@@ -10,6 +10,7 @@
 #include "torrent.hh"
 #include "peer.hh"
 #include "../core/url-utils.hh"
+#include "utils.hh"
 
 namespace NetworkDriver
 {

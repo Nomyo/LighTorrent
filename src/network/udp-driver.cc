@@ -65,16 +65,15 @@ namespace NetworkDriver
   std::vector<Peer> UdpDriver::tryAnnounce(uint64_t connectionId)
   {
     std::vector<Peer> peers;
-    struct announceRequest ar = createAnnounceRequest(torrent_, connectionId);
-    struct announceResponse response;
+    struct announceRequest arequest = createAnnounceRequest(torrent_, connectionId);
+    struct announceResponse aresponse;
 
     bool receivedPackets = false;
     int nbAnnounce = 1;
-
+    //bzero(&arequest, sizeof (arequest));
     while (!receivedPackets && nbAnnounce < NB_RETRY)
     {
-
-      int nbSend = sendto(fd_, &ar, sizeof (ar), 0,
+      int nbSend = sendto(fd_, &arequest, sizeof (arequest), 0,
           (struct sockaddr *)&trackerInfo_.getServerAddress(),
           sizeof (trackerInfo_.getServerAddress()));
       if (nbSend == -1)
@@ -85,7 +84,7 @@ namespace NetworkDriver
       std::cout << "announcing... (attempt " << nbAnnounce << "...)" << std::endl;
 
       socklen_t res = 0;
-      int nbRecv = recvfrom(fd_, &response, sizeof (response), 0,
+      int nbRecv = recvfrom(fd_, &aresponse, sizeof (aresponse), 0,
           (struct sockaddr *)&trackerInfo_.getServerAddress(),
           &res);
 
@@ -94,16 +93,14 @@ namespace NetworkDriver
         receivedPackets = true;
         std::cout << "received " << nbRecv << " bytes" << std::endl;
         std::cout << "received response" << std::endl
-          << "action: " << __builtin_bswap32(response.action) << std::endl
-          << "tId: " << __builtin_bswap32(response.transactionId) << std::endl
-          << "interval: " << __builtin_bswap32(response.interval) << std::endl
-          << "leechers: " << __builtin_bswap32(response.leechers) << std::endl
-          << "seeders: " << __builtin_bswap32(response.seeders)
+          << "action: " << __builtin_bswap32(aresponse.action) << std::endl
+          << "tId: " << __builtin_bswap32(aresponse.transactionId) << std::endl
+          << "interval: " << __builtin_bswap32(aresponse.interval) << std::endl
+          << "leechers: " << __builtin_bswap32(aresponse.leechers) << std::endl
+          << "seeders: " << __builtin_bswap32(aresponse.seeders)
           << std::endl;
 
-        peers = buildPeers(response.peer_infos, (nbRecv - 20) / 6);
-        for (auto peer : peers)
-          peer.dump();
+        peers = NetworkUtils::buildPeers(aresponse.peer_infos, (nbRecv - 20) / 6);
       }
       else
       {
@@ -114,27 +111,6 @@ namespace NetworkDriver
       nbAnnounce++;
     }
     close(fd_);
-    return peers;
-  }
-
-  std::vector<Peer> UdpDriver::buildPeers(const uint8_t *peer_info, int nb_peers)
-  {
-    std::vector<Peer> peers;
-    for (int i = 0; i < nb_peers; i++)
-    {
-      std::string ip;
-      for (int j = 0; j < 4; j++)
-      {
-        unsigned b = peer_info[i * 6 + j];
-        ip += std::to_string(b);
-        if (j != 3)
-          ip += ".";
-      }
-      uint16_t port = 0;
-      port += peer_info[i * 6 + 4] * 256;
-      port += peer_info[i * 6 + 5];
-      peers.push_back(Peer(ip, port));
-    }
     return peers;
   }
 
@@ -159,15 +135,17 @@ namespace NetworkDriver
 
   struct announceRequest createAnnounceRequest(Network::Torrent *t, uint64_t connectionId)
   {
-    std::string test = t->getInfoHash();
+    std::string info_hash = t->getInfoHash();
     std::string peer_id = t->getPeerId();
 
     struct announceRequest ar;
+    bzero(&ar, sizeof (ar));
+
     ar.connectionId = connectionId;
     ar.action = __builtin_bswap32(1);
     ar.transactionId = __builtin_bswap32(TR_ID);
     for (int i = 0; i < 20; i++)
-      ar.info_hash[i] = test[i];
+      ar.info_hash[i] = info_hash[i];
     for (int i = 0; i < 20; i++)
       ar.peer_id[i] = peer_id[i];
     ar.downloaded = t->getDownloaded();

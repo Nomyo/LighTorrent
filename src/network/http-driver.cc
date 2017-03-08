@@ -33,7 +33,6 @@ namespace NetworkDriver
       for (size_t i = 0; i < ((peersBinary.length() - 1) / 6); i++)
       {
         std::string ip;
-        //unsigned int port;
         for (int j = 0; j < 4; j++)
         {
           unsigned int b = peer_info[i * 6 + j];
