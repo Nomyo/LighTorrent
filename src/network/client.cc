@@ -75,30 +75,58 @@ namespace Network
 
   void Client::connectToPeers()
   {
-    int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    fcntl(sockfd, F_SETFL, O_NONBLOCK);
-
-    struct sockaddr_in remoteaddr;
-    remoteaddr.sin_family = AF_INET;
-    remoteaddr.sin_addr.s_addr = inet_addr(peers_[0].getIp().c_str());
-    remoteaddr.sin_port = peers_[0].getPort();
-
-    struct timeval tv;
-    tv.tv_sec = 2;
-    tv.tv_usec = 0;
-    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
-      std::cerr << "Could not set timeout to udp socket..." << std::endl;
-
-    if (connect(sockfd, (struct sockaddr *)&remoteaddr, sizeof(remoteaddr)) < 0)
+    for (auto peer : peers_)
     {
-      std::cout << "failed to connect to peers : ";
-      peers_[0].dump();
-      std::cout << std::endl;
-    }
-    else
-      std::cout << "YEAEHAEHAYEHAEYAEH" << std::endl;
+      int valopt;
+      int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+      fd_set myset;
+      socklen_t lon;
 
-    close(sockfd);
+      fcntl(sockfd, F_SETFL, O_NONBLOCK);
+
+      struct sockaddr_in remoteaddr;
+      remoteaddr.sin_family = AF_INET;
+      remoteaddr.sin_addr.s_addr = inet_addr(peer.getIp().c_str());
+      remoteaddr.sin_port = htons(peer.getPort());
+
+      struct timeval tv;
+
+      if (connect(sockfd, (struct sockaddr *)&remoteaddr, sizeof(remoteaddr)) < 0)
+      {
+	if (errno == EINPROGRESS)
+	{
+	  tv.tv_sec = 1;
+	  tv.tv_usec = 0;
+
+	  FD_ZERO(&myset);
+	  FD_SET(sockfd, &myset);
+
+	  if (select(sockfd + 1, NULL, &myset, NULL, &tv) > 0)
+	  {
+	    lon = sizeof(int);
+	    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon);
+	    if (valopt)
+	    {
+	      std::cout << "Peer : " << strerror(errno);
+	      peer.dump();
+	    }
+	    else
+	      std::cout << "connected !!!!!!!!!!!! " << std::endl;
+	  }
+	  else
+	  {
+	    std::cout << "Peer Timeout : ";
+	    peer.dump();
+	    std::cout << std::endl;
+	  }
+	}
+	else
+	  std::cout << strerror(errno);
+      }
+
+      // blocking socket
+      fcntl(sockfd, F_SETFL, ~O_NONBLOCK);
+    }
   }
 
   void Client::dumpPeers()

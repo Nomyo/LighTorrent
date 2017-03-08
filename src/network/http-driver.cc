@@ -26,6 +26,7 @@ namespace NetworkDriver
     {
       BEncodeDriver driver;
       auto result_node = getType<BType_ptr, BDico>(driver.bDecode(resultBody_));
+      std::cout << result_node << std::endl;
       std::string peersBinary = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
       std::cout << peersBinary << std::endl;
 
