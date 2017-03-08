@@ -89,6 +89,19 @@ namespace NetworkDriver
                   << "leechers: " << __builtin_bswap32(response.leechers) << std::endl
                   << "seeders: " << __builtin_bswap32(response.seeders)
                   << std::endl;
+        for (int i = 0; i < (nbRecv - 20) / 6; i++)
+        {
+          for (int j = 0; j < 4; j++)
+          {
+            unsigned b = response.peer_infos[i * 6 + j];
+            std::cout << b;
+            if (j != 3)
+              std::cout << ".";
+          }
+          unsigned int port = 256 * response.peer_infos[i * 6 + 4];
+          port += response.peer_infos[i * 6 + 5];
+          std::cout << ":" << port << std::endl;
+        }
       }
       else
       {
