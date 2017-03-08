@@ -105,6 +105,11 @@ namespace Network
   }
 
   // Getter
+  std::vector<std::string> Torrent::getAnnounceList() const
+  {
+    return announceList_;
+  }
+
   std::string Torrent::getInfoHash() const
   {
     return infoHash_;
