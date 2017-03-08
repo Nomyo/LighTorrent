@@ -1,6 +1,6 @@
 #include <ostream>
 
-namespace core
+namespace Core
 {
   enum ColorCode
   {

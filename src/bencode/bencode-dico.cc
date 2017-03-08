@@ -30,9 +30,9 @@ namespace BEncode
 
   void BEncodeDictionnary::print(std::ostream& str) const
   {
-    core::ColorModifier clgreen(core::ColorCode::FG_LIGHT_GREEN);
-    core::ColorModifier clred(core::ColorCode::FG_LIGHT_YELLOW);
-    core::ColorModifier cldef(core::ColorCode::FG_DEFAULT);
+    Core::ColorModifier clgreen(Core::ColorCode::FG_LIGHT_GREEN);
+    Core::ColorModifier clred(Core::ColorCode::FG_LIGHT_YELLOW);
+    Core::ColorModifier cldef(Core::ColorCode::FG_DEFAULT);
 
     str << "{\n\t";
     int tmp = 0;

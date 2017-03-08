@@ -3,18 +3,12 @@
 namespace Core
 {
   URLUtils::URLUtils()
-    : peerId_("-LHT01-1234568765011")
   { }
 
-
-  URLUtils::URLUtils(const std::string& peerId)
-    : peerId_(peerId)
-  { }
 
   void URLUtils::init(const BDico& metaInfo)
   {
     trackerBaseUrl_ = getFromDico<BString, std::string>(metaInfo, "announce");
-    infoHash_ = percentEncode(getInfoHash(metaInfo));
   }
 
   std::string URLUtils::percentEncode(const std::string& str)
@@ -42,33 +36,14 @@ namespace Core
     return tmp.str();
   }
 
-  std::string URLUtils::getInfoHash(const BDico& metaInfo)
-  {
-    BDico infDico = getType<BType_ptr, BDico>(metaInfo.get("info"));
-
-    std::string encodedDico = infDico.bEncode();
-    std::string hash;
-    unsigned char outBuffer[20];
-    const unsigned char *inBuffer = (const unsigned char *)encodedDico.c_str();
-
-    SHA1(inBuffer, encodedDico.size(), outBuffer);
-
-    for (int i = 0; i < 20; ++i) {
-      hash += outBuffer[i];
-    }
-
-    return hash;
-  }
-
-  std::string URLUtils::generateURL(const Torrent& torrent)
+  std::string URLUtils::generateURL(const Network::Torrent& torrent)
   {
     init(torrent.getMetaInfo());
-
     std::stringstream url;
 
     url << trackerBaseUrl_  << "?";
-    url << "info_hash=" << infoHash_ << "&";
-    url << "peer_id=" << peerId_ << "&";
+    url << "info_hash=" << percentEncode(torrent.getInfoHash()) << "&";
+    url << "peer_id=" << torrent.getPeerId() << "&";
     url << "left=" << torrent.getLeft() << "&";
     url << "compact=1" << "&";
     url << "event=started";

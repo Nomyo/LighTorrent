@@ -2,19 +2,29 @@
 
 #include "../bencode/bencode-dico.hh"
 #include "../bencode/bencode-utils.hh"
+#include <openssl/sha.h>
 
-namespace Core
+namespace Network
 {
   using namespace BEncode;
 
   class Torrent
   {
   public:
+    // Constructor & Destructor
     Torrent(const BDico& metaInfo);
     ~Torrent() = default;
 
+    // Action
     void init();
+    void computeInfoHash(BDico infoDico);
+    void computeEncodedInfoHash();
+    void computeAnnounce();
+    void dump();
 
+    // Getter
+    std::string getInfoHash() const;
+    std::string getPeerId() const;
     BDico getMetaInfo() const;
     long int getPort() const;
     long long int getUploaded() const;
@@ -22,6 +32,12 @@ namespace Core
     long long int getLeft() const;
 
   private:
+    std::vector<std::string> announceList_;
+
+    std::string infoHash_;
+    std::string encodedInfoHash_;
+    std::string peerId_;
+
     BDico metaInfo_;
     long int port_;
     long long int uploaded_;
@@ -29,4 +45,4 @@ namespace Core
     long long int left_;
   };
 
-} // namespace Core
+} // namespace Network

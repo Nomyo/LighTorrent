@@ -7,7 +7,7 @@
 #include <vector>
 
 #include "tracker-info.hh"
-#include "../core/torrent.hh"
+#include "torrent.hh"
 #include "../core/url-utils.hh"
 #include "ip-address.hh"
 
@@ -58,7 +58,7 @@ namespace NetworkDriver
   class UdpDriver
   {
     using TrackerInfo = TrackerInfo::TrackerInfo;
-    using Torrent = Core::Torrent;
+    using Torrent = Network::Torrent;
 
     public:
       // Ctor & Dtor
@@ -76,6 +76,6 @@ namespace NetworkDriver
   };
 
   struct connectionRequest createRequestAnnounce(int transactionId);
-  struct announceRequest createAnnounceRequest(Core::Torrent *t, uint64_t connectionId,
+  struct announceRequest createAnnounceRequest(Network::Torrent *t, uint64_t connectionId,
                                                uint32_t transactionId);
 }

@@ -150,12 +150,11 @@ namespace NetworkDriver
     return cr;
   }
 
-  struct announceRequest createAnnounceRequest(Core::Torrent *t, uint64_t connectionId,
+  struct announceRequest createAnnounceRequest(Network::Torrent *t, uint64_t connectionId,
       uint32_t transactionId)
   {
-    Core::URLUtils urlUtils;
-    std::string test = urlUtils.getInfoHash(t->getMetaInfo());
-    std::string peer_id = "-LHT01-1234568765011";
+    std::string test = t->getInfoHash();
+    std::string peer_id = t->getPeerId();
 
     struct announceRequest ar;
     ar.connectionId = connectionId;
@@ -165,9 +164,9 @@ namespace NetworkDriver
       ar.info_hash[i] = test[i];
     for (int i = 0; i < 20; i++)
       ar.peer_id[i] = peer_id[i];
-    ar.downloaded = 0;
-    ar.left = 100000;
-    ar.uploaded = 0;
+    ar.downloaded = t->getDownloaded();
+    ar.left = t->getLeft();
+    ar.uploaded = t->getUploaded();
     ar.event = 0;
     ar.ip = 0;
     ar.key = 0;
