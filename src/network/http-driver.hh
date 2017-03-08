@@ -5,7 +5,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <sstream>
-#include <list>
+#include <vector>
 
 #include "../bencode/fwd.hh"
 #include "../bencode/bencode-driver.hh"
@@ -29,7 +29,7 @@ namespace NetworkDriver
       HttpDriver();
       ~HttpDriver();
 
-      std::list<Peer> announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
+      std::vector<Peer> announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
       int sendRequest(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
       std::string getResult();
 

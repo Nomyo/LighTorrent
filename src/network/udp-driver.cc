@@ -62,9 +62,9 @@ namespace NetworkDriver
     return response.connectionId;
   }
 
-  std::list<Peer> UdpDriver::tryAnnounce(uint64_t connectionId)
+  std::vector<Peer> UdpDriver::tryAnnounce(uint64_t connectionId)
   {
-    std::list<Peer> peers;
+    std::vector<Peer> peers;
     struct announceRequest ar = createAnnounceRequest(torrent_, connectionId);
     struct announceResponse response;
 
@@ -117,9 +117,9 @@ namespace NetworkDriver
     return peers;
   }
 
-  std::list<Peer> UdpDriver::buildPeers(const uint8_t *peer_info, int nb_peers)
+  std::vector<Peer> UdpDriver::buildPeers(const uint8_t *peer_info, int nb_peers)
   {
-    std::list<Peer> peers;
+    std::vector<Peer> peers;
     for (int i = 0; i < nb_peers; i++)
     {
       std::string ip;
@@ -133,18 +133,18 @@ namespace NetworkDriver
       }
       port += peer_info[i * 6 + 4] * 256;
       port += peer_info[i * 6 + 5];
-      peers.push_front(Peer(ip, port));
+      peers.push_back(Peer(ip, port));
     }
     return peers;
   }
 
-  std::list<Peer> UdpDriver::announce()
+  std::vector<Peer> UdpDriver::announce()
   {
     uint64_t connectionId = tryConnect();
     if (connectionId != 0)
       return tryAnnounce(connectionId);
     else
-      return std::list<Peer>();
+      return std::vector<Peer>();
   }
 
   struct connectionRequest createRequestAnnounce(int transactionId)

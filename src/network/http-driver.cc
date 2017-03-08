@@ -17,10 +17,10 @@ namespace NetworkDriver
       close(fd_);
   }
 
-  std::list<Peer> HttpDriver::announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo)
+  std::vector<Peer> HttpDriver::announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo)
   {
     using namespace BEncode;
-    std::list<Peer> peers;
+    std::vector<Peer> peers;
 
     if (sendRequest(urlParser, trackerInfo) != -1)
     {
@@ -43,7 +43,7 @@ namespace NetworkDriver
         }
         port += peer_info[i * 6 + 4] * 256;
         port += peer_info[i * 6 + 5];
-        peers.push_front(Peer(ip, port));
+        peers.push_back(Peer(ip, port));
       }
     }
 

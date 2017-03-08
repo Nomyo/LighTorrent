@@ -37,11 +37,7 @@ namespace Network
     trackDriver.announces();
 
     TrackerConnector::TrackerConnector tc(&torrent_);
-    std::string result = tc.announce(urlGenerated);
-    auto result_node = getType<BType_ptr, BDico>(driver.bDecode(result));
-    std::string peersBinary = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
-
-    getPeersFromBinary(peersBinary);
+    peers_ = tc.announce(urlGenerated);
     dumpPeers();
     connectToPeers();
   }

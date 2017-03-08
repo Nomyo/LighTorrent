@@ -4,7 +4,7 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string.h>
-#include <list>
+#include <vector>
 
 #include "tracker-info.hh"
 #include "torrent.hh"
@@ -66,12 +66,12 @@ namespace NetworkDriver
       UdpDriver(Torrent *t, const TrackerInfo& trackerInfo);
       ~UdpDriver();
 
-      std::list<Network::Peer> announce();
+      std::vector<Network::Peer> announce();
 
     private:
       uint64_t tryConnect();
-      std::list<Peer> tryAnnounce(uint64_t connectionId);
-      std::list<Peer> buildPeers(const uint8_t *peer_info, int nb_peers);
+      std::vector<Peer> tryAnnounce(uint64_t connectionId);
+      std::vector<Peer> buildPeers(const uint8_t *peer_info, int nb_peers);
 
       int fd_;
       Torrent *torrent_;

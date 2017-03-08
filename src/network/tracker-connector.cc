@@ -1,4 +1,3 @@
-#include <string.h>
 #include "tracker-connector.hh"
 
 namespace TrackerConnector
@@ -11,7 +10,7 @@ namespace TrackerConnector
   TrackerConnector::~TrackerConnector()
   {}
 
-  std::list<Network::Peer> TrackerConnector::announce(const std::string& url)
+  std::vector<Network::Peer> TrackerConnector::announce(const std::string& url)
   {
     urlParser_.parseUrl(url);
     trackerInfo_.setTrackerInfo(urlParser_.getHost(), urlParser_.getPort());

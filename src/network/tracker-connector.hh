@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <string>
-#include <list>
+#include <vector>
 
 #include "url-parser.hh"
 #include "tracker-info.hh"
@@ -29,7 +29,7 @@ namespace TrackerConnector
     ~TrackerConnector();
 
     // Actions
-    std::list<Peer> announce(const std::string& url);
+    std::vector<Peer> announce(const std::string& url);
 
   private:
     UrlParser urlParser_;
