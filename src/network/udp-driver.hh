@@ -4,10 +4,12 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string.h>
+#include <vector>
 
 #include "tracker-info.hh"
 #include "../core/torrent.hh"
 #include "../core/url-utils.hh"
+#include "ip-address.hh"
 
 namespace NetworkDriver
 {

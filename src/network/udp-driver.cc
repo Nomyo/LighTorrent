@@ -31,14 +31,19 @@ namespace NetworkDriver
 
       nbAttempt++;
       int nbSend = sendto(fd_, &request, sizeof (request), 0,
-                          (struct sockaddr *)&trackerInfo_.getServerAddress(),
-                          sizeof (trackerInfo_.getServerAddress()));
+          (struct sockaddr *)&trackerInfo_.getServerAddress(),
+          sizeof (trackerInfo_.getServerAddress()));
+      if (nbSend == -1)
+      {
+        std::cerr << "Could not send connect request to tracker..." << std::endl;
+        return -1;
+      }
       std::cout << "connecting... (attempt " << nbAttempt << "...)" << std::endl;
 
       socklen_t res = 4;
       int nbRecv = recvfrom(fd_, &response, sizeof (response), 0,
-                            (struct sockaddr *)&trackerInfo_.getServerAddress(),
-                            &res);
+          (struct sockaddr *)&trackerInfo_.getServerAddress(),
+          &res);
 
       if (nbRecv != -1)
         receivedPackets = true;
@@ -48,7 +53,6 @@ namespace NetworkDriver
 
     if (receivedPackets)
     {
-      std::cout << "received response!" << std::endl;
       std::cout << "action: " << response.action << "\n";
       std::cout << "transactionId: " << response.transactionId << "\n";
       std::cout << "connectionId: " << response.connectionId << "\n";
@@ -60,7 +64,7 @@ namespace NetworkDriver
   int UdpDriver::tryAnnounce(uint64_t connectionId, uint32_t transactionId)
   {
     struct announceRequest ar = createAnnounceRequest(torrent_, connectionId,
-                                                      transactionId);
+        transactionId);
     struct announceResponse response;
 
     bool received2 = false;
@@ -69,39 +73,50 @@ namespace NetworkDriver
     while (!received2)
     {
 
-     int nbSend = sendto(fd_, &ar, sizeof (ar), 0,
-                        (struct sockaddr *)&trackerInfo_.getServerAddress(),
-                        sizeof (trackerInfo_.getServerAddress()));
+      int nbSend = sendto(fd_, &ar, sizeof (ar), 0,
+          (struct sockaddr *)&trackerInfo_.getServerAddress(),
+          sizeof (trackerInfo_.getServerAddress()));
+      if (nbSend == -1)
+      {
+        std::cerr << "Could not send announce message to tracker..." << std::endl;
+        return -1;
+      }
       std::cout << "announcing... (attempt " << nbAnnounce << "...)" << std::endl;
 
       socklen_t res = 4;
       int nbRecv = recvfrom(fd_, &response, sizeof (response), 0,
-                            (struct sockaddr *)&trackerInfo_.getServerAddress(),
-                            &res);
+          (struct sockaddr *)&trackerInfo_.getServerAddress(),
+          &res);
+
       if (nbRecv != -1)
       {
+        std::vector<ipAddress> ips;
         received2 = true;
         std::cout << "received " << nbRecv << " bytes" << std::endl;
         std::cout << "received response" << std::endl
-                  << "action: " << __builtin_bswap32(response.action) << std::endl
-                  << "tId: " << __builtin_bswap32(response.transactionId) << std::endl
-                  << "interval: " << __builtin_bswap32(response.interval) << std::endl
-                  << "leechers: " << __builtin_bswap32(response.leechers) << std::endl
-                  << "seeders: " << __builtin_bswap32(response.seeders)
-                  << std::endl;
+          << "action: " << __builtin_bswap32(response.action) << std::endl
+          << "tId: " << __builtin_bswap32(response.transactionId) << std::endl
+          << "interval: " << __builtin_bswap32(response.interval) << std::endl
+          << "leechers: " << __builtin_bswap32(response.leechers) << std::endl
+          << "seeders: " << __builtin_bswap32(response.seeders)
+          << std::endl;
         for (int i = 0; i < (nbRecv - 20) / 6; i++)
         {
+          struct ipAddress ip;
           for (int j = 0; j < 4; j++)
           {
             unsigned b = response.peer_infos[i * 6 + j];
-            std::cout << b;
+            ip.ip += std::to_string(b);
             if (j != 3)
-              std::cout << ".";
+              ip.ip += ".";
           }
           unsigned int port = 256 * response.peer_infos[i * 6 + 4];
           port += response.peer_infos[i * 6 + 5];
-          std::cout << ":" << port << std::endl;
+          ip.port = port;
+          ips.push_back(ip);
         }
+        for (auto ip : ips)
+          std::cout << ip.ip << ":" << ip.port << std::endl;
       }
       else
       {
@@ -136,7 +151,7 @@ namespace NetworkDriver
   }
 
   struct announceRequest createAnnounceRequest(Core::Torrent *t, uint64_t connectionId,
-                                               uint32_t transactionId)
+      uint32_t transactionId)
   {
     Core::URLUtils urlUtils;
     std::string test = urlUtils.getInfoHash(t->getMetaInfo());
