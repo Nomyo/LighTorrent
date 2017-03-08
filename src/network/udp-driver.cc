@@ -131,12 +131,8 @@ namespace NetworkDriver
           ip += ".";
       }
       uint16_t port = 0;
-      port <<= 8;
-      port |= static_cast<uint8_t>(peer_info[i * 6 + 4]);
-      port <<= 8;
-      port |= static_cast<uint8_t>(peer_info[i * 6 + 4]);
-      //port += peer_info[i * 6 + 4] * 256;
-      //port += peer_info[i * 6 + 5];
+      port += peer_info[i * 6 + 4] * 256;
+      port += peer_info[i * 6 + 5];
       peers.push_back(Peer(ip, port));
     }
     return peers;
