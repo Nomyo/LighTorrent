@@ -12,6 +12,7 @@ namespace Network
   {
   public:
     // Constructor & Destructor
+    Torrent();
     Torrent(const BDico& metaInfo);
     ~Torrent() = default;
 

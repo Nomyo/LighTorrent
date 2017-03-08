@@ -4,6 +4,8 @@
 
 namespace Network
 {
+  Torrent::Torrent()
+  { }
 
   Torrent::Torrent(const BDico& metaInfo)
     : peerId_("-LHT01-1234568765011")
