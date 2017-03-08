@@ -9,6 +9,7 @@
 #include "network/tracker-connector.hh"
 #include "network/torrent.hh"
 #include "network/url-parser.hh"
+#include "network/client.hh"
 
 #include <stdio.h>
 
@@ -16,8 +17,8 @@ using namespace BEncode;
 
 int main(void)
 {
-  //std::string filename("tests/let-it-be.torrent")a; // upd torrent
   std::string filename("tests/secretFamilyRecipes.torrent"); // http torrent
+  //std::string filename("tests/let-it-be.torrent"); // udp torrent
 
   BEncodeDriver driver;
   auto node = driver.bDecodeFile(filename);
@@ -31,7 +32,6 @@ int main(void)
   std::string urlGenerated = url.generateURL(torrent);
   UrlParser::UrlParser up(urlGenerated);
   up.dump();
-
   std::cout << std::endl;
 
   TrackerConnector::TrackerConnector tc(&torrent);

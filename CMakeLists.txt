@@ -23,6 +23,8 @@ set(
   src/network/udp-driver.cc
   src/network/tracker-info.cc
   src/network/torrent.cc
+  src/network/peer.cc
+  src/network/client.cc
   )
 
 
