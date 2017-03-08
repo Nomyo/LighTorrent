@@ -17,8 +17,8 @@ using namespace BEncode;
 
 int main(void)
 {
-  std::string filename("tests/secretFamilyRecipes.torrent"); // http torrent
-  //std::string filename("tests/let-it-be.torrent"); // udp torrent
+   std::string filename("tests/secretFamilyRecipes.torrent"); // http torrent
+ // std::string filename("tests/let-it-be.torrent"); // udp torrent
 
   BEncodeDriver driver;
   auto node = driver.bDecodeFile(filename);
@@ -42,6 +42,6 @@ int main(void)
   Network::Client client(torrent);
   client.getPeersFromBinary(peersBinary);
   client.dumpPeers();
-
+  client.connectToPeers();
   return 0;
 }

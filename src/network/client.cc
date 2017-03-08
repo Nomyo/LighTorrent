@@ -43,20 +43,29 @@ namespace Network
   void Client::connectToPeers()
   {
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    fcntl(sockfd, F_SETFL, O_NONBLOCK);
 
     struct sockaddr_in remoteaddr;
     remoteaddr.sin_family = AF_INET;
     remoteaddr.sin_addr.s_addr = inet_addr(peers_[0].getIp().c_str());
     remoteaddr.sin_port = peers_[0].getPort();
 
+    struct timeval tv;
+    tv.tv_sec = 2;
+    tv.tv_usec = 0;
+    if (setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
+      std::cerr << "Could not set timeout to udp socket..." << std::endl;
+
     if (connect(sockfd, (struct sockaddr *)&remoteaddr, sizeof(remoteaddr)) < 0)
     {
-      std::cout << "failed to connect to peers";
+      std::cout << "failed to connect to peers : ";
       peers_[0].dump();
       std::cout << std::endl;
     }
     else
       std::cout << "YEAEHAEHAYEHAEYAEH" << std::endl;
+
+    close(sockfd);
   }
 
   void Client::dumpPeers()
