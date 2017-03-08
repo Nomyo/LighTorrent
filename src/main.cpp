@@ -38,7 +38,7 @@ int main(void)
   std::cout << std::endl;
 
   TrackerConnector::TrackerConnector tc(&torrent);
-  tc.sendRequest(urlGenerated);
+  tc.announce(urlGenerated);
   //if (tc.sendRequest(urlGenerated))
     //std::cout << "result_body: " << tc.getResult() << "\n" << std::endl;
 

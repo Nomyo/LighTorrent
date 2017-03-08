@@ -11,7 +11,7 @@ namespace TrackerConnector
   TrackerConnector::~TrackerConnector()
   {}
 
-  int TrackerConnector::sendRequest(const std::string& url)
+  std::string TrackerConnector::announce(const std::string& url)
   {
     urlParser_.parseUrl(url);
     trackerInfo_.setTrackerInfo(urlParser_.getHost(), urlParser_.getPort());
@@ -20,19 +20,14 @@ namespace TrackerConnector
     {
       HttpDriver httpDriver;
       httpDriver.sendRequest(urlParser_, trackerInfo_);
-      result_ = httpDriver.getResult();
-      return 1;
+      return httpDriver.getResult();
     }
     else
     {
       UdpDriver udpDriver(torrent_);
       udpDriver.sendRequest(trackerInfo_);
-      return 1;
+      return "";
     }
-  }
 
-  std::string TrackerConnector::getResult() const
-  {
-    return result_;
   }
 }

@@ -26,7 +26,7 @@ namespace TrackerConnector
     ~TrackerConnector();
 
     // Actions
-    int sendRequest(const std::string& url);
+    std::string announce(const std::string& url);
 
     // Accessors
     std::string getResult() const;
