@@ -63,14 +63,15 @@ namespace NetworkDriver
 
     public:
       // Ctor & Dtor
-      UdpDriver(Torrent *t);
+      UdpDriver(Torrent *t, const TrackerInfo& trackerInfo);
       ~UdpDriver();
 
-      std::list<Network::Peer> announce(const TrackerInfo& trackerInfo);
+      std::list<Network::Peer> announce();
 
     private:
       uint64_t tryConnect();
       std::list<Peer> tryAnnounce(uint64_t connectionId);
+      std::list<Peer> buildPeers(const uint8_t *peer_info, int nb_peers);
 
       int fd_;
       Torrent *torrent_;
@@ -79,7 +80,6 @@ namespace NetworkDriver
 
   struct connectionRequest createRequestAnnounce(int transactionId);
   struct announceRequest createAnnounceRequest(Network::Torrent *t,
-                                                uint64_t connectionId,
-                                                uint32_t transactionId);
+                                                uint64_t connectionId);
   void setSocketTimeout(int fd);
 }

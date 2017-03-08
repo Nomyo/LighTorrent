@@ -24,8 +24,8 @@ namespace TrackerConnector
     }
     else
     {
-      UdpDriver udpDriver(torrent_);
-      udpDriver.announce(trackerInfo_);
+      UdpDriver udpDriver(torrent_, trackerInfo_);
+      udpDriver.announce();
       return "";
     }
 
