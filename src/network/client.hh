@@ -3,6 +3,7 @@
 #include "peer.hh"
 #include "torrent.hh"
 #include "tracker-connector.hh"
+#include "tracker-driver.hh"
 #include "url-parser.hh"
 
 #include "../bencode/bencode-driver.hh"

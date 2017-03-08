@@ -18,6 +18,9 @@ namespace Network
     TrackerDriver(Torrent *t);
     ~TrackerDriver();
 
+    void createConnectors();
+    void announces() const;
+
   private:
     Torrent *torrent_;
     std::vector<TrackerConnector> trackConnectors_;

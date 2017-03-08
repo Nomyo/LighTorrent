@@ -24,15 +24,19 @@ namespace Network
       return;
     }
 
-    Network::Torrent torrent(getType<BType_ptr, BDico>(decodedFile));
+    torrent_ = (getType<BType_ptr, BDico>(decodedFile));
 
     Core::URLUtils url;
-    std::string urlGenerated = url.generateURL(torrent);
+    std::string urlGenerated = url.generateURL(torrent_);
     UrlParser::UrlParser up(urlGenerated);
     up.dump();
     std::cout << std::endl;
 
-    TrackerConnector::TrackerConnector tc(&torrent);
+    TrackerDriver trackDriver(&torrent_);
+    trackDriver.createConnectors();
+    trackDriver.announces();
+
+    TrackerConnector::TrackerConnector tc(&torrent_);
     std::string result = tc.announce(urlGenerated);
     auto result_node = getType<BType_ptr, BDico>(driver.bDecode(result));
     std::string peersBinary = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
