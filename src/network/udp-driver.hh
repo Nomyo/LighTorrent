@@ -4,12 +4,12 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #include <string.h>
-#include <vector>
+#include <list>
 
 #include "tracker-info.hh"
 #include "torrent.hh"
+#include "peer.hh"
 #include "../core/url-utils.hh"
-#include "ip-address.hh"
 
 namespace NetworkDriver
 {
@@ -59,17 +59,19 @@ namespace NetworkDriver
   {
     using TrackerInfo = TrackerInfo::TrackerInfo;
     using Torrent = Network::Torrent;
+    using Peer = Network::Peer;
 
     public:
       // Ctor & Dtor
       UdpDriver(Torrent *t);
       ~UdpDriver();
 
-      int sendRequest(const TrackerInfo& trackerInfo);
-      int tryConnect();
-      int tryAnnounce(uint64_t connectionId, uint32_t transactionId);
+      std::list<Network::Peer> announce(const TrackerInfo& trackerInfo);
 
     private:
+      uint64_t tryConnect();
+      std::list<Peer> tryAnnounce(uint64_t connectionId);
+
       int fd_;
       Torrent *torrent_;
       TrackerInfo trackerInfo_;

@@ -2,6 +2,8 @@
 
 namespace NetworkDriver
 {
+  using Peer = Network::Peer;
+
   UdpDriver::UdpDriver(Torrent *t)
   {
     torrent_ = t;
@@ -10,7 +12,7 @@ namespace NetworkDriver
   UdpDriver::~UdpDriver()
   {}
 
-  int UdpDriver::tryConnect()
+  uint64_t UdpDriver::tryConnect()
   {
     std::cout << "requesting udp tracker..." << std::endl;
 
@@ -58,13 +60,14 @@ namespace NetworkDriver
       std::cout << "connectionId: " << response.connectionId << "\n";
     }
 
-    return tryAnnounce(response.connectionId, response.transactionId);
+    return response.connectionId;
   }
 
-  int UdpDriver::tryAnnounce(uint64_t connectionId, uint32_t transactionId)
+  std::list<Peer> UdpDriver::tryAnnounce(uint64_t connectionId)
   {
+    std::list<Peer> peers;
     struct announceRequest ar = createAnnounceRequest(torrent_, connectionId,
-        transactionId);
+        1500);
     struct announceResponse response;
 
     bool received2 = false;
@@ -79,7 +82,7 @@ namespace NetworkDriver
       if (nbSend == -1)
       {
         std::cerr << "Could not send announce message to tracker..." << std::endl;
-        return -1;
+        return peers;
       }
       std::cout << "announcing... (attempt " << nbAnnounce << "...)" << std::endl;
 
@@ -90,7 +93,6 @@ namespace NetworkDriver
 
       if (nbRecv != -1)
       {
-        std::vector<ipAddress> ips;
         received2 = true;
         std::cout << "received " << nbRecv << " bytes" << std::endl;
         std::cout << "received response" << std::endl
@@ -102,21 +104,20 @@ namespace NetworkDriver
           << std::endl;
         for (int i = 0; i < (nbRecv - 20) / 6; i++)
         {
-          struct ipAddress ip;
+          std::string ip;
           for (int j = 0; j < 4; j++)
           {
             unsigned b = response.peer_infos[i * 6 + j];
-            ip.ip += std::to_string(b);
+            ip += std::to_string(b);
             if (j != 3)
-              ip.ip += ".";
+              ip += ".";
           }
           unsigned int port = 256 * response.peer_infos[i * 6 + 4];
           port += response.peer_infos[i * 6 + 5];
-          ip.port = port;
-          ips.push_back(ip);
+          peers.push_front(Peer(ip, port));
         }
-        for (auto ip : ips)
-          std::cout << ip.ip << ":" << ip.port << std::endl;
+        for (auto peer : peers)
+          peer.dump();
       }
       else
       {
@@ -130,14 +131,18 @@ namespace NetworkDriver
       }
       nbAnnounce++;
     }
-    return -1;
+    return peers;
   }
 
-  int UdpDriver::sendRequest(const TrackerInfo& trackerInfo)
+  std::list<Peer> UdpDriver::announce(const TrackerInfo& trackerInfo)
   {
     trackerInfo_ = trackerInfo;
 
-    return tryConnect();
+    uint64_t connectionId = tryConnect();
+    if (connectionId != 0)
+      return tryAnnounce(connectionId);
+    else
+      return std::list<Peer>();
   }
 
   struct connectionRequest createRequestAnnounce(int transactionId)
