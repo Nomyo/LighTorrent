@@ -110,6 +110,11 @@ namespace Network
     return announceList_;
   }
 
+  std::string Torrent::getEncodedInfoHash() const
+  {
+    return encodedInfoHash_;
+  }
+
   std::string Torrent::getInfoHash() const
   {
     return infoHash_;

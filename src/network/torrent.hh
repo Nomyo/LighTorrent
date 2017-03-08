@@ -25,6 +25,7 @@ namespace Network
 
     // Getter
     std::vector<std::string> getAnnounceList() const;
+    std::string getEncodedInfoHash() const;
     std::string getInfoHash() const;
     std::string getPeerId() const;
     BDico getMetaInfo() const;
