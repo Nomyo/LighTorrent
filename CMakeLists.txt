@@ -14,6 +14,7 @@ set(
   src/core/tracker-driver.cc
   src/core/torrent.cc
   src/core/client.cc
+  src/core/peer-driver.cc
   src/bencode/bencode-type.cc
   src/bencode/bencode-string.cc
   src/bencode/bencode-integer.cc
