@@ -4,7 +4,7 @@
 #include <netdb.h>
 #include <strings.h>
 
-namespace TrackerInfo
+namespace Network
 {
   class TrackerInfo
   {

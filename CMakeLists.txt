@@ -11,6 +11,9 @@ set(
 
   src/main.cpp
   src/core/url-utils.cc
+  src/core/tracker-driver.cc
+  src/core/torrent.cc
+  src/core/client.cc
   src/bencode/bencode-type.cc
   src/bencode/bencode-string.cc
   src/bencode/bencode-integer.cc
@@ -22,10 +25,7 @@ set(
   src/network/http-driver.cc
   src/network/udp-driver.cc
   src/network/tracker-info.cc
-  src/network/torrent.cc
   src/network/peer.cc
-  src/network/client.cc
-  src/network/tracker-driver.cc
   src/network/utils.cc
   )
 

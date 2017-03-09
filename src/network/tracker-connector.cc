@@ -1,6 +1,6 @@
 #include "tracker-connector.hh"
 
-namespace TrackerConnector
+namespace Network
 {
   TrackerConnector::TrackerConnector(Torrent *t)
   {

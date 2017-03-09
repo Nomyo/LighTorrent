@@ -4,24 +4,19 @@
 #include <string>
 #include <vector>
 
+#include "../core/torrent.hh"
+
 #include "url-parser.hh"
 #include "tracker-info.hh"
 #include "http-driver.hh"
 #include "udp-driver.hh"
-#include "torrent.hh"
 #include "peer.hh"
 
-namespace TrackerConnector
+namespace Network
 {
   class TrackerConnector
   {
-    using UrlProtocol = UrlParser::urlProtocol;
-    using UrlParser = UrlParser::UrlParser;
-    using TrackerInfo = TrackerInfo::TrackerInfo;
-    using HttpDriver = NetworkDriver::HttpDriver;
-    using UdpDriver = NetworkDriver::UdpDriver;
-    using Torrent = Network::Torrent;
-    using Peer = Network::Peer;
+    using Torrent = Core::Torrent;
 
   public:
     // Ctor & Dtor

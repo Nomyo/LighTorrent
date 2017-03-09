@@ -1,6 +1,6 @@
 #include "http-driver.hh"
 
-namespace NetworkDriver
+namespace Network
 {
   using Peer = Network::Peer;
 
@@ -30,28 +30,8 @@ namespace NetworkDriver
       std::string peersBinary = getDecode<BType_ptr, BString, std::string>(result_node.get("peers"));
       std::cout << peersBinary << std::endl;
 
-      peers = NetworkUtils::buildPeers((const uint8_t *)peersBinary.c_str(),
-                                        ((peersBinary.length() - 1) / 6));
-      //const unsigned char *peer_info = (const unsigned char *)peersBinary.c_str();
-      //for (size_t i = 0; i < ((peersBinary.length() - 1) / 6); i++)
-      //{
-      //  std::string ip;
-      //  for (int j = 0; j < 4; j++)
-      //  {
-      //    unsigned int b = peer_info[i * 6 + j];
-      //    ip += std::to_string(b);
-      //    if (j != 3)
-      //      ip += ".";
-      //  }
-      //  uint16_t port = 0;
-      //  port += peer_info[i * 6 + 4] * 256;
-      //  port += peer_info[i * 6 + 5];
-      //  peers.push_back(Peer(ip, port));
-      //}
+      peers = buildPeers((const uint8_t *)peersBinary.c_str(), ((peersBinary.length() - 1) / 6));
     }
-
-    //for (auto peer : peers)
-    //  peer.dump();
 
     return peers;
   }

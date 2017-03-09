@@ -1,18 +1,5 @@
 #pragma once
 
-#include "peer.hh"
-#include "torrent.hh"
-#include "tracker-connector.hh"
-#include "tracker-driver.hh"
-#include "url-parser.hh"
-
-#include "../bencode/bencode-driver.hh"
-#include "../bencode/bencode-utils.hh"
-#include "../bencode/fwd.hh"
-
-#include "../core/url-utils.hh"
-
-
 #include <iostream>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -24,9 +11,22 @@
 #include <sys/epoll.h>
 #include <map>
 
+#include "../network/peer.hh"
+#include "../network/tracker-connector.hh"
+#include "../network/url-parser.hh"
+
+#include "../bencode/bencode-driver.hh"
+#include "../bencode/bencode-utils.hh"
+#include "../bencode/fwd.hh"
+
+#include "../core/url-utils.hh"
+#include "../core/tracker-driver.hh"
+
+#include "torrent.hh"
+
 using namespace BEncode;
 
-namespace Network
+namespace Core
 {
   class Client
   {
@@ -44,7 +44,7 @@ namespace Network
   private:
     // laters we would have a list of torrent
     // each torrent mapped to a list of peer
-    std::vector<Peer> peers_;
+    std::vector<Network::Peer> peers_;
     Torrent torrent_;
   };
 

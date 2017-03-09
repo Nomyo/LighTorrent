@@ -1,6 +1,6 @@
 #include "client.hh"
 
-namespace Network
+namespace Core
 {
 
   Client::Client()
@@ -28,7 +28,7 @@ namespace Network
 
     Core::URLUtils url;
     std::string urlGenerated = url.generateURL(torrent_);
-    UrlParser::UrlParser up(urlGenerated);
+    Network::UrlParser up(urlGenerated);
     up.dump();
     std::cout << std::endl;
 
@@ -36,7 +36,7 @@ namespace Network
     trackDriver.createConnectors();
     trackDriver.announces();
 
-    TrackerConnector::TrackerConnector tc(&torrent_);
+    Network::TrackerConnector tc(&torrent_);
     peers_ = tc.announce(urlGenerated);
     dumpPeers();
     connectToPeers();

@@ -3,9 +3,9 @@
 #include <string>
 #include <iostream>
 
-namespace UrlParser
+namespace Network
 {
-  enum urlProtocol
+  enum UrlProtocol
   {
     Http,
     Udp
@@ -23,7 +23,7 @@ namespace UrlParser
 
       // Accessors
       std::string getHost() const;
-      urlProtocol getProtocol() const;
+      UrlProtocol getProtocol() const;
       int getPort() const;
       std::string getBody() const;
       std::string getBaseUrl() const;
@@ -33,7 +33,7 @@ namespace UrlParser
 
     private:
       std::string baseUrl_;
-      urlProtocol protocol_;
+      UrlProtocol protocol_;
       std::string host_;
       int port_;
       std::string body_;

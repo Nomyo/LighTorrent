@@ -1,6 +1,6 @@
 #include "tracker-driver.hh"
 
-namespace Network
+namespace Core
 {
   TrackerDriver::TrackerDriver(Torrent *t)
     : torrent_(t)

@@ -2,7 +2,7 @@
 #include "../core/color.hh"
 #include "../core/url-utils.hh"
 
-namespace Network
+namespace Core
 {
   Torrent::Torrent()
   { }

@@ -3,15 +3,15 @@
 #include <iostream>
 #include <string>
 
-#include "tracker-connector.hh"
+#include "../network/tracker-connector.hh"
+
 #include "torrent.hh"
 
-namespace Network
+namespace Core
 {
   class TrackerDriver
   {
-    using TrackerConnector = TrackerConnector::TrackerConnector;
-    using Torrent = Network::Torrent;
+    using TrackerConnector = Network::TrackerConnector;
 
   public:
     // Ctor & Dtor

@@ -36,7 +36,7 @@ namespace Core
     return tmp.str();
   }
 
-  std::string URLUtils::generateURL(const Network::Torrent& torrent)
+  std::string URLUtils::generateURL(const Torrent& torrent)
   {
     init(torrent.getMetaInfo());
     std::stringstream url;

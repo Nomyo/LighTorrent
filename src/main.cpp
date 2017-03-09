@@ -1,8 +1,8 @@
-#include "network/client.hh"
+#include "core/client.hh"
 
 int main(void)
 {
-  Network::Client client;
+  Core::Client client;
   client.download("tests/l.torrent");
   //client.download("tests/secretFamilyRecipes.torrent");
 

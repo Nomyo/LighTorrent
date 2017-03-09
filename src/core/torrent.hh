@@ -1,10 +1,11 @@
 #pragma once
 
-#include "../bencode/bencode-dico.hh"
-#include "../bencode/bencode-utils.hh"
 #include <openssl/sha.h>
 
-namespace Network
+#include "../bencode/bencode-dico.hh"
+#include "../bencode/bencode-utils.hh"
+
+namespace Core
 {
   using namespace BEncode;
 

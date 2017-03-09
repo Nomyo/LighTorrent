@@ -1,14 +1,15 @@
 #pragma once
 
-#include "../bencode/bencode-dico.hh"
-#include "../bencode/bencode-utils.hh"
-#include "../network/torrent.hh"
-
 #include <memory>
 #include <iostream>
 #include <fstream>
 #include <iomanip>
 #include <ctype.h>
+
+#include "../bencode/bencode-dico.hh"
+#include "../bencode/bencode-utils.hh"
+
+#include "torrent.hh"
 
 namespace Core
 {
@@ -22,7 +23,7 @@ namespace Core
     void init(const BDico& metaInfo);
 
     std::string percentEncode(const std::string& str);
-    std::string generateURL(const Network::Torrent& torrent);
+    std::string generateURL(const Torrent& torrent);
 
   private:
     std::string trackerBaseUrl_;

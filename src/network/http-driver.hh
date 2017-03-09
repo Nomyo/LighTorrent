@@ -10,6 +10,7 @@
 #include "../bencode/fwd.hh"
 #include "../bencode/bencode-driver.hh"
 #include "../bencode/bencode-utils.hh"
+
 #include "url-parser.hh"
 #include "tracker-info.hh"
 #include "peer.hh"
@@ -17,14 +18,10 @@
 
 #define READ_BUF_SIZE 6000
 
-namespace NetworkDriver
+namespace Network
 {
   class HttpDriver
   {
-    using UrlParser = UrlParser::UrlParser;
-    using TrackerInfo = TrackerInfo::TrackerInfo;
-    using Peer = Network::Peer;
-
     public:
       // Ctor & Dtor
       HttpDriver();

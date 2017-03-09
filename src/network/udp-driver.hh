@@ -6,13 +6,14 @@
 #include <string.h>
 #include <vector>
 
-#include "tracker-info.hh"
-#include "torrent.hh"
-#include "peer.hh"
+#include "../core/torrent.hh"
 #include "../core/url-utils.hh"
+
+#include "tracker-info.hh"
+#include "peer.hh"
 #include "utils.hh"
 
-namespace NetworkDriver
+namespace Network
 {
   struct connectionRequest
   {
@@ -58,9 +59,7 @@ namespace NetworkDriver
 
   class UdpDriver
   {
-    using TrackerInfo = TrackerInfo::TrackerInfo;
-    using Torrent = Network::Torrent;
-    using Peer = Network::Peer;
+    using Torrent = Core::Torrent;
 
     public:
       // Ctor & Dtor
@@ -72,7 +71,6 @@ namespace NetworkDriver
     private:
       uint64_t tryConnect();
       std::vector<Peer> tryAnnounce(uint64_t connectionId);
-      std::vector<Peer> buildPeers(const uint8_t *peer_info, int nb_peers);
 
       int fd_;
       Torrent *torrent_;
@@ -80,7 +78,6 @@ namespace NetworkDriver
   };
 
   struct connectionRequest createRequestAnnounce(int transactionId);
-  struct announceRequest createAnnounceRequest(Network::Torrent *t,
-                                                uint64_t connectionId);
+  struct announceRequest createAnnounceRequest(Core::Torrent *t, uint64_t connectionId);
   void setSocketTimeout(int fd);
 }

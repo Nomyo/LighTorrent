@@ -1,6 +1,6 @@
 #include "tracker-info.hh"
 
-namespace TrackerInfo
+namespace Network
 {
   TrackerInfo::TrackerInfo()
   {}

@@ -1,6 +1,6 @@
 #include "url-parser.hh"
 
-namespace UrlParser
+namespace Network
 {
   UrlParser::UrlParser()
   {}
@@ -42,16 +42,16 @@ namespace UrlParser
     body = url.substr(counter, url.length() - counter);
 
     if (protocol == "http")
-      protocol_ = urlProtocol::Http;
+      protocol_ = UrlProtocol::Http;
     else
-      protocol_ = urlProtocol::Udp;
+      protocol_ = UrlProtocol::Udp;
 
     host_ = host;
     port_ = atoi(port.c_str());
     body_ = body;
   }
 
-  urlProtocol UrlParser::getProtocol() const
+  UrlProtocol UrlParser::getProtocol() const
   {
     return protocol_;
   }

@@ -4,7 +4,7 @@
 #define NB_RETRY 15
 #define TIMEOUT_SEC 2
 
-namespace NetworkDriver
+namespace Network
 {
   using Peer = Network::Peer;
 
@@ -70,7 +70,7 @@ namespace NetworkDriver
 
     bool receivedPackets = false;
     int nbAnnounce = 1;
-    //bzero(&arequest, sizeof (arequest));
+
     while (!receivedPackets && nbAnnounce < NB_RETRY)
     {
       int nbSend = sendto(fd_, &arequest, sizeof (arequest), 0,
@@ -100,7 +100,7 @@ namespace NetworkDriver
           << "seeders: " << __builtin_bswap32(aresponse.seeders)
           << std::endl;
 
-        peers = NetworkUtils::buildPeers(aresponse.peer_infos, (nbRecv - 20) / 6);
+        peers = buildPeers(aresponse.peer_infos, (nbRecv - 20) / 6);
       }
       else
       {
@@ -133,7 +133,7 @@ namespace NetworkDriver
     return cr;
   }
 
-  struct announceRequest createAnnounceRequest(Network::Torrent *t, uint64_t connectionId)
+  struct announceRequest createAnnounceRequest(Core::Torrent *t, uint64_t connectionId)
   {
     std::string info_hash = t->getInfoHash();
     std::string peer_id = t->getPeerId();
