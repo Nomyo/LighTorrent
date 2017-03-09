@@ -42,46 +42,14 @@ namespace Network
     connectToPeers();
   }
 
-  void Client::getPeersFromBinary(const std::string& binaryPeers)
-  {
-    const unsigned char *str = (const unsigned char *) binaryPeers.c_str();
-    int j = 0;
-    in_port_t port = 0;
-    std::string ip;
-
-    for (unsigned i = 0; i < binaryPeers.size(); ++i, ++j)
-    {
-      unsigned int b = str[i];
-
-      if (j == 4)
-	port = 256 * str[i];
-      else if (j == 5)
-      {
-	port += str[i];
-	peers_.push_back(Peer(ip, port));
-	port = 0;
-	j = -1;
-      }
-      else
-      {
-	if (i % 6)
-	  ip += ".";
-	else
-	  ip = "";
-	ip += std::to_string(b);
-      }
-    }
-  }
-
   void Client::connectToPeers()
   {
+    std::map<int, std::string> peer_fd;
+    int nbWatched = 0;
+    int epfd = epoll_create(150);
     for (auto peer : peers_)
     {
-      int valopt;
       int sockfd = socket(AF_INET, SOCK_STREAM, 0);
-      fd_set myset;
-      socklen_t lon;
-
       fcntl(sockfd, F_SETFL, O_NONBLOCK);
 
       struct sockaddr_in remoteaddr;
@@ -89,44 +57,77 @@ namespace Network
       remoteaddr.sin_addr.s_addr = inet_addr(peer.getIp().c_str());
       remoteaddr.sin_port = htons(peer.getPort());
 
-      struct timeval tv;
-
-      if (connect(sockfd, (struct sockaddr *)&remoteaddr, sizeof(remoteaddr)) < 0)
+      int res = connect(sockfd, (struct sockaddr *)&remoteaddr, sizeof (remoteaddr));
+      if (res == 0)
       {
-	if (errno == EINPROGRESS)
-	{
-	  tv.tv_sec = 1;
-	  tv.tv_usec = 0;
-
-	  FD_ZERO(&myset);
-	  FD_SET(sockfd, &myset);
-
-	  if (select(sockfd + 1, NULL, &myset, NULL, &tv) > 0)
-	  {
-	    lon = sizeof(int);
-	    getsockopt(sockfd, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon);
-	    if (valopt)
-	    {
-	      std::cout << "Peer : " << strerror(errno);
-	      peer.dump();
-	    }
-	    else
-	      std::cout << "connected !!!!!!!!!!!! " << std::endl;
-	  }
-	  else
-	  {
-	    std::cout << "Peer Timeout : ";
-	    peer.dump();
-	    std::cout << std::endl;
-	  }
-	}
-	else
-	  std::cout << strerror(errno);
+        std::cout << "Connected to " << peer.getIp() << ":" << peer.getPort() << std::endl;
+        close(sockfd);
+        continue;
       }
-
-      // blocking socket
-      fcntl(sockfd, F_SETFL, ~O_NONBLOCK);
+      else if (errno == EINPROGRESS)
+      {
+        nbWatched++;
+        peer_fd.insert(std::make_pair(sockfd, peer.getIp() + ":" + std::to_string(peer.getPort())));
+        struct epoll_event ev;
+        bzero(&ev, sizeof (struct epoll_event));
+        ev.events = EPOLLOUT | EPOLLERR | EPOLLHUP | EPOLLRDHUP;
+        ev.data.fd = sockfd;
+        epoll_ctl(epfd, EPOLL_CTL_ADD, sockfd, &ev);
+        continue;
+      }
+      else
+      {
+        std::cout << "Error while trying to connect to " << peer.getIp() << ":" << peer.getPort() << std::endl;
+        close(sockfd);
+        continue;
+      }
     }
+    struct epoll_event *events = (struct epoll_event *)calloc(15, sizeof (struct epoll_event));
+
+    while (nbWatched > 0)
+    {
+      int ndfs = epoll_wait(epfd, events, 15, -1);
+      for (int i = 0; i < ndfs; i++)
+      {
+        nbWatched--;
+        if (events[i].events & EPOLLERR
+            && events[i].events & EPOLLOUT)
+        {
+          std::string ip = "UNRESOLVED";
+          auto find = peer_fd.find(events[i].data.fd);
+          if (find != peer_fd.end())
+            ip = find->second;
+          std::cout << "Socket " << ip << " connection lost "
+            << "(" << events[i].events << ")"
+            "  >  " << (events[i].events & EPOLLERR)
+            << "  |  " << (events[i].events & EPOLLHUP)
+            << "  |  " << (events[i].events & EPOLLRDHUP)
+            << std::endl;
+          epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, &events[i]);
+          close(events[i].data.fd);
+          continue;
+        }
+        else if (events[i].events & EPOLLOUT)
+        {
+          struct sockaddr_in addr;
+          socklen_t addr_size = sizeof (struct sockaddr_in);
+          int res = getpeername(events[i].data.fd, (struct sockaddr *)&addr, &addr_size);
+          if (res == -1)
+            std::cout << "Error on getpeername " << strerror(errno) << std::endl;
+          char *clientip = new char[20];
+          strcpy(clientip, inet_ntoa(addr.sin_addr));
+
+          std::cout << "Socket " << clientip << ":" << ntohs(addr.sin_port) << " is connected! " << std::endl;
+          epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, &events[i]);
+          close(events[i].data.fd);
+          continue;
+        }
+        else
+          std::cout << "Unexpected condition..." << std::endl;
+      }
+    }
+
+    std::cout << "Finished!" << std::endl;
   }
 
   void Client::dumpPeers()

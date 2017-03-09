@@ -21,6 +21,8 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <fcntl.h>
+#include <sys/epoll.h>
+#include <map>
 
 using namespace BEncode;
 
