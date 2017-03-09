@@ -13,6 +13,7 @@
 #include "url-parser.hh"
 #include "tracker-info.hh"
 #include "peer.hh"
+#include "utils.hh"
 
 #define READ_BUF_SIZE 6000
 

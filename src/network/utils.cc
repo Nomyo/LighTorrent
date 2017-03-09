@@ -4,6 +4,7 @@ namespace NetworkUtils
 {
   std::vector<Network::Peer> buildPeers(const uint8_t *peers_info, int nb_peers)
   {
+    std::cout << "Building " << nb_peers << " peers..." << std::endl;
     std::vector<Network::Peer> peers;
     for (int i = 0; i < nb_peers; i++)
     {
