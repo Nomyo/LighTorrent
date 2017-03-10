@@ -28,12 +28,17 @@ namespace Core
     ~PeerDriver();
 
     void startLeeching();
+    void connectPeers();
+    void updatePeers();
     void dumpPeers() const;
 
   private:
-    std::vector<Network::Peer> peers_;
+    void initiateHandshake(struct epoll_event *event, int fd);
+
+    std::vector<Network::Peer> waitingPeers_;
     std::map<int, Network::Peer> pendingPeers_;
     std::map<int, Network::Peer> connectedPeers_;
     Torrent *torrent_;
+    int epfd_; // epoll fd
   };
 }
