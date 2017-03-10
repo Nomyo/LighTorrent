@@ -3,7 +3,7 @@ project(LighTorrent)
 
 #set(CMAKE_CXX_COMPILER "g++")
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -g -O0 -Wall -Wextra")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread -g -O0 -Wall -Wextra")
 
 set(
 

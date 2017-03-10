@@ -12,10 +12,15 @@
 #include <fcntl.h>
 #include <sys/epoll.h>
 #include <map>
+#include <thread>
+#include <mutex>
 
 #include "../network/peer.hh"
 #include "torrent.hh"
 #include "color.hh"
+
+#include "url-utils.hh"
+#include "../network/tracker-connector.hh"
 
 namespace Core
 {
@@ -31,10 +36,13 @@ namespace Core
     void connectPeers();
     void updatePeers();
     void dumpPeers() const;
+    void addNewPeers(std::vector<Network::Peer> peers);
 
   private:
     void initiateHandshake(struct epoll_event *event, int fd);
 
+    std::mutex eMutex_;
+    std::thread *updater_ = nullptr;
     std::vector<Network::Peer> waitingPeers_;
     std::map<int, Network::Peer> pendingPeers_;
     std::map<int, Network::Peer> connectedPeers_;

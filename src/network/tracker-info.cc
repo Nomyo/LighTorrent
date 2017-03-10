@@ -19,16 +19,19 @@ namespace Network
 
     if (server_ == nullptr)
       std::cerr << "Could not resolve host " << host << std::endl;
+    else
+    {
 
-    bzero((char *)&serverAddress_, sizeof (serverAddress_));
+      bzero((char *)&serverAddress_, sizeof (serverAddress_));
 
-    serverAddress_.sin_family = AF_INET;
+      serverAddress_.sin_family = AF_INET;
 
-    bcopy((char *)server_->h_addr,
+      bcopy((char *)server_->h_addr,
           (char *)&serverAddress_.sin_addr.s_addr,
           server_->h_length);
 
-    serverAddress_.sin_port = htons(port);
+      serverAddress_.sin_port = htons(port);
+    }
   }
 
   const struct sockaddr_in& TrackerInfo::getServerAddress() const
