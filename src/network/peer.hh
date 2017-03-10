@@ -40,6 +40,7 @@ namespace Network
     std::string getIp() const;
     in_port_t getPort() const;
     int getFd() const;
+    bool handshakeDone() const;
 
     //Setter
     void setTorrent(Core::Torrent* torrent);

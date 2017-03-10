@@ -26,10 +26,11 @@ namespace Network
     memcpy(hshake.peer_id, peer_id.c_str(), 20);
 
     // FIXME: RETURN SOMETHING TO LET THE PD REMOVE PEER
-    if (write(fd_, &hshake, sizeof (hshake)) < 0)
-      std::cerr << "Could not write request to peer \n";
-    else
-      std::cout << "Send handshake" << std::endl;
+    //if (write(fd_, &hshake, sizeof (hshake)) < 0)
+      //std::cerr << "Could not write request to peer \n";
+    //else
+      //std::cout << "Send handshake" << std::endl;
+    write(fd_, &hshake, sizeof (hshake));
   }
 
   void Peer::onReceive()
@@ -48,12 +49,12 @@ namespace Network
       ret = (struct handshake *)buffer;
       if (memcmp(ret->info_hash, torrent_->getInfoHash().c_str(), 20) == 0)
       {
-	std::cout << "Handshake Done" << std::endl;
+	//std::cout << "Handshake Done" << std::endl;
 	handshakeDone_ = true;
       }
     }
-    else
-      std::cout << "nothing received or Error" << std::endl;
+    //else
+      //std::cout << "nothing received or Error: " << strerror(errno) << std::endl;
 
   }
 
@@ -82,6 +83,11 @@ namespace Network
   int Peer::getFd() const
   {
     return fd_;
+  }
+
+  bool Peer::handshakeDone() const
+  {
+    return handshakeDone_;
   }
 
   void Peer::setTorrent(Core::Torrent* torrent)
