@@ -28,8 +28,35 @@ namespace Network
     // FIXME: RETURN SOMETHING TO LET THE PD REMOVE PEER
     if (write(fd_, &hshake, sizeof (hshake)) < 0)
       std::cerr << "Could not write request to peer \n";
+    else
+      std::cout << "Send handshake" << std::endl;
+  }
+
+  void Peer::onReceive()
+  {
+    if (!handshakeDone_)
+      onReceiveHandshake();
+  }
+
+  void Peer::onReceiveHandshake()
+  {
+    struct handshake *ret;
+    char buffer[sizeof (struct handshake)];
+    int recvN = recv(fd_, buffer, sizeof (struct handshake), 0);
+    if (recvN > 0)
+    {
+      ret = (struct handshake *)buffer;
+      if (memcmp(ret->info_hash, torrent_->getInfoHash().c_str(), 20) == 0)
+      {
+	std::cout << "Handshake Done" << std::endl;
+	handshakeDone_ = true;
+      }
+    }
+    else
+      std::cout << "nothing received or Error" << std::endl;
 
   }
+
 
   void Peer::dump() const
   {
@@ -60,6 +87,11 @@ namespace Network
   void Peer::setTorrent(Core::Torrent* torrent)
   {
     torrent_ = torrent;
+  }
+
+  void Peer::setFd(int fd)
+  {
+    fd_ = fd;
   }
 
 } // namespace Network

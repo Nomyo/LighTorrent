@@ -32,6 +32,7 @@ namespace Network
     // Action
     void tryHandshake();
     void onReceive();
+    void onReceiveHandshake();
 
     void dump() const;
 
@@ -42,6 +43,7 @@ namespace Network
 
     //Setter
     void setTorrent(Core::Torrent* torrent);
+    void setFd(int fd);
 
   private:
     Core::Torrent* torrent_;
