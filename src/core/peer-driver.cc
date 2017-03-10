@@ -21,6 +21,7 @@ namespace Core
     for (auto peer : peers_)
     {
       int sockfd = socket(AF_INET, SOCK_STREAM, 0);
+      pendingPeers_.insert(std::make_pair(sockfd, peer));
       fcntl(sockfd, F_SETFL, O_NONBLOCK);
 
       struct sockaddr_in remoteaddr;
@@ -89,8 +90,34 @@ namespace Core
           strcpy(clientip, inet_ntoa(addr.sin_addr));
 
           std::cout << "Socket " << clientip << ":" << ntohs(addr.sin_port) << " is connected! " << std::endl;
-          epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, &events[i]);
-          close(events[i].data.fd);
+
+	  // TEST HANDSHAKE
+	  connectedPeers_.insert(*pendingPeers_.find(events[i].data.fd));
+	  pendingPeers_.erase(events[i].data.fd);
+	  auto connectedPeerIt = connectedPeers_.find(events[i].data.fd);
+	  if (connectedPeerIt != connectedPeers_.end())
+	  {
+	    long arg = fcntl(events[i].data.fd, F_GETFL, NULL);
+	    arg &= (~O_NONBLOCK);
+	    fcntl(events[i].data.fd, F_SETFL, arg);
+
+	    struct timeval tv;
+	    tv.tv_sec = 0;
+	    tv.tv_usec = 500000;
+
+	    if (setsockopt(events[i].data.fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
+	      std::cout << "failed timeout" << std::endl;
+
+	    connectedPeerIt->second.setTorrent(torrent_);
+	    connectedPeerIt->second.setFd(events[i].data.fd);
+	    connectedPeerIt->second.tryHandshake();
+	    connectedPeerIt->second.onReceive();
+	  }
+
+          // END TEST HANSHAKE
+
+	  epoll_ctl(epfd, EPOLL_CTL_DEL, events[i].data.fd, &events[i]);
+	  close(events[i].data.fd);
           continue;
         }
         else

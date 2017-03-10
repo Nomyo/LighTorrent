@@ -31,6 +31,8 @@ namespace Core
 
   private:
     std::vector<Network::Peer> peers_;
+    std::map<int, Network::Peer> pendingPeers_;
+    std::map<int, Network::Peer> connectedPeers_;
     Torrent *torrent_;
   };
 }
