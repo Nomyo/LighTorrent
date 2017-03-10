@@ -18,8 +18,8 @@ namespace Core
     ~Message() { free(buffer_); };
 
     // Getters
-    char *getBuffer() { return buffer_; }
-    size_t getLength() { return length_; }
+    char *getBuffer() const { return buffer_; }
+    size_t getLength() const { return length_; }
 
   private:
     char *buffer_;

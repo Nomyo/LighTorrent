@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../core/torrent.hh"
+#include "../core/message-builder.hh"
 
 #include <string>
 #include <string.h>
@@ -33,6 +34,7 @@ namespace Network
 
     // Action
     void tryHandshake();
+    void toSend(const Core::Message& m);
     void onReceive();
     void onReceiveHandshake();
 

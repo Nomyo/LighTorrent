@@ -12,25 +12,13 @@ namespace Network
 
   void Peer::tryHandshake()
   {
-    struct handshake hshake;
+    Core::MessageBuilder mBuilder;
+    toSend(mBuilder.buildHandshake(*torrent_));
+  }
 
-    std::string info_hash = torrent_->getInfoHash();
-    std::string peer_id = torrent_->getPeerId();
-    std::string protocol = "BitTorrent protocol";
-
-    bzero(&hshake, sizeof (hshake));
-    hshake.pstrlen = 19;
-
-    memcpy(hshake.pstr, protocol.c_str(), 19);
-    memcpy(hshake.info_hash, info_hash.c_str(), 20);
-    memcpy(hshake.peer_id, peer_id.c_str(), 20);
-
-    // FIXME: RETURN SOMETHING TO LET THE PD REMOVE PEER
-    //if (write(fd_, &hshake, sizeof (hshake)) < 0)
-      //std::cerr << "Could not write request to peer \n";
-    //else
-      //std::cout << "Send handshake" << std::endl;
-    write(fd_, &hshake, sizeof (hshake));
+  void Peer::toSend(const Core::Message& m)
+  {
+    write(fd_, m.getBuffer(), m.getLength());
   }
 
   void Peer::onReceive()
