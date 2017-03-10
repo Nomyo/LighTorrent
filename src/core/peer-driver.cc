@@ -14,17 +14,17 @@ namespace Core
 
   PeerDriver::~PeerDriver()
   {
-    if (updater_)
-      updater_->join();
+    if (updater_.joinable())
+      updater_.join();
   }
 
   void PeerDriver::startLeeching()
   {
     connectPeers();
-    if (waitingPeers_.size() != 0)
-      updater_ = new std::thread(&PeerDriver::updatePeers, this);
+    //std::cout << "pending peers: " << pendingPeers_.size() << std::endl;
+    if (pendingPeers_.size() != 0)
+      updater_ = std::thread(&PeerDriver::updatePeers, this);
 
-    return;
     while (true)
     {
       if (pendingPeers_.size() == 0)
@@ -33,6 +33,7 @@ namespace Core
         std::string urlGenerated = url.generateURL(*torrent_);
         Network::TrackerConnector tc(torrent_);
         addNewPeers(tc.announce(urlGenerated));
+        connectPeers();
       }
     }
     std::cout << "Finished!" << std::endl;

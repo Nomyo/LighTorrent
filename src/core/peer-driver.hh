@@ -42,7 +42,7 @@ namespace Core
     void initiateHandshake(struct epoll_event *event, int fd);
 
     std::mutex eMutex_;
-    std::thread *updater_ = nullptr;
+    std::thread updater_;
     std::vector<Network::Peer> waitingPeers_;
     std::map<int, Network::Peer> pendingPeers_;
     std::map<int, Network::Peer> connectedPeers_;
