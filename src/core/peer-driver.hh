@@ -15,6 +15,7 @@
 
 #include "../network/peer.hh"
 #include "torrent.hh"
+#include "color.hh"
 
 namespace Core
 {

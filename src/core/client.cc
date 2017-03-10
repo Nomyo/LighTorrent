@@ -40,7 +40,7 @@ namespace Core
     Network::TrackerConnector tc(&torrent_);
     PeerDriver peerDriver(tc.announce(urlGenerated), &torrent_);
     peerDriver.startLeeching();
-    peerDriver.dumpPeers();
+    //peerDriver.dumpPeers();
     //peers_ = tc.announce(urlGenerated);
   }
 } // namespace Network
