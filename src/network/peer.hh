@@ -33,9 +33,11 @@ namespace Network
     ~Peer() = default;
 
     // Action
-    void tryHandshake();
     void toSend(const Core::Message& m);
     void onReceive();
+    void parseMessage(std::string msg);
+
+    void tryHandshake();
     void onReceiveHandshake();
 
     void dump() const;

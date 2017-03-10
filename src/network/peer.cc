@@ -1,5 +1,7 @@
 #include "peer.hh"
 #include "../core/color.hh"
+#include <stdio.h>
+#include <bitset>
 
 namespace Network
 {
@@ -10,11 +12,6 @@ namespace Network
     , fd_(0)
   { }
 
-  void Peer::tryHandshake()
-  {
-    Core::MessageBuilder mBuilder;
-    toSend(mBuilder.buildHandshake(*torrent_));
-  }
 
   void Peer::toSend(const Core::Message& m)
   {
@@ -37,10 +34,43 @@ namespace Network
 	  res += buffer[i];
 	bzero(buffer, READ_BUF_SIZE);
 	recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
-	std::cout << "passed " << std::endl;
       }
-      std::cout << res << std::endl;
+
+      parseMessage(res);
     }
+  }
+
+  void Peer::parseMessage(std::string msg)
+  {
+    std::cout << "length " << msg.length() << std::endl;
+    for (int i = 0; i < msg.size(); ++i)
+    {
+      uint8_t j = msg[i];
+      printf("%x\n", j);
+    }
+
+    unsigned int i = 0;
+    memcpy(&i, msg.c_str(), sizeof(i));
+    std::cout << "bitset : " << htons(i) << std::endl;
+    if (msg.length() < 5)
+      std::cout << "Message: keep alive" << std::endl;
+    else if (msg.length() == 5)
+      std::cout << "No payload message" << std::endl;
+    else
+    {
+      if (msg[4] == 4)
+	std::cout << "HAVE messages" << std::endl;
+      else if (msg[4] == 5)
+	std::cout << "BITFIELDS messages" << std::endl;
+      else if (msg[4] == 6)
+	std::cout << "REQUEST messages" << std::endl;
+    }
+  }
+
+  void Peer::tryHandshake()
+  {
+    Core::MessageBuilder mBuilder;
+    toSend(mBuilder.buildHandshake(*torrent_));
   }
 
   void Peer::onReceiveHandshake()
@@ -55,7 +85,6 @@ namespace Network
 	handshakeDone_ = true;
     }
   }
-
 
   void Peer::dump() const
   {
