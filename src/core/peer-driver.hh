@@ -14,21 +14,23 @@
 #include <map>
 
 #include "../network/peer.hh"
+#include "torrent.hh"
 
 namespace Core
 {
   class PeerDriver
   {
-    public:
-      // Ctor & Dtor
-      PeerDriver();
-      PeerDriver(std::vector<Network::Peer> peers);
-      ~PeerDriver();
+  public:
+    // Ctor & Dtor
+    PeerDriver();
+    PeerDriver(std::vector<Network::Peer> peers, Torrent *torrent);
+    ~PeerDriver();
 
-      void startLeeching();
-      void dumpPeers() const;
+    void startLeeching();
+    void dumpPeers() const;
 
-    private:
-      std::vector<Network::Peer> peers_;
+  private:
+    std::vector<Network::Peer> peers_;
+    Torrent *torrent_;
   };
 }

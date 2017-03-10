@@ -5,10 +5,10 @@ namespace Core
   PeerDriver::PeerDriver()
   { }
 
-  PeerDriver::PeerDriver(std::vector<Network::Peer> peers)
-  {
-    peers_ = peers;
-  }
+  PeerDriver::PeerDriver(std::vector<Network::Peer> peers, Torrent *torrent)
+    : peers_(peers)
+    , torrent_(torrent)
+  { }
 
   PeerDriver::~PeerDriver()
   { }
