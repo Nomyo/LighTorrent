@@ -4,9 +4,8 @@
 namespace Network
 {
 
-  Peer::Peer(Torrent *torrent, const std::string& ip, in_port_t port)
-    : torrent_(torrent)
-    , ip_(ip)
+  Peer::Peer(const std::string& ip, in_port_t port)
+    : ip_(ip)
     , port_(port)
     , fd_(0)
   { }
@@ -56,6 +55,11 @@ namespace Network
   int Peer::getFd() const
   {
     return fd_;
+  }
+
+  void Peer::setTorrent(Core::Torrent* torrent)
+  {
+    torrent_ = torrent;
   }
 
 } // namespace Network

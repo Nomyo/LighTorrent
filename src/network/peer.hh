@@ -1,6 +1,10 @@
 #pragma once
 
+#include "../core/torrent.hh"
+
 #include <string>
+#include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <netdb.h>
@@ -25,7 +29,6 @@ namespace Network
     Peer(const std::string& ip, in_port_t port);
     ~Peer() = default;
 
-
     // Action
     void tryHandshake();
     void onReceive();
@@ -37,8 +40,11 @@ namespace Network
     in_port_t getPort() const;
     int getFd() const;
 
+    //Setter
+    void setTorrent(Core::Torrent* torrent);
+
   private:
-    Torrent torrent_;
+    Core::Torrent* torrent_;
     std::string ip_;
     in_port_t port_;
     int fd_;
