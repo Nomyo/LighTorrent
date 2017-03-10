@@ -37,6 +37,22 @@ namespace Network
   {
     if (!handshakeDone_)
       onReceiveHandshake();
+    else
+    {
+      std::string res = "";
+      char buffer[READ_BUF_SIZE];
+      int recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
+      while (recvN > 0)
+      {
+	buffer[READ_BUF_SIZE - 1] = '\0';
+	for (int i = 0; i < recvN; i++)
+	  res += buffer[i];
+	bzero(buffer, READ_BUF_SIZE);
+	recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
+	std::cout << "passed " << std::endl;
+      }
+      std::cout << res << std::endl;
+    }
   }
 
   void Peer::onReceiveHandshake()
@@ -48,14 +64,8 @@ namespace Network
     {
       ret = (struct handshake *)buffer;
       if (memcmp(ret->info_hash, torrent_->getInfoHash().c_str(), 20) == 0)
-      {
-	//std::cout << "Handshake Done" << std::endl;
 	handshakeDone_ = true;
-      }
     }
-    //else
-      //std::cout << "nothing received or Error: " << strerror(errno) << std::endl;
-
   }
 
 

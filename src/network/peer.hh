@@ -10,6 +10,8 @@
 #include <netdb.h>
 #include <iostream>
 
+#define READ_BUF_SIZE 6000
+
 namespace Network
 {
   class Peer
