@@ -76,39 +76,35 @@ namespace Core
   void PeerDriver::updatePeers()
   {
     std::cout << "Started the updatePeers thread..." << std::endl;
-    int totalConnected = 0;
+    int handshakeSuccess = 0;
     struct epoll_event *events = (struct epoll_event *)calloc(150, sizeof (struct epoll_event));
-
-    ColorModifier colorRed(ColorCode::FG_RED);
-    ColorModifier colorWhite(ColorCode::FG_DEFAULT);
-    ColorModifier colorGreen(ColorCode::FG_GREEN);
 
     while (pendingPeers_.size() || connectedPeers_.size())
     {
-      std::cout << "pending peers: " << pendingPeers_.size() << std::endl;
-      std::cout << "connected peers: " << connectedPeers_.size()
-        << "(" << totalConnected << ")" << std::endl;
+      std::cout << pendingPeers_.size() << " | " << connectedPeers_.size()
+        << " (" << handshakeSuccess << ")" << std::endl;
       int ndfs = epoll_wait(epfd_, events, 150, 20000);
       for (int i = 0; i < ndfs; i++)
       {
+        // If the peer did not even connect (connection error)
         if (events[i].events & EPOLLERR && events[i].events & EPOLLOUT)
         {
           auto peer = pendingPeers_.find(events[i].data.fd);
           if (peer != pendingPeers_.end())
           {
             eMutex_.lock();
-            std::cout << colorRed << "[" << peer->second.getIp() << "]: connection lost "
-              << colorWhite << std::endl;
             epoll_ctl(epfd_, EPOLL_CTL_DEL, events[i].data.fd, &events[i]);
             pendingPeers_.erase(peer->first);
             eMutex_.unlock();
             close(events[i].data.fd);
           }
         }
+
+        // If the peer connected successfully, try to handshake
         else if (events[i].events & EPOLLOUT)
-        {
           initiateHandshake(&events[i], events[i].data.fd);
-        }
+
+        // We got a message from the peer
         else if (events[i].events & EPOLLIN)
         {
           auto connectedPeerIt = connectedPeers_.find(events[i].data.fd);
@@ -116,29 +112,15 @@ namespace Core
           {
             connectedPeerIt->second.onReceive();
             eMutex_.lock();
-            if (connectedPeerIt->second.handshakeDone())
-            {
-              std::cout << colorGreen << "[" << connectedPeerIt->second.getIp()
-                << "]: handshake success! "
-                << colorWhite << std::endl;
-              totalConnected++;
-            }
-            else
-            {
-              std::cout << colorRed << "[" << connectedPeerIt->second.getIp()
-                << "]: handshake failed "
-                << colorWhite << std::endl;
-            }
+            handshakeSuccess++;
+            connectedPeers_.erase(connectedPeerIt->first);
+            close(events[i].data.fd);
             eMutex_.unlock();
           }
-          else
-            std::cout << "Error on getting connected peer in map..." << std::endl;
         }
-        else
-          std::cout << "Unexpected condition..." << std::endl;
       }
     }
-
+    std::cout << "No more peers to update, stopping thread..." << std::endl;
   }
 
   void PeerDriver::dumpPeers() const
@@ -170,9 +152,9 @@ namespace Core
     auto connectedPeerIt = connectedPeers_.find(fd);
     if (connectedPeerIt != connectedPeers_.end())
     {
-      long arg = fcntl(fd, F_GETFL, NULL);
-      arg &= (~O_NONBLOCK);
-      fcntl(fd, F_SETFL, arg);
+      //long arg = fcntl(fd, F_GETFL, NULL);
+      //arg &= (~O_NONBLOCK);
+      //fcntl(fd, F_SETFL, arg);
       connectedPeerIt->second.setTorrent(torrent_);
       connectedPeerIt->second.setFd(fd);
       connectedPeerIt->second.tryHandshake();
