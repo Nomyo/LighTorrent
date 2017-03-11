@@ -20,31 +20,40 @@ namespace Network
     std::string body;
 
     // Parsing the protocol indicator first
-    int counter = 0;
+    size_t counter = 0;
     while (url[counter] != ':')
       protocol += url[counter++];
 
     counter += 3; // we jump the '://'
 
-    while (url[counter] != ':' && url[counter] != '/')
+    while (counter < url.length() && url[counter] != ':' && url[counter] != '/')
       host += url[counter++];
 
-    if (protocol == "udp")
+    // the tracker url has no port and no body
+    if (counter == url.length())
     {
-      counter += 1; // we jump the ':'
-
-      while (url[counter] != '/')
-        port += url[counter++];
+      port = "80";
+      body = "/";
     }
     else
-      port = "80";
+    {
+      if (url[counter] == ':')
+      {
+        counter += 1; // we jump the ':'
 
-    body = url.substr(counter, url.length() - counter);
+        while (url[counter] != '/')
+          port += url[counter++];
+      }
+      else
+        port = "80";
 
-    if (protocol == "http")
-      protocol_ = UrlProtocol::Http;
-    else
-      protocol_ = UrlProtocol::Udp;
+      body = url.substr(counter, url.length() - counter);
+
+      if (protocol == "http")
+        protocol_ = UrlProtocol::Http;
+      else
+        protocol_ = UrlProtocol::Udp;
+    }
 
     host_ = host;
     port_ = atoi(port.c_str());
