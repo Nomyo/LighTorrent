@@ -112,7 +112,8 @@ namespace Core
           {
             connectedPeerIt->second.onReceive();
             eMutex_.lock();
-            handshakeSuccess++;
+            if (connectedPeerIt->second.handshakeDone())
+              handshakeSuccess++;
             connectedPeers_.erase(connectedPeerIt->first);
             close(events[i].data.fd);
             eMutex_.unlock();
