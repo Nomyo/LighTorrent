@@ -14,6 +14,7 @@
 #include <map>
 #include <thread>
 #include <mutex>
+#include <algorithm>
 
 #include "../network/tracker-connector.hh"
 #include "../network/peer.hh"

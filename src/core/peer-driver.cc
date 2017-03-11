@@ -22,21 +22,20 @@ namespace Core
   void PeerDriver::startLeeching()
   {
     connectPeers();
-    //std::cout << "pending peers: " << pendingPeers_.size() << std::endl;
     if (pendingPeers_.size() != 0)
       updater_ = std::thread(&PeerDriver::updatePeers, this);
 
-    //while (true)
-    //{
-    //  if (pendingPeers_.size() == 0)
-    //  {
-    //    Core::URLUtils url;
-    //    std::string urlGenerated = url.generateURL(*torrent_);
-    //    Network::TrackerConnector tc(torrent_);
-    //    addNewPeers(tc.announce(urlGenerated));
-    //    connectPeers();
-    //  }
-    //}
+    while (true)
+    {
+      if (pendingPeers_.size() == 0)
+      {
+        Core::URLUtils url;
+        std::string urlGenerated = url.generateURL(*torrent_);
+        Network::TrackerConnector tc(torrent_);
+        addNewPeers(tc.announce(urlGenerated));
+        connectPeers();
+      }
+    }
     std::cout << "Finished!" << std::endl;
   }
 
@@ -137,14 +136,25 @@ namespace Core
 
   void PeerDriver::addNewPeers(std::vector<Network::Peer> peers)
   {
-    waitingPeers_.insert(waitingPeers_.end(), peers.begin(), peers.end());
-    //auto it = std::find_if(connectedPeers_.begin(), connectedPeers_.end(),
-    //    [](auto s)
-    //    {
-    //      return std::find(waitingPeers_.begin(), waitingPeers_.end(), s.second)
-    //              != waitingPeers_.end(); });
-    //    }
-    //waitingPeers_.insert(waitingPeers_.end(), it, peers.end());
+    //waitingPeers_.insert(waitingPeers_.end(), peers.begin(), peers.end());
+    // auto it = std::find_if(connectedPeers_.begin(), connectedPeers_.end(),
+    // 			   [this](auto s)
+    // 			   {
+    // 			     return std::find(waitingPeers_.begin(), waitingPeers_.end(), s.second)
+    // 			     != waitingPeers_.end(); });
+
+    // waitingPeers_.insert(waitingPeers_.end(), it, peers.end());
+
+    // auto lambda = [this](auto ) { return }
+    std::copy_if(peers.begin(), peers.end(), std::back_inserter(waitingPeers_),
+		 [this](auto s)
+		 {
+		   for (auto& i : connectedPeers_)
+		     if (i.second == s)
+		       return false;
+		   return true;
+		 }
+      );
   }
 
   void PeerDriver::initiateHandshake(struct epoll_event *event, int fd)
@@ -166,7 +176,7 @@ namespace Core
       //arg &= (~O_NONBLOCK);
       //fcntl(fd, F_SETFL, arg);
       connectedPeerIt->second.setTorrent(torrent_);
-      connectedPeerIt->second.setTorrent(torrent_);
+      connectedPeerIt->second.setFileManager(&fileManager_);
       connectedPeerIt->second.setFd(fd);
       connectedPeerIt->second.tryHandshake();
     }

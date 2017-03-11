@@ -41,8 +41,8 @@ namespace Network
 
     void tryHandshake();
     void onReceiveHandshake();
-
     void dump() const;
+    bool operator==(const Peer& p);
 
     // Getter
     std::string getIp() const;

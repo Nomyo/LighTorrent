@@ -97,6 +97,12 @@ namespace Network
 	      << clgreen << port_ << cdef << std::endl;
   }
 
+  bool Peer::operator==(const Peer& p)
+  {
+    return (port_ == p.port_) && (ip_ == p.ip_);
+  }
+
+
   // Getter
   std::string Peer::getIp() const
   {
