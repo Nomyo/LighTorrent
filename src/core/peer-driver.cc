@@ -25,17 +25,17 @@ namespace Core
     if (pendingPeers_.size() != 0)
       updater_ = std::thread(&PeerDriver::updatePeers, this);
 
-    while (true)
-    {
-      if (pendingPeers_.size() == 0)
-      {
-        Core::URLUtils url;
-        std::string urlGenerated = url.generateURL(*torrent_);
-        Network::TrackerConnector tc(torrent_);
-        addNewPeers(tc.announce(urlGenerated));
-        connectPeers();
-      }
-    }
+    //while (true)
+    //{
+    //  if (pendingPeers_.size() == 0)
+    //  {
+    //    Core::URLUtils url;
+    //    std::string urlGenerated = url.generateURL(*torrent_);
+    //    Network::TrackerConnector tc(torrent_);
+    //    addNewPeers(tc.announce(urlGenerated));
+    //    connectPeers();
+    //  }
+    //}
     std::cout << "Finished!" << std::endl;
   }
 
@@ -60,12 +60,12 @@ namespace Core
       {
         eMutex_.lock();
         pendingPeers_.insert(std::make_pair(sockfd, peer));
+        eMutex_.unlock();
         struct epoll_event ev;
         bzero(&ev, sizeof (struct epoll_event));
         ev.events = EPOLLOUT | EPOLLERR | EPOLLHUP | EPOLLRDHUP;
         ev.data.fd = sockfd;
         epoll_ctl(epfd_, EPOLL_CTL_ADD, sockfd, &ev);
-        eMutex_.unlock();
       }
       else
         close(sockfd);
@@ -92,8 +92,8 @@ namespace Core
           auto peer = pendingPeers_.find(events[i].data.fd);
           if (peer != pendingPeers_.end())
           {
-            eMutex_.lock();
             epoll_ctl(epfd_, EPOLL_CTL_DEL, events[i].data.fd, &events[i]);
+            eMutex_.lock();
             pendingPeers_.erase(peer->first);
             eMutex_.unlock();
             close(events[i].data.fd);
@@ -111,12 +111,12 @@ namespace Core
           if (connectedPeerIt != connectedPeers_.end())
           {
             connectedPeerIt->second.onReceive();
-            eMutex_.lock();
             if (connectedPeerIt->second.handshakeDone())
               handshakeSuccess++;
+            eMutex_.lock();
             connectedPeers_.erase(connectedPeerIt->first);
-            close(events[i].data.fd);
             eMutex_.unlock();
+            close(events[i].data.fd);
           }
         }
       }
@@ -137,7 +137,13 @@ namespace Core
   void PeerDriver::addNewPeers(std::vector<Network::Peer> peers)
   {
     waitingPeers_.insert(waitingPeers_.end(), peers.begin(), peers.end());
-  }
+    //auto it = std::find_if(connectedPeers_.begin(), connectedPeers_.end(),
+    //    [](auto s)
+    //    {
+    //      return std::find(waitingPeers_.begin(), waitingPeers_.end(), s.second)
+    //              != waitingPeers_.end(); });
+    //    }
+    //waitingPeers_.insert(waitingPeers_.end(), it, peers.end());
 
   void PeerDriver::initiateHandshake(struct epoll_event *event, int fd)
   {
@@ -150,6 +156,7 @@ namespace Core
       connectedPeers_.insert(std::make_pair(pendingPeerIt->first, pendingPeerIt->second));
       pendingPeers_.erase(pendingPeerIt);
     }
+    eMutex_.unlock();
     auto connectedPeerIt = connectedPeers_.find(fd);
     if (connectedPeerIt != connectedPeers_.end())
     {
@@ -160,6 +167,5 @@ namespace Core
       connectedPeerIt->second.setFd(fd);
       connectedPeerIt->second.tryHandshake();
     }
-    eMutex_.unlock();
   }
 }
