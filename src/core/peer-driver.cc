@@ -144,6 +144,7 @@ namespace Core
     //              != waitingPeers_.end(); });
     //    }
     //waitingPeers_.insert(waitingPeers_.end(), it, peers.end());
+  }
 
   void PeerDriver::initiateHandshake(struct epoll_event *event, int fd)
   {
