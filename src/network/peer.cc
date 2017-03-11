@@ -1,7 +1,6 @@
 #include "peer.hh"
 #include "../core/color.hh"
 #include <stdio.h>
-#include <bitset>
 
 namespace Network
 {
@@ -122,6 +121,11 @@ namespace Network
   void Peer::setTorrent(Core::Torrent* torrent)
   {
     torrent_ = torrent;
+  }
+
+  void Peer::setFileManager(Core::FileManager* fileManager)
+  {
+    fileManager_ = fileManager;
   }
 
   void Peer::setFd(int fd)

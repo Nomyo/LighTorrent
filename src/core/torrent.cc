@@ -21,7 +21,7 @@ namespace Core
   void Torrent::init()
   {
     BDico infoDico = getType<BType_ptr, BDico>(metaInfo_.get("info"));
-
+    std::cout << infoDico << std::endl;
     auto files = infoDico.get("files");
 
     if (!files)
@@ -37,6 +37,9 @@ namespace Core
 			   long long int>(file.get("length"));
       }
     }
+
+    pieces_length_ = getDecode<BType_ptr, BInteger,
+			       long long int>(infoDico.get("piece length"));
 
     computeInfoHash(infoDico);
     computeEncodedInfoHash();
@@ -128,6 +131,16 @@ namespace Core
   BDico Torrent::getMetaInfo() const
   {
     return metaInfo_;
+  }
+
+  long long int Torrent::getPiecesLength() const
+  {
+    return pieces_length_;
+  }
+
+  size_t Torrent::getNbPieces() const
+  {
+    return (left_ / pieces_length_) + ((left_ / pieces_length_) ? 1 : 0);
   }
 
   long int Torrent::getPort() const

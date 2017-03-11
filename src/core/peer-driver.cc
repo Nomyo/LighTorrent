@@ -7,6 +7,7 @@ namespace Core
 
   PeerDriver::PeerDriver(std::vector<Network::Peer> peers, Torrent *torrent)
     : torrent_(torrent)
+    , fileManager_(torrent_->getNbPieces())
   {
     waitingPeers_ = peers;
     epfd_ = epoll_create(350);
@@ -164,6 +165,7 @@ namespace Core
       //long arg = fcntl(fd, F_GETFL, NULL);
       //arg &= (~O_NONBLOCK);
       //fcntl(fd, F_SETFL, arg);
+      connectedPeerIt->second.setTorrent(torrent_);
       connectedPeerIt->second.setTorrent(torrent_);
       connectedPeerIt->second.setFd(fd);
       connectedPeerIt->second.tryHandshake();

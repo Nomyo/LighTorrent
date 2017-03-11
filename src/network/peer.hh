@@ -2,6 +2,7 @@
 
 #include "../core/torrent.hh"
 #include "../core/message-builder.hh"
+#include "../core/file-manager.hh"
 
 #include <string>
 #include <string.h>
@@ -10,6 +11,7 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <iostream>
+#include <bitset>
 
 #define READ_BUF_SIZE 6000
 
@@ -51,11 +53,14 @@ namespace Network
 
     //Setter
     void setTorrent(Core::Torrent* torrent);
+    void setFileManager(Core::FileManager* fileManager);
     void setFd(int fd);
     void setLastUpdate(long unsigned update);
 
   private:
+    std::vector<bool> pieces_;
     Core::Torrent* torrent_;
+    Core::FileManager* fileManager_;
     std::string ip_;
     in_port_t port_;
     int fd_;

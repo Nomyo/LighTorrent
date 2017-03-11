@@ -17,6 +17,7 @@
 
 #include "../network/tracker-connector.hh"
 #include "../network/peer.hh"
+#include "file-manager.hh"
 #include "torrent.hh"
 #include "url-utils.hh"
 
@@ -38,13 +39,13 @@ namespace Core
     void connectPeers();
     void updatePeers();
     void initiateHandshake(struct epoll_event *event, int fd);
-
     std::mutex eMutex_;
     std::thread updater_;
     std::vector<Network::Peer> waitingPeers_;
     std::map<int, Network::Peer> pendingPeers_;
     std::map<int, Network::Peer> connectedPeers_;
     Torrent *torrent_;
+    FileManager fileManager_;
     int epfd_; // epoll fd
   };
 }
