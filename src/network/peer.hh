@@ -41,7 +41,9 @@ namespace Network
 
     void tryHandshake();
     void onReceiveHandshake();
+    long long int computeLength(std::string lengthPrefix);
     void dump() const;
+
     bool operator==(const Peer& p);
 
     // Getter
@@ -65,6 +67,8 @@ namespace Network
     in_port_t port_;
     int fd_;
     long unsigned lastUpdate_;
+    long long int totalReceived_;
+    long long int expectReceived_;
     bool handshakeDone_ = false;
   };
 

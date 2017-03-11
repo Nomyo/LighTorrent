@@ -81,8 +81,8 @@ namespace Core
 
     while (pendingPeers_.size() || connectedPeers_.size())
     {
-      std::cout << pendingPeers_.size() << " | " << connectedPeers_.size()
-        << " (" << handshakeSuccess << ")" << std::endl;
+      // std::cout << pendingPeers_.size() << " | " << connectedPeers_.size()
+      //   << " (" << handshakeSuccess << ")" << std::endl;
       int ndfs = epoll_wait(epfd_, events, 150, 20000);
       for (int i = 0; i < ndfs; i++)
       {
@@ -114,9 +114,9 @@ namespace Core
             if (connectedPeerIt->second.handshakeDone())
               handshakeSuccess++;
             eMutex_.lock();
-            connectedPeers_.erase(connectedPeerIt->first);
+            //connectedPeers_.erase(connectedPeerIt->first);
             eMutex_.unlock();
-            close(events[i].data.fd);
+            //close(events[i].data.fd);
           }
         }
       }
@@ -172,9 +172,9 @@ namespace Core
     auto connectedPeerIt = connectedPeers_.find(fd);
     if (connectedPeerIt != connectedPeers_.end())
     {
-      //long arg = fcntl(fd, F_GETFL, NULL);
-      //arg &= (~O_NONBLOCK);
-      //fcntl(fd, F_SETFL, arg);
+      long arg = fcntl(fd, F_GETFL, NULL);
+      arg &= (~O_NONBLOCK);
+      fcntl(fd, F_SETFL, arg);
       connectedPeerIt->second.setTorrent(torrent_);
       connectedPeerIt->second.setFileManager(&fileManager_);
       connectedPeerIt->second.setFd(fd);

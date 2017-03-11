@@ -26,25 +26,36 @@ namespace Network
       std::string res = "";
       char buffer[READ_BUF_SIZE];
       int recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
-      while (recvN > 0)
+      if (recvN > 0)
       {
-	buffer[READ_BUF_SIZE - 1] = '\0';
 	for (int i = 0; i < recvN; i++)
 	  res += buffer[i];
 	bzero(buffer, READ_BUF_SIZE);
-	if (recvN < READ_BUF_SIZE - 1)
-	  break;
-	else
+	totalReceived_ = recvN;
+	if (recvN >= READ_BUF_SIZE - 1)
+	{
 	  std::cout << "SHOULDN'T BE THERE FOR NOW" << std::endl;
+	  exit(27);
+	}
       }
       parseMessage(res);
+
+      if (expectReceived_ == totalReceived_)
+      {
+	// Do action
+      }
+
     }
   }
 
   void Peer::parseMessage(std::string msg)
   {
-    std::cout << "length " << msg.length() << std::endl;
-    for (int i = 0; i < msg.size(); ++i)
+
+    expectReceived_ = computeLength(msg.substr(0, 4));
+
+    std::cout << "length " << expectReceived_ << std::endl;
+
+    for (unsigned i = 0; i < msg.size(); ++i)
     {
       uint8_t j = msg[i];
       printf("%x\n", j);
@@ -52,6 +63,7 @@ namespace Network
 
     unsigned int i = 0;
     memcpy(&i, msg.c_str(), sizeof(i));
+
     std::cout << "bitset : " << htons(i) << std::endl;
     if (msg.length() < 5)
       std::cout << "Message: keep alive" << std::endl;
@@ -100,6 +112,22 @@ namespace Network
   bool Peer::operator==(const Peer& p)
   {
     return (port_ == p.port_) && (ip_ == p.ip_);
+  }
+
+
+  long long int Peer::computeLength(std::string lengthPrefix)
+  {
+    uint8_t l_1 = lengthPrefix[0];
+    uint8_t l_2 = lengthPrefix[1];
+    uint8_t l_3 = lengthPrefix[2];
+    uint8_t l_4 = lengthPrefix[3];
+
+    long long int tmp =  l_1 * 256 * 256 * 256;
+    tmp += l_2 * 256 * 256;
+    tmp += l_3 * 256;
+    tmp += l_4;
+
+    return tmp;
   }
 
 
