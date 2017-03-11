@@ -116,8 +116,6 @@ namespace Core
           {
             connectedPeerIt->second.onReceive();
             eMutex_.lock();
-            epoll_ctl(epfd_, EPOLL_CTL_DEL, events[i].data.fd, &events[i]);
-            close(events[i].data.fd);
             if (connectedPeerIt->second.handshakeDone())
             {
               std::cout << colorGreen << "[" << connectedPeerIt->second.getIp()
@@ -131,7 +129,6 @@ namespace Core
                 << "]: handshake failed "
                 << colorWhite << std::endl;
             }
-            connectedPeers_.erase(connectedPeerIt->first);
             eMutex_.unlock();
           }
           else

@@ -84,7 +84,6 @@ namespace Network
           break;
       }
       bzero(buffer, READ_BUF_SIZE);
-      recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
     }
 
     free(buffer);

@@ -46,17 +46,20 @@ namespace Network
     std::string getIp() const;
     in_port_t getPort() const;
     int getFd() const;
+    long unsigned getLastUpdate() const;
     bool handshakeDone() const;
 
     //Setter
     void setTorrent(Core::Torrent* torrent);
     void setFd(int fd);
+    void setLastUpdate(long unsigned update);
 
   private:
     Core::Torrent* torrent_;
     std::string ip_;
     in_port_t port_;
     int fd_;
+    long unsigned lastUpdate_;
     bool handshakeDone_ = false;
   };
 

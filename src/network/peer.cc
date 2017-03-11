@@ -33,9 +33,11 @@ namespace Network
 	for (int i = 0; i < recvN; i++)
 	  res += buffer[i];
 	bzero(buffer, READ_BUF_SIZE);
-	recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
+	if (recvN < READ_BUF_SIZE - 1)
+	  break;
+	else
+	  std::cout << "SHOULDN'T BE THERE FOR NOW" << std::endl;
       }
-
       parseMessage(res);
     }
   }
