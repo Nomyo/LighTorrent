@@ -28,18 +28,18 @@ namespace Core
 
     Core::URLUtils url;
     std::string urlGenerated = url.generateURL(torrent_);
-    Network::UrlParser up(urlGenerated);
-    up.dump();
-    std::cout << std::endl;
+    //Network::UrlParser up(urlGenerated);
+    //up.dump();
+    //std::cout << std::endl;
 
-    // Useless for now because we treat only one tracker.
-    TrackerDriver trackDriver(&torrent_);
-    trackDriver.createConnectors();
-    trackDriver.announces();
+    //// Useless for now because we treat only one tracker.
+    //TrackerDriver trackDriver(&torrent_);
+    //trackDriver.createConnectors();
+    //trackDriver.announces();
 
     Network::TrackerConnector tc(&torrent_);
     PeerDriver peerDriver(tc.announce(urlGenerated), &torrent_);
-    peerDriver.startLeeching();
+    //peerDriver.startLeeching();
     //peerDriver.dumpPeers();
     //peers_ = tc.announce(urlGenerated);
   }

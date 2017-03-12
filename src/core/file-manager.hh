@@ -2,6 +2,10 @@
 
 #include <vector>
 #include <stddef.h>
+#include <bitset>
+
+#include "torrent.hh"
+#include "blocks.hh"
 
 namespace Core
 {
@@ -9,14 +13,16 @@ namespace Core
   {
   public:
     FileManager();
-    FileManager(size_t nbPieces);
+    FileManager(Torrent *t);
     ~FileManager() = default;
 
     // Getter
-    std::vector<bool> getPieces();
+    std::vector<Blocks> getPieces();
 
   private:
-    std::vector<bool> pieces_;
+    Torrent *torrent_ = nullptr;
+    std::vector<Blocks> pieces_;
+    std::vector<std::string> hashes_;
   };
 
 } // namespace Core

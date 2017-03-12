@@ -31,6 +31,7 @@ namespace Core
     std::string getInfoHash() const;
     std::string getPeerId() const;
     BDico getMetaInfo() const;
+    const std::string& getPiecesHash() const;
     size_t getNbPieces() const;
     long int getPort() const;
     long long int getPiecesLength() const;
@@ -46,10 +47,14 @@ namespace Core
     std::string peerId_;
     BDico metaInfo_;
     size_t pieces_length_;
+    std::string pieces_; // pieces hash
     long int port_;
     long long int uploaded_;
     long long int downloaded_;
     long long int left_; // Total size
+
+    // files path + nb pieces per file
+    std::vector<std::pair<std::string, long int>> files_;
   };
 
 } // namespace Network

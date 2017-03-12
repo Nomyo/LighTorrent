@@ -21,7 +21,7 @@ namespace Core
   void Torrent::init()
   {
     BDico infoDico = getType<BType_ptr, BDico>(metaInfo_.get("info"));
-    std::cout << infoDico << std::endl;
+    //std::cout << infoDico << std::endl;
     auto files = infoDico.get("files");
 
     if (!files)
@@ -35,8 +35,19 @@ namespace Core
 	BDico file = getType<BType_ptr, BDico>(i);
         left_ += getDecode<BType_ptr, BInteger,
 			   long long int>(file.get("length"));
+
+        // cyp
+        std::cout << i << std::endl;
+        auto filePathList = getType<BType_ptr, BList>(file.get("path"));
+        auto filePath = filePathList.getDecodedValue()[0];
+        auto realPath = getType<BType_ptr, BString>(filePath);
+        auto realLength = getType<BType_ptr, BInteger>(file.get("length"));
+        files_.push_back(std::make_pair(realPath.getDecodedValue(),
+                                        realLength.getDecodedValue()));
       }
     }
+
+    pieces_ = getType<BType_ptr, BString>(infoDico.get("pieces")).getDecodedValue();
 
     pieces_length_ = getDecode<BType_ptr, BInteger,
 			       long long int>(infoDico.get("piece length"));
@@ -138,9 +149,14 @@ namespace Core
     return pieces_length_;
   }
 
+  const std::string& Torrent::getPiecesHash() const
+  {
+    return pieces_;
+  }
+
   size_t Torrent::getNbPieces() const
   {
-    return (left_ / pieces_length_) + ((left_ / pieces_length_) ? 1 : 0);
+    return (left_ / pieces_length_) + ((left_ % pieces_length_) ? 1 : 0);
   }
 
   long int Torrent::getPort() const

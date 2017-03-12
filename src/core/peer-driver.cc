@@ -7,7 +7,7 @@ namespace Core
 
   PeerDriver::PeerDriver(std::vector<Network::Peer> peers, Torrent *torrent)
     : torrent_(torrent)
-    , fileManager_(torrent_->getNbPieces())
+    , fileManager_(torrent_)
   {
     waitingPeers_ = peers;
     epfd_ = epoll_create(350);
