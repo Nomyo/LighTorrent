@@ -61,9 +61,10 @@ namespace Core
     for (size_t i = 0; i < files_.size(); i++)
     {
       struct stat buffer;
-      if (stat(files_[i].first.c_str(), &buffer) != 0) // file doesn't exist
+      if (stat(("Downloads/" + files_[i].first).c_str(), &buffer) != 0) // file doesn't exist
       {
-        std::ofstream ofs(files_[i].first, std::ios::binary | std::ios::out);
+        mkdir("Downloads", 0777);
+        std::ofstream ofs("Downloads/" + files_[i].first, std::ios::binary | std::ios::out);
         ofs.seekp(files_[i].second - 1);
         ofs.write("", 1);
         ofs.close();
