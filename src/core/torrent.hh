@@ -38,6 +38,7 @@ namespace Core
     long long int getUploaded() const;
     long long int getDownloaded() const;
     long long int getLeft() const;
+    std::vector<std::pair<std::string, long long int>> getFiles() const;
 
   private:
     std::vector<std::string> announceList_;
@@ -53,8 +54,8 @@ namespace Core
     long long int downloaded_;
     long long int left_; // Total size
 
-    // files path + nb pieces per file
-    std::vector<std::pair<std::string, long int>> files_;
+    // files path + size per file
+    std::vector<std::pair<std::string, long long int>> files_;
   };
 
 } // namespace Network

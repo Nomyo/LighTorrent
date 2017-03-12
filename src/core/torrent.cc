@@ -179,4 +179,9 @@ namespace Core
     return left_;
   }
 
+  std::vector<std::pair<std::string, long long int>> Torrent::getFiles() const
+  {
+    return files_;
+  }
+
 } // namespace Network

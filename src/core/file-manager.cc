@@ -12,8 +12,9 @@ namespace Core
     for (size_t i = 0; i < t->getNbPieces(); i++)
       hashes_.push_back(pieces.substr(i * 20, 20));
 
-    long long int left = t->getLeft();
+    files_ = t->getFiles();
 
+    long long int left = t->getLeft();
     while (left > 0)
     {
       long long int pieceSize = left > t->getPiecesLength() ? t->getPiecesLength() : left;
@@ -21,11 +22,9 @@ namespace Core
       left -= pieceSize;
     }
 
+    createFiles();
+
     std::cout << "total file size = " << t->getLeft() << std::endl;
-    long long int blocksSize = 0;
-    for (auto piece: pieces_)
-      blocksSize += piece.getSize();
-    std::cout << "total blocks size = " << blocksSize << std::endl;
     std::cout << "Initialized FileManager with " << t->getNbPieces()
       << " pieces of size ~" << t->getPiecesLength() << std::endl;
     std::cout << "Pieces Hash length = " << t->getPiecesHash().length() << std::endl;
@@ -57,6 +56,26 @@ namespace Core
     pieces_[pr.pieceIndex].setBlockData(pr.blockOffset, data);
   }
 
+  void FileManager::createFiles() const
+  {
+    for (size_t i = 0; i < files_.size(); i++)
+    {
+      struct stat buffer;
+      if (stat(files_[i].first.c_str(), &buffer) != 0) // file doesn't exist
+      {
+        std::ofstream ofs(files_[i].first, std::ios::binary | std::ios::out);
+        ofs.seekp(files_[i].second - 1);
+        ofs.write("", 1);
+        ofs.close();
+        std::cout << "Created file " << files_[i].first << std::endl;
+      }
+      else
+      {
+        std::cout << "File " << files_[i].first << " already exists." << std::endl;
+      }
+    }
+  }
+
   struct PieceRequest FileManager::initPieceRequest() const
   {
     struct PieceRequest req;
@@ -70,5 +89,4 @@ namespace Core
   {
     return pieces_;
   }
-
 } // namespace Core

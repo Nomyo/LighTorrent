@@ -4,6 +4,10 @@
 #include <stddef.h>
 #include <bitset>
 #include <strings.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+#include <fstream>
 
 #include "torrent.hh"
 #include "blocks.hh"
@@ -33,11 +37,14 @@ namespace Core
     std::vector<Blocks> getPieces();
 
   private:
+    void createFiles() const; // /!\ heavy I/O
     struct PieceRequest initPieceRequest() const;
 
     Torrent *torrent_ = nullptr;
     std::vector<Blocks> pieces_;
     std::vector<std::string> hashes_;
+
+    std::vector<std::pair<std::string, long long int>> files_;
   };
 
 } // namespace Core
