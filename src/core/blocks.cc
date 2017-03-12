@@ -3,10 +3,12 @@
 namespace Core
 {
   Blocks::Blocks(int pieceLength)
-    : isFull_(false), data_(pieceLength)
+    : isFull_(false), isWaiting_(false)
   {
     int nbBlocks = pieceLength / 16384 + (pieceLength % 16384 == 0 ? 0 : 1);
     blocks_ = std::vector<bool>(nbBlocks);
+    requested_ = std::vector<bool>(nbBlocks);
+    data_ = std::vector<std::string>(nbBlocks);
     //std::cout << "Initialized a piece of " << blocks_.size() << " blocks. - "
     //          << pieceLength << std::endl;
   }
@@ -14,9 +16,45 @@ namespace Core
   Blocks::~Blocks()
   { }
 
+  int Blocks::getBlockOffset()
+  {
+    if (isFull_)
+      return -1;
+    for (size_t i = 0; i < blocks_.size(); i++)
+    {
+      if (!blocks_[i] && !requested_[i])
+      {
+        requested_[i] = true;
+        if (i == blocks_.size() - 1)
+          isWaiting_ = true;
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  void Blocks::setBlockData(uint32_t block, const std::string& data)
+  {
+    data_[block] = data;
+    blocks_[block] = true;
+    requested_[block] = false;
+
+    size_t firstFalse = 0;
+    while (firstFalse < blocks_.size() && !blocks_[firstFalse])
+      firstFalse++;
+
+    if (firstFalse == blocks_.size())
+      isFull_ = true;
+  }
+
   bool Blocks::isFull() const
   {
     return isFull_;
+  }
+
+  bool Blocks::isWaiting() const
+  {
+    return isWaiting_;
   }
 
   long long int Blocks::getSize() const

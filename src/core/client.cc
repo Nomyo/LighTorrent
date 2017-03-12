@@ -39,6 +39,8 @@ namespace Core
 
     Network::TrackerConnector tc(&torrent_);
     PeerDriver peerDriver(tc.announce(urlGenerated), &torrent_);
+    std::string test;
+    std::cin >> test;
     //peerDriver.startLeeching();
     //peerDriver.dumpPeers();
     //peers_ = tc.announce(urlGenerated);

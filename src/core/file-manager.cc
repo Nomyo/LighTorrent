@@ -8,7 +8,7 @@ namespace Core
   FileManager::FileManager(Torrent *t)
     : torrent_(t)
   {
-        const std::string& pieces = t->getPiecesHash();
+    const std::string& pieces = t->getPiecesHash();
     for (size_t i = 0; i < t->getNbPieces(); i++)
       hashes_.push_back(pieces.substr(i * 20, 20));
 
@@ -27,8 +27,43 @@ namespace Core
       blocksSize += piece.getSize();
     std::cout << "total blocks size = " << blocksSize << std::endl;
     std::cout << "Initialized FileManager with " << t->getNbPieces()
-              << " pieces of size ~" << t->getPiecesLength() << std::endl;
+      << " pieces of size ~" << t->getPiecesLength() << std::endl;
     std::cout << "Pieces Hash length = " << t->getPiecesHash().length() << std::endl;
+  }
+
+  struct PieceRequest FileManager::getPieceRequest(const std::vector<bool>& have)
+  {
+    if (have.size() != pieces_.size())
+      std::cerr << "Error, peer have is != from torrent have" << std::endl;
+
+    struct PieceRequest req = initPieceRequest();
+    for (size_t i = 0; i < have.size(); i++)
+    {
+      if (have[i] && !pieces_[i].isFull() && !pieces_[i].isWaiting())
+      {
+        uint32_t blockOffset = pieces_[i].getBlockOffset();
+        req.pieceIndex = i;
+        req.blockOffset = blockOffset;
+        req.blockSize = 16384;
+        break;
+      }
+    }
+
+    return req;
+  }
+
+  void FileManager::setPieceRequest(const struct PieceRequest& pr, const std::string& data)
+  {
+    pieces_[pr.pieceIndex].setBlockData(pr.blockOffset, data);
+  }
+
+  struct PieceRequest FileManager::initPieceRequest() const
+  {
+    struct PieceRequest req;
+    bzero(&req, sizeof (req));
+    req.len = 13;
+    req.id = 6;
+    return req;
   }
 
   std::vector<Blocks> FileManager::getPieces()

@@ -11,13 +11,18 @@ namespace Core
       Blocks(int pieceLength);
       ~Blocks();
 
+      int getBlockOffset();
+      void setBlockData(uint32_t block, const std::string& data);
+
       bool isFull() const;
+      bool isWaiting() const;
       long long int getSize() const;
 
     private:
       bool isFull_;
+      bool isWaiting_; // waiting for return of peer messages (requested is full)
       std::vector<bool> blocks_;
-      std::vector<uint8_t> data_;
-
+      std::vector<bool> requested_;
+      std::vector<std::string> data_;
   };
 }
