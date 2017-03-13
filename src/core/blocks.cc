@@ -52,6 +52,11 @@ namespace Core
     return isFull_;
   }
 
+  void Blocks::setFull(bool full)
+  {
+    isFull_ = full;
+  }
+
   bool Blocks::isWaiting() const
   {
     return isWaiting_;

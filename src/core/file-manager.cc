@@ -56,7 +56,7 @@ namespace Core
     pieces_[pr.pieceIndex].setBlockData(pr.blockOffset, data);
   }
 
-  void FileManager::createFiles() const
+  void FileManager::createFiles()
   {
     for (size_t i = 0; i < files_.size(); i++)
     {
@@ -73,7 +73,68 @@ namespace Core
       else
       {
         std::cout << "File " << files_[i].first << " already exists." << std::endl;
+        verifyHashes();
+        break;
       }
+    }
+  }
+
+  void FileManager::verifyHashes()
+  {
+    long long int pieceLength = torrent_->getPiecesLength();
+    unsigned char buffer[pieceLength] = { 0 };
+    size_t bufferPos = 0;
+    size_t filePos = 0;
+    size_t hashCounter = 0;
+    std::ifstream ifs;
+    size_t fileCounter = 0;
+
+    ifs.open(("Downloads/" + files_[fileCounter].first).c_str(), std::ios::in | std::ios::binary);
+    while (fileCounter != files_.size())
+    {
+      char c;
+      ifs.get(c);
+      buffer[bufferPos] = c;
+      filePos++;
+      bufferPos++;
+      if (bufferPos == pieceLength)
+      {
+        unsigned char outBuffer[20];
+        SHA1(buffer, pieceLength, outBuffer);
+        if (memcmp(outBuffer, hashes_[hashCounter].c_str(), 20) == 0)
+          pieces_[hashCounter].setFull(true);
+        hashCounter++;
+        bufferPos = 0;
+      }
+      if (filePos == files_[fileCounter].second)
+      {
+        // handle file not found
+        fileCounter++;
+        ifs.close();
+        if (fileCounter < files_.size())
+          ifs.open(("Downloads/" + files_[fileCounter].first).c_str(), std::ios::in | std::ios::binary);
+        filePos = 0;
+      }
+    }
+    ifs.close();
+
+    for (size_t i = 0; i < files_.size(); i++)
+    {
+      long long int fileSize = files_[i].second;
+      size_t nbTotal = 0;
+      size_t nbGood = 0;
+      size_t nbHash = 0;
+
+      while (fileSize >= 0)
+      {
+        if (pieces_[nbHash].isFull())
+          nbGood++;
+        nbTotal++;
+        if (fileSize >= torrent_->getPiecesLength())
+          nbHash++;
+        fileSize -= torrent_->getPiecesLength();
+      }
+      std::cout << files_[i].first << ": " << (nbGood * 100) / nbTotal << "%" << std::endl;
     }
   }
 

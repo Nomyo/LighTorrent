@@ -15,6 +15,7 @@ namespace Core
       void setBlockData(uint32_t block, const std::string& data);
 
       bool isFull() const;
+      void setFull(bool full);
       bool isWaiting() const;
       long long int getSize() const;
 

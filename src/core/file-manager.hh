@@ -3,11 +3,13 @@
 #include <vector>
 #include <stddef.h>
 #include <bitset>
+#include <string.h>
 #include <strings.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fstream>
+#include <openssl/sha.h>
 
 #include "torrent.hh"
 #include "blocks.hh"
@@ -37,7 +39,8 @@ namespace Core
     std::vector<Blocks> getPieces();
 
   private:
-    void createFiles() const; // /!\ heavy I/O
+    void createFiles(); // /!\ heavy I/O
+    void verifyHashes();
     struct PieceRequest initPieceRequest() const;
 
     Torrent *torrent_ = nullptr;
