@@ -118,12 +118,12 @@ namespace Core
     }
     ifs.close();
 
+    size_t nbHash = 0;
     for (size_t i = 0; i < files_.size(); i++)
     {
       long long int fileSize = files_[i].second;
       size_t nbTotal = 0;
       size_t nbGood = 0;
-      size_t nbHash = 0;
 
       while (fileSize >= 0)
       {
@@ -135,6 +135,7 @@ namespace Core
         fileSize -= torrent_->getPiecesLength();
       }
       std::cout << files_[i].first << ": " << (nbGood * 100) / nbTotal << "%" << std::endl;
+      std::cout << nbGood << " " << nbTotal << std::endl;
     }
   }
 
