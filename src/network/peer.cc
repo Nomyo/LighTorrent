@@ -1,6 +1,4 @@
 #include "peer.hh"
-#include "../core/color.hh"
-#include <stdio.h>
 
 namespace Network
 {

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../core/color.hh"
 #include "../core/torrent.hh"
 #include "../core/message-builder.hh"
 #include "../core/file-manager.hh"
@@ -12,6 +13,7 @@
 #include <netdb.h>
 #include <iostream>
 #include <bitset>
+#include <stdio.h>
 
 #define READ_BUF_SIZE 6000
 

@@ -13,6 +13,7 @@
 
 #include "torrent.hh"
 #include "blocks.hh"
+#include "color.hh"
 
 namespace Core
 {

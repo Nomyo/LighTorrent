@@ -118,6 +118,8 @@ namespace Core
     }
     ifs.close();
 
+    ColorModifier cldef(ColorCode::FG_DEFAULT);
+    ColorModifier clyel(ColorCode::FG_LIGHT_YELLOW);
     size_t nbHash = 0;
     for (size_t i = 0; i < files_.size(); i++)
     {
@@ -134,8 +136,8 @@ namespace Core
           nbHash++;
         fileSize -= torrent_->getPiecesLength();
       }
-      std::cout << files_[i].first << ": " << (nbGood * 100) / nbTotal << "%" << std::endl;
-      std::cout << nbGood << " " << nbTotal << std::endl;
+      std::cout << clyel << files_[i].first << ": "
+                << (nbGood * 100) / nbTotal << "%" << cldef << std::endl;
     }
   }
 
