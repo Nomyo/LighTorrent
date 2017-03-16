@@ -52,13 +52,6 @@ namespace Network
         close(fd_);
     }
 
-    if (receivedPackets)
-    {
-      std::cout << "action: " << response.action << "\n";
-      std::cout << "transactionId: " << response.transactionId << "\n";
-      std::cout << "connectionId: " << response.connectionId << "\n";
-    }
-
     return response.connectionId;
   }
 
@@ -91,15 +84,6 @@ namespace Network
       if (nbRecv != -1)
       {
         receivedPackets = true;
-        std::cout << "received " << nbRecv << " bytes" << std::endl;
-        std::cout << "received response" << std::endl
-          << "action: " << __builtin_bswap32(aresponse.action) << std::endl
-          << "tId: " << __builtin_bswap32(aresponse.transactionId) << std::endl
-          << "interval: " << __builtin_bswap32(aresponse.interval) << std::endl
-          << "leechers: " << __builtin_bswap32(aresponse.leechers) << std::endl
-          << "seeders: " << __builtin_bswap32(aresponse.seeders)
-          << std::endl;
-
         peers = buildPeers(aresponse.peer_infos, (nbRecv - 20) / 6);
       }
       else

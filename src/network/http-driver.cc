@@ -44,6 +44,7 @@ namespace Network
     request += "Content-Length: 0\r\n";
     request += "\r\n";
 
+    std::cout << "Connecting to tracker..." << std::endl;
     if (connect(fd_, (struct sockaddr*)&trackerInfo.getServerAddress(),
                 sizeof (trackerInfo.getServerAddress())) < 0)
     {
@@ -51,6 +52,7 @@ namespace Network
       return -1;
     }
 
+    std::cout << "Announcing to tracker..." << std::endl;
     if (write(fd_, request.c_str(), strlen(request.c_str())) < 0)
     {
       std::cerr << "Could not write request to url " << urlParser.getBaseUrl() << std::endl;
@@ -72,23 +74,16 @@ namespace Network
     std::string res = "";
     char *buffer = (char*)calloc(sizeof (char), READ_BUF_SIZE);
     int recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
-    while (recvN > 0)
-    {
-      buffer[READ_BUF_SIZE - 1] = '\0';
-      if (recvN > 0)
-      {
-        for (int i = 0; i < recvN; i++)
-          res += buffer[i];
 
-        if (buffer[recvN - 1] == '\n' && buffer[recvN - 2] == '\r')
-          break;
-      }
-      bzero(buffer, READ_BUF_SIZE);
+    buffer[READ_BUF_SIZE - 1] = '\0';
+    if (recvN > 0)
+    {
+      for (int i = 0; i < recvN; i++)
+        res += buffer[i];
     }
+    bzero(buffer, READ_BUF_SIZE);
 
     free(buffer);
-
-    std::cout << "RESULT = " << res << std::endl;
 
     formatResult(res);
   }
