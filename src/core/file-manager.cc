@@ -72,7 +72,6 @@ namespace Core
       }
       else
       {
-        std::cout << "File " << files_[i].first << " already exists." << std::endl;
         verifyHashes();
         break;
       }
@@ -81,6 +80,7 @@ namespace Core
 
   void FileManager::verifyHashes()
   {
+    std::cout << "Verifying hashes...\r" << std::flush;
     long long int pieceLength = torrent_->getPiecesLength();
     unsigned char buffer[pieceLength] = { 0 };
     size_t bufferPos = 0;
@@ -105,6 +105,8 @@ namespace Core
           pieces_[hashCounter].setFull(true);
         hashCounter++;
         bufferPos = 0;
+        std::cout << "Verifying hashes..." << (hashCounter * 100) / pieces_.size()
+                  << "%\r" << std::flush;
       }
       if (filePos == files_[fileCounter].second)
       {
