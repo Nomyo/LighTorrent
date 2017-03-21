@@ -57,6 +57,64 @@ namespace Core
   void FileManager::setPieceRequest(const struct PieceRequest& pr, const std::string& data)
   {
     pieces_[pr.pieceIndex].setBlockData(pr.blockOffset, data);
+    if (pieces_[pr.pieceIndex].isFull())
+    {
+      // The length of a piece (in bits), also, the size to write
+      long long int pLen = torrent_->getPiecesLength();
+      // The cursor position in all the data (in bits)
+      long long int cPos = pr.pieceIndex * pLen + pr.blockOffset * pr.blockSize;
+      // The index of the file in which we write
+      int fileIndex = 0;
+      // The offset of the data vector in the piece we extract
+      int dataPos = 0;
+      // The data vector to write
+      const std::vector<std::string>& data = pieces_[pr.pieceIndex].getData();
+
+      // We find the file to fill
+      while (cPos > files_[fileIndex].second)
+      {
+        cPos -= files_[fileIndex].second;
+        fileIndex++;
+      }
+
+      // While we have something to write
+      while (pLen > 0)
+      {
+        std::ofstream ofs(directory_ + "/" + files_[fileIndex].first, std::ios::binary | std::ios::out);
+        ofs.seekp(cPos);
+
+        // If the data to write is bigger than the file to write it in
+        if (files_[fileIndex].second - cPos < pLen)
+        {
+          // The maximum data we can write (in bits)
+          long long int sizeToWrite = files_[fileIndex].second - cPos;
+          std::string res;
+          for (size_t i = dataPos; i < data.size(); i++)
+            res += data[i];
+
+          ofs.write(res.c_str(), sizeToWrite / 8);
+
+          ofs.close();
+          fileIndex++;
+          ofs.open(directory_ + "/" + files_[fileIndex].first, std::ios::binary | std::ios::out);
+          dataPos += sizeToWrite / 8;
+          cPos = 0;
+          pLen -= sizeToWrite;
+        }
+        else
+        {
+          std::string res;
+          for (size_t i = dataPos; i < data.size(); i++)
+            res += data[i];
+
+          ofs.write(res.c_str(), pLen / 8);
+          ofs.close();
+          pLen = 0;
+        }
+      }
+
+      std::cout << "Wrote a block of data to file." << std::endl;
+    }
   }
 
   void FileManager::initDirectory()
