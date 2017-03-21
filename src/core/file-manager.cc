@@ -146,7 +146,7 @@ namespace Core
   struct PieceRequest FileManager::initPieceRequest() const
   {
     struct PieceRequest req;
-    bzero(&req, sizeof (req));
+    bzero(&req, sizeof(req));
     req.len = 13;
     req.id = 6;
     return req;

@@ -53,7 +53,7 @@ namespace Core
       remoteaddr.sin_port = htons(peer.getPort());
 
       // we try to connect
-      int res = connect(sockfd, (struct sockaddr *)&remoteaddr, sizeof (remoteaddr));
+      int res = connect(sockfd, (struct sockaddr *)&remoteaddr, sizeof(remoteaddr));
 
       // if the connection did not fail immediatly, we put the peer in "pending" state
       if (res != -1 || errno == EINPROGRESS)
@@ -62,7 +62,7 @@ namespace Core
         pendingPeers_.insert(std::make_pair(sockfd, peer));
         eMutex_.unlock();
         struct epoll_event ev;
-        bzero(&ev, sizeof (struct epoll_event));
+        bzero(&ev, sizeof(struct epoll_event));
         ev.events = EPOLLOUT | EPOLLERR | EPOLLHUP | EPOLLRDHUP;
         ev.data.fd = sockfd;
         epoll_ctl(epfd_, EPOLL_CTL_ADD, sockfd, &ev);
@@ -77,7 +77,7 @@ namespace Core
   {
     std::cout << "Started the updatePeers thread..." << std::endl;
     int handshakeSuccess = 0;
-    struct epoll_event *events = (struct epoll_event *)calloc(150, sizeof (struct epoll_event));
+    struct epoll_event *events = (struct epoll_event *)calloc(150, sizeof(struct epoll_event));
 
     while (pendingPeers_.size() || connectedPeers_.size())
     {

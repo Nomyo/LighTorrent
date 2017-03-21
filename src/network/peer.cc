@@ -26,21 +26,21 @@ namespace Network
       int recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
       if (recvN > 0)
       {
-	for (int i = 0; i < recvN; i++)
-	  res += buffer[i];
-	bzero(buffer, READ_BUF_SIZE);
-	totalReceived_ = recvN;
-	if (recvN >= READ_BUF_SIZE - 1)
-	{
-	  std::cout << "SHOULDN'T BE THERE FOR NOW" << std::endl;
-	  exit(27);
-	}
+        for (int i = 0; i < recvN; i++)
+          res += buffer[i];
+        bzero(buffer, READ_BUF_SIZE);
+        totalReceived_ = recvN;
+        if (recvN >= READ_BUF_SIZE - 1)
+        {
+          std::cout << "SHOULDN'T BE THERE FOR NOW" << std::endl;
+          exit(27);
+        }
       }
       parseMessage(res);
 
       if (expectReceived_ == totalReceived_)
       {
-	// Do action
+        // Do action
       }
 
     }
@@ -70,11 +70,11 @@ namespace Network
     else
     {
       if (msg[4] == 4)
-	std::cout << "HAVE messages" << std::endl;
+        std::cout << "HAVE messages" << std::endl;
       else if (msg[4] == 5)
-	std::cout << "BITFIELDS messages" << std::endl;
+        std::cout << "BITFIELDS messages" << std::endl;
       else if (msg[4] == 6)
-	std::cout << "REQUEST messages" << std::endl;
+        std::cout << "REQUEST messages" << std::endl;
     }
   }
 
@@ -93,7 +93,7 @@ namespace Network
     {
       ret = (struct handshake *)buffer;
       if (memcmp(ret->info_hash, torrent_->getInfoHash().c_str(), 20) == 0)
-	handshakeDone_ = true;
+        handshakeDone_ = true;
     }
   }
 
@@ -104,7 +104,7 @@ namespace Network
     Core::ColorModifier cdef(Core::ColorCode::FG_DEFAULT);
 
     std::cout << clblue << ip_  << " " << cdef << " "
-	      << clgreen << port_ << cdef << std::endl;
+              << clgreen << port_ << cdef << std::endl;
   }
 
   bool Peer::operator==(const Peer& p)

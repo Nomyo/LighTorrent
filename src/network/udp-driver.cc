@@ -31,9 +31,9 @@ namespace Network
       setSocketTimeout(fd_);
 
       nbAttempt++;
-      int nbSend = sendto(fd_, &request, sizeof (request), 0,
+      int nbSend = sendto(fd_, &request, sizeof(request), 0,
           (struct sockaddr *)&trackerInfo_.getServerAddress(),
-          sizeof (trackerInfo_.getServerAddress()));
+          sizeof(trackerInfo_.getServerAddress()));
       if (nbSend == -1)
       {
         std::cerr << "Could not send connect request to tracker..." << std::endl;
@@ -42,7 +42,7 @@ namespace Network
       std::cout << "connecting... (attempt " << nbAttempt << "...)" << std::endl;
 
       socklen_t res = 0;
-      int nbRecv = recvfrom(fd_, &response, sizeof (response), 0,
+      int nbRecv = recvfrom(fd_, &response, sizeof(response), 0,
           (struct sockaddr *)&trackerInfo_.getServerAddress(),
           &res);
 
@@ -51,6 +51,8 @@ namespace Network
       else
         close(fd_);
     }
+    if (!receivedPackets)
+      std::cout << "Failed to connect to tracker." << std::endl;
 
     return response.connectionId;
   }
@@ -66,9 +68,9 @@ namespace Network
 
     while (!receivedPackets && nbAnnounce < NB_RETRY)
     {
-      int nbSend = sendto(fd_, &arequest, sizeof (arequest), 0,
+      int nbSend = sendto(fd_, &arequest, sizeof(arequest), 0,
           (struct sockaddr *)&trackerInfo_.getServerAddress(),
-          sizeof (trackerInfo_.getServerAddress()));
+          sizeof(trackerInfo_.getServerAddress()));
       if (nbSend == -1)
       {
         std::cerr << "Could not send announce message to tracker..." << std::endl;
@@ -77,7 +79,7 @@ namespace Network
       std::cout << "announcing... (attempt " << nbAnnounce << "...)" << std::endl;
 
       socklen_t res = 0;
-      int nbRecv = recvfrom(fd_, &aresponse, sizeof (aresponse), 0,
+      int nbRecv = recvfrom(fd_, &aresponse, sizeof(aresponse), 0,
           (struct sockaddr *)&trackerInfo_.getServerAddress(),
           &res);
 
@@ -94,6 +96,9 @@ namespace Network
       }
       nbAnnounce++;
     }
+    if (!receivedPackets)
+      std::cout << "No response from the tracker." << std::endl;
+
     close(fd_);
     return peers;
   }
@@ -123,7 +128,7 @@ namespace Network
     std::string peer_id = t->getPeerId();
 
     struct announceRequest ar;
-    bzero(&ar, sizeof (ar));
+    bzero(&ar, sizeof(ar));
 
     ar.connectionId = connectionId;
     ar.action = __builtin_bswap32(1);
@@ -149,7 +154,7 @@ namespace Network
     struct timeval tv;
     tv.tv_sec = TIMEOUT_SEC;
     tv.tv_usec = 0;
-    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof (tv)) < 0)
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv)) < 0)
       std::cerr << "Could not set timeout to udp socket..." << std::endl;
   }
 }

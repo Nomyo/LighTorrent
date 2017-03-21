@@ -22,7 +22,7 @@ namespace Network
     else
     {
 
-      bzero((char *)&serverAddress_, sizeof (serverAddress_));
+      bzero((char *)&serverAddress_, sizeof(serverAddress_));
 
       serverAddress_.sin_family = AF_INET;
 

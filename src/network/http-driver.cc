@@ -46,7 +46,7 @@ namespace Network
 
     std::cout << "Connecting to tracker..." << std::endl;
     if (connect(fd_, (struct sockaddr*)&trackerInfo.getServerAddress(),
-                sizeof (trackerInfo.getServerAddress())) < 0)
+                sizeof(trackerInfo.getServerAddress())) < 0)
     {
       std::cerr << "Could not connect to url " << urlParser.getBaseUrl() << std::endl;
       return -1;
@@ -72,7 +72,7 @@ namespace Network
   void HttpDriver::buildResult()
   {
     std::string res = "";
-    char *buffer = (char*)calloc(sizeof (char), READ_BUF_SIZE);
+    char *buffer = (char*)calloc(sizeof(char), READ_BUF_SIZE);
     int recvN = recv(fd_, buffer, READ_BUF_SIZE - 1, 0);
 
     buffer[READ_BUF_SIZE - 1] = '\0';
