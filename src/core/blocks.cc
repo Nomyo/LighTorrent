@@ -5,12 +5,10 @@ namespace Core
   Blocks::Blocks(int pieceLength)
     : isFull_(false), isWaiting_(false)
   {
-    int nbBlocks = pieceLength / 16384 + (pieceLength % 16384 == 0 ? 0 : 1);
+    int nbBlocks = pieceLength / BLOCKSIZE + (pieceLength % BLOCKSIZE == 0 ? 0 : 1);
     blocks_ = std::vector<bool>(nbBlocks);
     requested_ = std::vector<bool>(nbBlocks);
     data_ = std::vector<std::string>(nbBlocks);
-    //std::cout << "Initialized a piece of " << blocks_.size() << " blocks. - "
-    //          << pieceLength << std::endl;
   }
 
   Blocks::~Blocks()

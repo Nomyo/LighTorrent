@@ -23,26 +23,13 @@ namespace Core
       left -= pieceSize;
     }
 
-    createFiles();
+    initDirectory();
+    dumpPieces();
 
     std::cout << "total file size = " << t->getLeft() << std::endl;
     std::cout << "Initialized FileManager with " << t->getNbPieces()
       << " pieces of size ~" << t->getPiecesLength() << std::endl;
     std::cout << "Pieces Hash length = " << t->getPiecesHash().length() << std::endl;
-  }
-
-  std::string FileManager::extractFileName(std::string& fullPath) const
-  {
-    int counterDot = fullPath.length() - 1;
-    while (fullPath[counterDot] != '.')
-      counterDot--;
-    counterDot -= 1;
-
-    int counterSlash = counterDot;
-    while (counterSlash >= 0 && fullPath[counterSlash] != '/')
-      counterSlash--;
-
-    return fullPath.substr(counterSlash + 1, counterDot - counterSlash);
   }
 
   struct PieceRequest FileManager::getPieceRequest(const std::vector<bool>& have)
@@ -53,12 +40,13 @@ namespace Core
     struct PieceRequest req = initPieceRequest();
     for (size_t i = 0; i < have.size(); i++)
     {
+      // If the block has not been downloaded yet and is now waiting for a response
       if (have[i] && !pieces_[i].isFull() && !pieces_[i].isWaiting())
       {
         uint32_t blockOffset = pieces_[i].getBlockOffset();
         req.pieceIndex = i;
         req.blockOffset = blockOffset;
-        req.blockSize = 16384;
+        req.blockSize = BLOCKSIZE;
         break;
       }
     }
@@ -71,26 +59,23 @@ namespace Core
     pieces_[pr.pieceIndex].setBlockData(pr.blockOffset, data);
   }
 
-  void FileManager::createFiles()
+  void FileManager::initDirectory()
   {
-    for (size_t i = 0; i < files_.size(); i++)
+    struct stat buffer;
+    if (stat((directory_ + "/").c_str(), &buffer) != 0) // directory doesn't exist
     {
-      struct stat buffer;
-      if (stat(("Downloads/" + files_[i].first).c_str(), &buffer) != 0) // file doesn't exist
+      mkdir(directory_.c_str(), 0777);
+      for (size_t i = 0; i < files_.size(); i++)
       {
-        mkdir("Downloads", 0777);
-        std::ofstream ofs("Downloads/" + files_[i].first, std::ios::binary | std::ios::out);
+        std::ofstream ofs(directory_ + "/" + files_[i].first, std::ios::binary | std::ios::out);
         ofs.seekp(files_[i].second - 1);
         ofs.write("", 1);
         ofs.close();
         std::cout << "Created file " << files_[i].first << std::endl;
       }
-      else
-      {
-        verifyHashes();
-        break;
-      }
     }
+    else
+      verifyHashes();
   }
 
   void FileManager::verifyHashes()
@@ -98,13 +83,13 @@ namespace Core
     std::cout << "Verifying hashes...\r" << std::flush;
     long long int pieceLength = torrent_->getPiecesLength();
     unsigned char buffer[pieceLength] = { 0 };
-    size_t bufferPos = 0;
-    size_t filePos = 0;
+    int bufferPos = 0;
+    int filePos = 0;
     size_t hashCounter = 0;
     std::ifstream ifs;
     size_t fileCounter = 0;
 
-    ifs.open(("Downloads/" + files_[fileCounter].first).c_str(), std::ios::in | std::ios::binary);
+    ifs.open((directory_ + "/" + files_[fileCounter].first).c_str(), std::ios::in | std::ios::binary);
     while (fileCounter != files_.size())
     {
       char c;
@@ -129,12 +114,38 @@ namespace Core
         fileCounter++;
         ifs.close();
         if (fileCounter < files_.size())
-          ifs.open(("Downloads/" + files_[fileCounter].first).c_str(), std::ios::in | std::ios::binary);
+          ifs.open((directory_ + "/" + files_[fileCounter].first).c_str(), std::ios::in | std::ios::binary);
         filePos = 0;
       }
     }
     ifs.close();
+  }
 
+  struct PieceRequest FileManager::initPieceRequest() const
+  {
+    struct PieceRequest req;
+    bzero(&req, sizeof(req));
+    req.len = 13;
+    req.id = 6;
+    return req;
+  }
+
+  std::string FileManager::extractFileName(const std::string& fullPath) const
+  {
+    int counterDot = fullPath.length() - 1;
+    while (fullPath[counterDot] != '.')
+      counterDot--;
+    counterDot -= 1;
+
+    int counterSlash = counterDot;
+    while (counterSlash >= 0 && fullPath[counterSlash] != '/')
+      counterSlash--;
+
+    return fullPath.substr(counterSlash + 1, counterDot - counterSlash);
+  }
+
+  void FileManager::dumpPieces() const
+  {
     ColorModifier cldef(ColorCode::FG_DEFAULT);
     ColorModifier clyel(ColorCode::FG_LIGHT_YELLOW);
     size_t nbHash = 0;
@@ -156,15 +167,6 @@ namespace Core
       std::cout << clyel << files_[i].first << ": "
                 << (nbGood * 100) / nbTotal << "%" << cldef << std::endl;
     }
-  }
-
-  struct PieceRequest FileManager::initPieceRequest() const
-  {
-    struct PieceRequest req;
-    bzero(&req, sizeof(req));
-    req.len = 13;
-    req.id = 6;
-    return req;
   }
 
   std::vector<Blocks> FileManager::getPieces()

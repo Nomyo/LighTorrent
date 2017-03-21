@@ -2,6 +2,8 @@
 #include <stdint.h>
 #include <vector>
 
+#define BLOCKSIZE 16384
+
 namespace Core
 {
   class Blocks

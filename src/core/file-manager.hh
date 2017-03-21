@@ -40,10 +40,11 @@ namespace Core
     std::vector<Blocks> getPieces();
 
   private:
-    void createFiles(); // /!\ heavy I/O
+    void initDirectory(); // /!\ heavy I/O
     void verifyHashes();
     struct PieceRequest initPieceRequest() const;
-    std::string extractFileName(std::string& fullPath) const;
+    std::string extractFileName(const std::string& fullPath) const;
+    void dumpPieces() const;
 
     Torrent *torrent_ = nullptr;
     std::vector<Blocks> pieces_;
