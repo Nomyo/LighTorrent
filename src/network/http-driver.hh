@@ -28,10 +28,9 @@ namespace Network
       ~HttpDriver();
 
       std::vector<Peer> announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
-      int sendRequest(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
-      std::string getResult();
 
     private:
+      int sendRequest(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
       void formatResult(std::string& result);
       void buildResult();
 

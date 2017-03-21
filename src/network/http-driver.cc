@@ -64,11 +64,6 @@ namespace Network
     return 1;
   }
 
-  std::string HttpDriver::getResult()
-  {
-    return resultBody_;
-  }
-
   void HttpDriver::buildResult()
   {
     std::string res = "";
