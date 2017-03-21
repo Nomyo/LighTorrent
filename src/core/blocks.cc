@@ -64,4 +64,9 @@ namespace Core
   {
     return data_.size();
   }
+
+  const std::vector<std::string>& Blocks::getData() const
+  {
+    return data_;
+  }
 }

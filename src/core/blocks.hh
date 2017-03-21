@@ -20,6 +20,7 @@ namespace Core
       void setFull(bool full);
       bool isWaiting() const;
       long long int getSize() const;
+      const std::vector<std::string>& getData() const;
 
     private:
       bool isFull_;
