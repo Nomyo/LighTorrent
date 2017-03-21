@@ -15,7 +15,7 @@ namespace Core
   public:
     // Constructor & Destructor
     Torrent();
-    Torrent(const BDico& metaInfo);
+    Torrent(const BDico& metaInfo, const std::string& fileName);
     ~Torrent() = default;
 
     // Action
@@ -27,6 +27,7 @@ namespace Core
 
     // Getter
     std::vector<std::string> getAnnounceList() const;
+    std::string getFileName() const;
     std::string getEncodedInfoHash() const;
     std::string getInfoHash() const;
     std::string getPeerId() const;
@@ -43,6 +44,7 @@ namespace Core
   private:
     std::vector<std::string> announceList_;
 
+    std::string fileName_;
     std::string infoHash_;
     std::string encodedInfoHash_;
     std::string peerId_;

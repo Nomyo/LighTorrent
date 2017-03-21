@@ -13,6 +13,7 @@ namespace Core
       hashes_.push_back(pieces.substr(i * 20, 20));
 
     files_ = t->getFiles();
+    directory_ = extractFileName(t->getFileName());
 
     long long int left = t->getLeft();
     while (left > 0)
@@ -28,6 +29,20 @@ namespace Core
     std::cout << "Initialized FileManager with " << t->getNbPieces()
       << " pieces of size ~" << t->getPiecesLength() << std::endl;
     std::cout << "Pieces Hash length = " << t->getPiecesHash().length() << std::endl;
+  }
+
+  std::string FileManager::extractFileName(std::string& fullPath) const
+  {
+    int counterDot = fullPath.length() - 1;
+    while (fullPath[counterDot] != '.')
+      counterDot--;
+    counterDot -= 1;
+
+    int counterSlash = counterDot;
+    while (counterSlash >= 0 && fullPath[counterSlash] != '/')
+      counterSlash--;
+
+    return fullPath.substr(counterSlash + 1, counterDot - counterSlash);
   }
 
   struct PieceRequest FileManager::getPieceRequest(const std::vector<bool>& have)

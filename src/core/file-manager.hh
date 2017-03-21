@@ -43,10 +43,12 @@ namespace Core
     void createFiles(); // /!\ heavy I/O
     void verifyHashes();
     struct PieceRequest initPieceRequest() const;
+    std::string extractFileName(std::string& fullPath) const;
 
     Torrent *torrent_ = nullptr;
     std::vector<Blocks> pieces_;
     std::vector<std::string> hashes_;
+    std::string directory_;
 
     std::vector<std::pair<std::string, long long int>> files_;
   };

@@ -7,8 +7,9 @@ namespace Core
   Torrent::Torrent()
   { }
 
-  Torrent::Torrent(const BDico& metaInfo)
-    : peerId_("-LHT01-1234568765011")
+  Torrent::Torrent(const BDico& metaInfo, const std::string& fileName)
+    : fileName_(fileName)
+    , peerId_("-LHT01-1234568765011")
     , metaInfo_(metaInfo)
     , port_(80)
     , uploaded_(0)
@@ -122,6 +123,11 @@ namespace Core
   std::vector<std::string> Torrent::getAnnounceList() const
   {
     return announceList_;
+  }
+
+  std::string Torrent::getFileName() const
+  {
+    return fileName_;
   }
 
   std::string Torrent::getEncodedInfoHash() const

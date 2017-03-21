@@ -136,24 +136,14 @@ namespace Core
 
   void PeerDriver::addNewPeers(std::vector<Network::Peer> peers)
   {
-    //waitingPeers_.insert(waitingPeers_.end(), peers.begin(), peers.end());
-    // auto it = std::find_if(connectedPeers_.begin(), connectedPeers_.end(),
-    // 			   [this](auto s)
-    // 			   {
-    // 			     return std::find(waitingPeers_.begin(), waitingPeers_.end(), s.second)
-    // 			     != waitingPeers_.end(); });
-
-    // waitingPeers_.insert(waitingPeers_.end(), it, peers.end());
-
-    // auto lambda = [this](auto ) { return }
     std::copy_if(peers.begin(), peers.end(), std::back_inserter(waitingPeers_),
-		 [this](auto s)
-		 {
-		   for (auto& i : connectedPeers_)
-		     if (i.second == s)
-		       return false;
-		   return true;
-		 }
+                [this](auto s)
+                {
+                  for (auto& i : connectedPeers_)
+                    if (i.second == s)
+                       return false;
+                   return true;
+                 }
       );
   }
 

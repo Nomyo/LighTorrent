@@ -24,7 +24,7 @@ namespace Core
       return;
     }
 
-    torrent_ = (getType<BType_ptr, BDico>(decodedFile));
+    torrent_ = Torrent(getType<BType_ptr, BDico>(decodedFile), filename);
 
     Core::URLUtils url;
     std::string urlGenerated = url.generateURL(torrent_);
