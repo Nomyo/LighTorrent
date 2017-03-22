@@ -113,6 +113,7 @@ namespace Core
         }
       }
 
+      pieces_[pr.pieceIndex].clearData();
       std::cout << "Wrote a block of data to file." << std::endl;
     }
   }

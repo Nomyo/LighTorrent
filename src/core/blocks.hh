@@ -15,6 +15,7 @@ namespace Core
 
       int getBlockOffset();
       void setBlockData(uint32_t block, const std::string& data);
+      void clearData();
 
       bool isFull() const;
       void setFull(bool full);

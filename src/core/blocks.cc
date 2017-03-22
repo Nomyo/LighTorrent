@@ -31,6 +31,13 @@ namespace Core
     return -1;
   }
 
+  void Blocks::clearData()
+  {
+    blocks_.clear();
+    requested_.clear();
+    data_.clear();
+  }
+
   void Blocks::setBlockData(uint32_t block, const std::string& data)
   {
     data_[block] = data;
