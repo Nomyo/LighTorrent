@@ -3,7 +3,7 @@
 #include <iostream>
 #include <string>
 
-#include "../network/tracker-connector.hh"
+#include "network/tracker-connector.hh"
 
 #include "torrent.hh"
 

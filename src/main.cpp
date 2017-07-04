@@ -1,9 +1,9 @@
-#include "core/client.hh"
+#include "core/torrent-manager.hh"
 
 int main(void)
 {
-  Core::Client client;
-  client.download("tests/l.torrent");
+  Core::TorrentManager torrentManager;
+  torrentManager.download("tests/l.torrent");
   //client.download("tests/secretFamilyRecipes.torrent");
 
   return 0;

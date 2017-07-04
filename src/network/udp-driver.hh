@@ -6,10 +6,10 @@
 #include <string.h>
 #include <vector>
 
-#include "../core/torrent.hh"
-#include "../core/url-utils.hh"
+#include "core/torrent.hh"
+#include "core/url-utils.hh"
 
-#include "tracker-info.hh"
+#include "tracker.hh"
 #include "peer.hh"
 #include "utils.hh"
 
@@ -63,7 +63,7 @@ namespace Network
 
     public:
       // Ctor & Dtor
-      UdpDriver(Torrent *t, const TrackerInfo& trackerInfo);
+      UdpDriver(Torrent *t, const Tracker& tracker);
       ~UdpDriver();
 
       std::vector<Network::Peer> announce();
@@ -74,7 +74,7 @@ namespace Network
 
       int fd_;
       Torrent *torrent_;
-      TrackerInfo trackerInfo_;
+      Tracker tracker_;
   };
 
   struct connectionRequest createRequestAnnounce(int transactionId);

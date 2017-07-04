@@ -1,19 +1,19 @@
-#include "client.hh"
+#include "torrent-manager.hh"
 
 namespace Core
 {
 
-  Client::Client()
+  TorrentManager::TorrentManager()
   { }
 
-  Client::Client(Torrent torrent)
+  TorrentManager::TorrentManager(Torrent torrent)
     : torrent_(torrent)
   { }
 
-  Client::~Client()
+  TorrentManager::~TorrentManager()
   { }
 
-  void Client::download(const std::string& filename)
+  void TorrentManager::download(const std::string& filename)
   {
     BEncodeDriver driver;
     auto decodedFile = driver.bDecodeFile(filename);
@@ -28,19 +28,8 @@ namespace Core
 
     Core::URLUtils url;
     std::string urlGenerated = url.generateURL(torrent_);
-    //Network::UrlParser up(urlGenerated);
-    //up.dump();
-    //std::cout << std::endl;
-
-    //// Useless for now because we treat only one tracker.
-    //TrackerDriver trackDriver(&torrent_);
-    //trackDriver.createConnectors();
-    //trackDriver.announces();
-
     Network::TrackerConnector tc(&torrent_);
     PeerDriver peerDriver(tc.announce(urlGenerated), &torrent_);
-    //peerDriver.startLeeching();
-    //peerDriver.dumpPeers();
-    //peers_ = tc.announce(urlGenerated);
+
   }
 } // namespace Network

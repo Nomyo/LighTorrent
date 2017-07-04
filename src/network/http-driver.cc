@@ -17,12 +17,12 @@ namespace Network
       close(fd_);
   }
 
-  std::vector<Peer> HttpDriver::announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo)
+  std::vector<Peer> HttpDriver::announce(const UrlParser& urlParser, const Tracker& tracker)
   {
     using namespace BEncode;
     std::vector<Peer> peers;
 
-    if (sendRequest(urlParser, trackerInfo) != -1)
+    if (sendRequest(urlParser, tracker) != -1)
     {
       BEncodeDriver driver;
       auto result_node = getType<BType_ptr, BDico>(driver.bDecode(resultBody_));
@@ -36,7 +36,7 @@ namespace Network
     return peers;
   }
 
-  int HttpDriver::sendRequest(const UrlParser& urlParser, const TrackerInfo& trackerInfo)
+  int HttpDriver::sendRequest(const UrlParser& urlParser, const Tracker& tracker)
   {
     std::string request = "GET " + urlParser.getBody() + " HTTP/1.1\r\n";
     request += "Host: " + urlParser.getHost() + "\r\n";
@@ -45,8 +45,8 @@ namespace Network
     request += "\r\n";
 
     std::cout << "Connecting to tracker..." << std::endl;
-    if (connect(fd_, (struct sockaddr*)&trackerInfo.getServerAddress(),
-                sizeof(trackerInfo.getServerAddress())) < 0)
+    if (connect(fd_, (struct sockaddr*)&tracker.getServerAddress(),
+                sizeof(tracker.getServerAddress())) < 0)
     {
       std::cerr << "Could not connect to url " << urlParser.getBaseUrl() << std::endl;
       return -1;

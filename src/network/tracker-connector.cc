@@ -12,17 +12,18 @@ namespace Network
 
   std::vector<Network::Peer> TrackerConnector::announce(const std::string& url)
   {
+    std::cout << "Announcing to URL <" << url << ">" << std::endl;
     urlParser_.parseUrl(url);
-    trackerInfo_.setTrackerInfo(urlParser_.getHost(), urlParser_.getPort());
+    tracker_.setTracker(urlParser_.getHost(), urlParser_.getPort());
 
     if (urlParser_.getProtocol() == UrlProtocol::Http)
     {
       HttpDriver httpDriver;
-      return httpDriver.announce(urlParser_, trackerInfo_);
+      return httpDriver.announce(urlParser_, tracker_);
     }
     else
     {
-      UdpDriver udpDriver(torrent_, trackerInfo_);
+      UdpDriver udpDriver(torrent_, tracker_);
       return udpDriver.announce();
     }
 

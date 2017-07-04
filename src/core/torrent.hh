@@ -3,8 +3,8 @@
 #include <openssl/sha.h>
 #include <stddef.h>
 
-#include "../bencode/bencode-dico.hh"
-#include "../bencode/bencode-utils.hh"
+#include "bencode/bencode-dico.hh"
+#include "bencode/bencode-utils.hh"
 
 namespace Core
 {

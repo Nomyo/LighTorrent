@@ -1,6 +1,6 @@
-#include  "torrent.hh"
-#include "../core/color.hh"
-#include "../core/url-utils.hh"
+#include "torrent.hh"
+#include "core/color.hh"
+#include "core/url-utils.hh"
 
 namespace Core
 {

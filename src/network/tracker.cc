@@ -1,19 +1,19 @@
-#include "tracker-info.hh"
+#include "tracker.hh"
 
 namespace Network
 {
-  TrackerInfo::TrackerInfo()
+  Tracker::Tracker()
   {}
 
-  TrackerInfo::TrackerInfo(const std::string& host, int port)
+  Tracker::Tracker(const std::string& host, int port)
   {
-    setTrackerInfo(host, port);
+    setTracker(host, port);
   }
 
-  TrackerInfo::~TrackerInfo()
+  Tracker::~Tracker()
   {}
 
-  void TrackerInfo::setTrackerInfo(const std::string& host, int port)
+  void Tracker::setTracker(const std::string& host, int port)
   {
     server_ = gethostbyname(host.c_str());
 
@@ -34,17 +34,17 @@ namespace Network
     }
   }
 
-  const struct sockaddr_in& TrackerInfo::getServerAddress() const
+  const struct sockaddr_in& Tracker::getServerAddress() const
   {
     return serverAddress_;
   }
 
-  const struct hostent *TrackerInfo::getServer() const
+  const struct hostent *Tracker::getServer() const
   {
     return server_;
   }
 
-  bool TrackerInfo::isResolved() const
+  bool Tracker::isResolved() const
   {
     return (server_ != nullptr);
   }

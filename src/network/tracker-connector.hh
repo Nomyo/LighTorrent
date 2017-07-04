@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "../core/torrent.hh"
+#include "core/torrent.hh"
 
 #include "url-parser.hh"
-#include "tracker-info.hh"
+#include "tracker.hh"
 #include "http-driver.hh"
 #include "udp-driver.hh"
 #include "peer.hh"
@@ -28,7 +28,7 @@ namespace Network
 
   private:
     UrlParser urlParser_;
-    TrackerInfo trackerInfo_;
+    Tracker tracker_;
     Torrent *torrent_;
   };
 }

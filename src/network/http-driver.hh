@@ -7,12 +7,12 @@
 #include <sstream>
 #include <vector>
 
-#include "../bencode/fwd.hh"
-#include "../bencode/bencode-driver.hh"
-#include "../bencode/bencode-utils.hh"
+#include "bencode/fwd.hh"
+#include "bencode/bencode-driver.hh"
+#include "bencode/bencode-utils.hh"
 
 #include "url-parser.hh"
-#include "tracker-info.hh"
+#include "tracker.hh"
 #include "peer.hh"
 #include "utils.hh"
 
@@ -27,11 +27,15 @@ namespace Network
       HttpDriver();
       ~HttpDriver();
 
-      std::vector<Peer> announce(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
+      // Returns a list of peers for a given tracker
+      std::vector<Peer> announce(const UrlParser& urlParser, const Tracker& tracker);
 
     private:
-      int sendRequest(const UrlParser& urlParser, const TrackerInfo& trackerInfo);
+      // Sends a request to a given tracker
+      int sendRequest(const UrlParser& urlParser, const Tracker& tracker);
+      // Reads the result of the HTTP request
       void formatResult(std::string& result);
+      // Builds the result from the return message
       void buildResult();
 
       int fd_;

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "../network/peer.hh"
-#include "../network/tracker-connector.hh"
-#include "../network/url-parser.hh"
+#include "network/peer.hh"
+#include "network/tracker-connector.hh"
+#include "network/url-parser.hh"
 
-#include "../bencode/bencode-driver.hh"
-#include "../bencode/bencode-utils.hh"
-#include "../bencode/fwd.hh"
+#include "bencode/bencode-driver.hh"
+#include "bencode/bencode-utils.hh"
+#include "bencode/fwd.hh"
 
 #include "url-utils.hh"
 #include "tracker-driver.hh"
@@ -17,13 +17,13 @@ using namespace BEncode;
 
 namespace Core
 {
-  class Client
+  class TorrentManager
   {
   public:
     // Ctor & Dtor
-    Client();
-    Client(Torrent torrent);
-    ~Client();
+    TorrentManager();
+    TorrentManager(Torrent torrent);
+    ~TorrentManager();
 
     void download(const std::string& filename);
 

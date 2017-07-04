@@ -5,6 +5,8 @@ project(LighTorrent)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -pthread -g -O0 -Wall -Wextra")
 
+include_directories(src/)
+
 set(
 
   SOURCE_FILES
@@ -13,7 +15,7 @@ set(
   src/core/url-utils.cc
   src/core/tracker-driver.cc
   src/core/torrent.cc
-  src/core/client.cc
+  src/core/torrent-manager.cc
   src/core/peer-driver.cc
   src/core/message-builder.cc
   src/core/file-manager.cc
@@ -28,7 +30,7 @@ set(
   src/network/url-parser.cc
   src/network/http-driver.cc
   src/network/udp-driver.cc
-  src/network/tracker-info.cc
+  src/network/tracker.cc
   src/network/peer.cc
   src/network/utils.cc
   )

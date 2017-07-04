@@ -1,9 +1,9 @@
 #pragma once
 
-#include "../core/color.hh"
-#include "../core/torrent.hh"
-#include "../core/message-builder.hh"
-#include "../core/file-manager.hh"
+#include "core/color.hh"
+#include "core/torrent.hh"
+#include "core/message-builder.hh"
+#include "core/file-manager.hh"
 
 #include <string>
 #include <string.h>

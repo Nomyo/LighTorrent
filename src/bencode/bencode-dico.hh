@@ -3,6 +3,8 @@
 #include "bencode-type.hh"
 #include "bencode-string.hh"
 
+#include "core/color.hh"
+
 #include <map>
 #include <memory>
 #include <iostream>

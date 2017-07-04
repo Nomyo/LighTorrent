@@ -16,8 +16,8 @@
 #include <mutex>
 #include <algorithm>
 
-#include "../network/tracker-connector.hh"
-#include "../network/peer.hh"
+#include "network/tracker-connector.hh"
+#include "network/peer.hh"
 #include "file-manager.hh"
 #include "torrent.hh"
 #include "url-utils.hh"

@@ -8,10 +8,10 @@ namespace Network
 {
   using Peer = Network::Peer;
 
-  UdpDriver::UdpDriver(Torrent *t, const TrackerInfo& trackerInfo)
+  UdpDriver::UdpDriver(Torrent *t, const Tracker& tracker)
   {
     torrent_ = t;
-    trackerInfo_ = trackerInfo;
+    tracker_ = tracker;
   }
 
   UdpDriver::~UdpDriver()
@@ -32,8 +32,8 @@ namespace Network
 
       nbAttempt++;
       int nbSend = sendto(fd_, &request, sizeof(request), 0,
-          (struct sockaddr *)&trackerInfo_.getServerAddress(),
-          sizeof(trackerInfo_.getServerAddress()));
+          (struct sockaddr *)&tracker_.getServerAddress(),
+          sizeof(tracker_.getServerAddress()));
       if (nbSend == -1)
       {
         std::cerr << "Could not send connect request to tracker..." << std::endl;
@@ -43,7 +43,7 @@ namespace Network
 
       socklen_t res = 0;
       int nbRecv = recvfrom(fd_, &response, sizeof(response), 0,
-          (struct sockaddr *)&trackerInfo_.getServerAddress(),
+          (struct sockaddr *)&tracker_.getServerAddress(),
           &res);
 
       if (nbRecv != -1)
@@ -69,8 +69,8 @@ namespace Network
     while (!receivedPackets && nbAnnounce < NB_RETRY)
     {
       int nbSend = sendto(fd_, &arequest, sizeof(arequest), 0,
-          (struct sockaddr *)&trackerInfo_.getServerAddress(),
-          sizeof(trackerInfo_.getServerAddress()));
+          (struct sockaddr *)&tracker_.getServerAddress(),
+          sizeof(tracker_.getServerAddress()));
       if (nbSend == -1)
       {
         std::cerr << "Could not send announce message to tracker..." << std::endl;
@@ -80,7 +80,7 @@ namespace Network
 
       socklen_t res = 0;
       int nbRecv = recvfrom(fd_, &aresponse, sizeof(aresponse), 0,
-          (struct sockaddr *)&trackerInfo_.getServerAddress(),
+          (struct sockaddr *)&tracker_.getServerAddress(),
           &res);
 
       if (nbRecv != -1)

@@ -6,8 +6,8 @@
 #include <iomanip>
 #include <ctype.h>
 
-#include "../bencode/bencode-dico.hh"
-#include "../bencode/bencode-utils.hh"
+#include "bencode/bencode-dico.hh"
+#include "bencode/bencode-utils.hh"
 
 #include "torrent.hh"
 

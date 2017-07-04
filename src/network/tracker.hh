@@ -6,20 +6,19 @@
 
 namespace Network
 {
-  class TrackerInfo
+  class Tracker
   {
     public:
       // Ctor & Dtor
-      TrackerInfo();
-      TrackerInfo(const std::string& host, int port);
-      ~TrackerInfo();
-
-      void setTrackerInfo(const std::string& host, int port);
+      Tracker();
+      Tracker(const std::string& host, int port);
+      ~Tracker();
 
       // Getters
       const struct sockaddr_in& getServerAddress() const;
       const struct hostent *getServer() const;
       bool isResolved() const;
+      void setTracker(const std::string& host, int port);
 
     private:
       struct sockaddr_in serverAddress_;

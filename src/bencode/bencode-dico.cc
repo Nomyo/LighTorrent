@@ -1,5 +1,4 @@
 #include "bencode-dico.hh"
-#include "../core/color.hh"
 
 namespace BEncode
 {
