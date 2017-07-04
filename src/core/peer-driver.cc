@@ -31,7 +31,7 @@ namespace Core
       {
         Core::URLUtils url;
         std::string urlGenerated = url.generateURL(*torrent_);
-        Network::TrackerConnector tc(torrent_);
+        Network::Announcer tc(torrent_);
         addNewPeers(tc.announce(urlGenerated));
         connectPeers();
       }

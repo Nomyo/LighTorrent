@@ -6,22 +6,22 @@
 
 #include "core/torrent.hh"
 
-#include "url-parser.hh"
-#include "tracker.hh"
-#include "http-driver.hh"
-#include "udp-driver.hh"
-#include "peer.hh"
+#include "network/url-parser.hh"
+#include "network/tracker/tracker.hh"
+#include "network/tracker/http-driver.hh"
+#include "network/tracker/udp-driver.hh"
+#include "network/peer.hh"
 
 namespace Network
 {
-  class TrackerConnector
+  class Announcer
   {
     using Torrent = Core::Torrent;
 
   public:
     // Ctor & Dtor
-    TrackerConnector(Torrent *t);
-    ~TrackerConnector();
+    Announcer(Torrent *t);
+    ~Announcer();
 
     // Actions
     std::vector<Peer> announce(const std::string& url);

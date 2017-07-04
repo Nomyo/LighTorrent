@@ -9,9 +9,9 @@
 #include "core/torrent.hh"
 #include "core/url-utils.hh"
 
-#include "tracker.hh"
-#include "peer.hh"
-#include "utils.hh"
+#include "network/tracker/tracker.hh"
+#include "network/peer.hh"
+#include "network/utils.hh"
 
 namespace Network
 {

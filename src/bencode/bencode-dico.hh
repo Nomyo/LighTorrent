@@ -1,14 +1,14 @@
 #pragma once
 
-#include "bencode-type.hh"
-#include "bencode-string.hh"
-
-#include "core/color.hh"
-
 #include <map>
 #include <memory>
 #include <iostream>
 #include <exception>
+
+#include "bencode/bencode-type.hh"
+#include "bencode/bencode-string.hh"
+
+#include "core/color.hh"
 
 namespace BEncode
 {

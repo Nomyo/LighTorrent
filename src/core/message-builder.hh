@@ -4,8 +4,8 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "message.hh"
-#include "torrent.hh"
+#include "core/message.hh"
+#include "core/torrent.hh"
 
 namespace Core
 {

@@ -9,7 +9,7 @@
 #include "bencode/bencode-dico.hh"
 #include "bencode/bencode-utils.hh"
 
-#include "torrent.hh"
+#include "core/torrent.hh"
 
 namespace Core
 {

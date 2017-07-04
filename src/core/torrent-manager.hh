@@ -1,17 +1,17 @@
 #pragma once
 
 #include "network/peer.hh"
-#include "network/tracker-connector.hh"
+#include "network/tracker/announcer.hh"
 #include "network/url-parser.hh"
 
 #include "bencode/bencode-driver.hh"
 #include "bencode/bencode-utils.hh"
 #include "bencode/fwd.hh"
 
-#include "url-utils.hh"
-#include "tracker-driver.hh"
-#include "peer-driver.hh"
-#include "torrent.hh"
+#include "core/url-utils.hh"
+#include "core/tracker-driver.hh"
+#include "core/peer-driver.hh"
+#include "core/torrent.hh"
 
 using namespace BEncode;
 

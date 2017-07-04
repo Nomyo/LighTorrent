@@ -1,8 +1,9 @@
 #pragma once
 
-#include "bencode-type.hh"
 #include <vector>
 #include <memory>
+
+#include "bencode/bencode-type.hh"
 
 namespace BEncode
 {

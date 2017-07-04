@@ -1,16 +1,16 @@
-#include "tracker-connector.hh"
+#include "announcer.hh"
 
 namespace Network
 {
-  TrackerConnector::TrackerConnector(Torrent *t)
+  Announcer::Announcer(Torrent *t)
   {
     torrent_ = t;
   }
 
-  TrackerConnector::~TrackerConnector()
+  Announcer::~Announcer()
   {}
 
-  std::vector<Network::Peer> TrackerConnector::announce(const std::string& url)
+  std::vector<Network::Peer> Announcer::announce(const std::string& url)
   {
     std::cout << "Announcing to URL <" << url << ">" << std::endl;
     urlParser_.parseUrl(url);

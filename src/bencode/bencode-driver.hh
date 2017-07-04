@@ -1,14 +1,14 @@
 #pragma once
 
-#include "bencode-type.hh"
-#include "bencode-integer.hh"
-#include "bencode-string.hh"
-#include "bencode-list.hh"
-#include "bencode-dico.hh"
-
 #include <memory>
 #include <iostream>
 #include <fstream>
+
+#include "bencode/bencode-type.hh"
+#include "bencode/bencode-integer.hh"
+#include "bencode/bencode-string.hh"
+#include "bencode/bencode-list.hh"
+#include "bencode/bencode-dico.hh"
 
 namespace BEncode
 {

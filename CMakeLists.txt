@@ -26,11 +26,11 @@ set(
   src/bencode/bencode-list.cc
   src/bencode/bencode-dico.cc
   src/bencode/bencode-driver.cc
-  src/network/tracker-connector.cc
+  src/network/tracker/announcer.cc
   src/network/url-parser.cc
-  src/network/http-driver.cc
-  src/network/udp-driver.cc
-  src/network/tracker.cc
+  src/network/tracker/http-driver.cc
+  src/network/tracker/udp-driver.cc
+  src/network/tracker/tracker.cc
   src/network/peer.cc
   src/network/utils.cc
   )

@@ -3,15 +3,15 @@
 #include <iostream>
 #include <string>
 
-#include "network/tracker-connector.hh"
+#include "network/tracker/announcer.hh"
 
-#include "torrent.hh"
+#include "core/torrent.hh"
 
 namespace Core
 {
   class TrackerDriver
   {
-    using TrackerConnector = Network::TrackerConnector;
+    using Announcer = Network::Announcer;
 
   public:
     // Ctor & Dtor
@@ -23,6 +23,6 @@ namespace Core
 
   private:
     Torrent *torrent_;
-    std::vector<TrackerConnector> trackConnectors_;
+    std::vector<Announcer> announcers_;
   };
 }

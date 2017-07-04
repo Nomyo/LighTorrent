@@ -1,6 +1,6 @@
 #pragma once
 
-#include "bencode-type.hh"
+#include "bencode/bencode-type.hh"
 
 namespace BEncode
 {

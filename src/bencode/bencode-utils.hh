@@ -1,6 +1,6 @@
 #pragma once
 
-#include "fwd.hh"
+#include "bencode/fwd.hh"
 
 namespace BEncode
 {

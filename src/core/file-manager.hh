@@ -11,9 +11,9 @@
 #include <fstream>
 #include <openssl/sha.h>
 
-#include "torrent.hh"
-#include "blocks.hh"
-#include "color.hh"
+#include "core/torrent.hh"
+#include "core/blocks.hh"
+#include "core/color.hh"
 
 namespace Core
 {

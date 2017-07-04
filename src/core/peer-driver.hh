@@ -16,11 +16,12 @@
 #include <mutex>
 #include <algorithm>
 
-#include "network/tracker-connector.hh"
+#include "network/tracker/announcer.hh"
 #include "network/peer.hh"
-#include "file-manager.hh"
-#include "torrent.hh"
-#include "url-utils.hh"
+
+#include "core/file-manager.hh"
+#include "core/torrent.hh"
+#include "core/url-utils.hh"
 
 namespace Core
 {

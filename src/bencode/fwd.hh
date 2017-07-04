@@ -1,7 +1,7 @@
-#include "bencode-dico.hh"
-#include "bencode-string.hh"
-#include "bencode-integer.hh"
-#include "bencode-list.hh"
+#include "bencode/bencode-dico.hh"
+#include "bencode/bencode-string.hh"
+#include "bencode/bencode-integer.hh"
+#include "bencode/bencode-list.hh"
 
 namespace BEncode
 {

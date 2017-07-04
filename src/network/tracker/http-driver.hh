@@ -11,10 +11,10 @@
 #include "bencode/bencode-driver.hh"
 #include "bencode/bencode-utils.hh"
 
-#include "url-parser.hh"
-#include "tracker.hh"
-#include "peer.hh"
-#include "utils.hh"
+#include "network/url-parser.hh"
+#include "network/tracker/tracker.hh"
+#include "network/peer.hh"
+#include "network/utils.hh"
 
 #define READ_BUF_SIZE 6000
 
