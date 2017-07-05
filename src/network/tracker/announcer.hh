@@ -24,7 +24,7 @@ namespace Network
     ~Announcer();
 
     // Actions
-    std::vector<Peer> announce(const std::string& url);
+    std::vector<Peer> announce();
 
   private:
     UrlParser urlParser_;

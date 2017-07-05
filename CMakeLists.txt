@@ -13,7 +13,6 @@ set(
 
   src/main.cpp
   src/core/url-utils.cc
-  src/core/tracker-driver.cc
   src/core/torrent.cc
   src/core/torrent-manager.cc
   src/core/peer-driver.cc

@@ -10,10 +10,11 @@ namespace Network
   Announcer::~Announcer()
   {}
 
-  std::vector<Network::Peer> Announcer::announce(const std::string& url)
+  std::vector<Network::Peer> Announcer::announce()
   {
-    std::cout << "Announcing to URL <" << url << ">" << std::endl;
-    urlParser_.parseUrl(url);
+    std::cout << "Announcing to URL <" << torrent_->getUrlGenerated() << ">"
+              << std::endl;
+    urlParser_.parseUrl(torrent_->getUrlGenerated());
     tracker_.setTracker(urlParser_.getHost(), urlParser_.getPort());
 
     if (urlParser_.getProtocol() == UrlProtocol::Http)

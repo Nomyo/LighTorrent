@@ -29,10 +29,8 @@ namespace Core
     {
       if (pendingPeers_.size() == 0)
       {
-        Core::URLUtils url;
-        std::string urlGenerated = url.generateURL(*torrent_);
-        Network::Announcer tc(torrent_);
-        addNewPeers(tc.announce(urlGenerated));
+        Network::Announcer announcer(torrent_);
+        addNewPeers(announcer.announce());
         connectPeers();
       }
     }

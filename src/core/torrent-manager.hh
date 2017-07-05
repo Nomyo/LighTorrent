@@ -9,7 +9,6 @@
 #include "bencode/fwd.hh"
 
 #include "core/url-utils.hh"
-#include "core/tracker-driver.hh"
 #include "core/peer-driver.hh"
 #include "core/torrent.hh"
 

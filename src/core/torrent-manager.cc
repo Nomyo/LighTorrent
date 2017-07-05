@@ -26,10 +26,10 @@ namespace Core
 
     torrent_ = Torrent(getType<BType_ptr, BDico>(decodedFile), filename);
 
-    Core::URLUtils url;
-    std::string urlGenerated = url.generateURL(torrent_);
-    Network::Announcer tc(&torrent_);
-    PeerDriver peerDriver(tc.announce(urlGenerated), &torrent_);
+    //Core::URLUtils url;
+    //std::string urlGenerated = url.generateURL(torrent_);
+    Network::Announcer announcer(&torrent_);
+    PeerDriver peerDriver(announcer.announce(), &torrent_);
 
   }
 } // namespace Network

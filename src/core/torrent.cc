@@ -56,6 +56,8 @@ namespace Core
     computeInfoHash(infoDico);
     computeEncodedInfoHash();
     computeAnnounce();
+    Core::URLUtils urlUtils;
+    urlGenerated_ = urlUtils.generateURL(*this);
   }
 
   void Torrent::computeInfoHash(BDico infoDico)
@@ -143,6 +145,11 @@ namespace Core
   std::string Torrent::getPeerId() const
   {
     return peerId_;
+  }
+
+  std::string Torrent::getUrlGenerated() const
+  {
+    return urlGenerated_;
   }
 
   BDico Torrent::getMetaInfo() const

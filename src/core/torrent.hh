@@ -31,6 +31,7 @@ namespace Core
     std::string getEncodedInfoHash() const;
     std::string getInfoHash() const;
     std::string getPeerId() const;
+    std::string getUrlGenerated() const;
     BDico getMetaInfo() const;
     const std::string& getPiecesHash() const;
     size_t getNbPieces() const;
@@ -48,6 +49,7 @@ namespace Core
     std::string infoHash_;
     std::string encodedInfoHash_;
     std::string peerId_;
+    std::string urlGenerated_;
     BDico metaInfo_;
     size_t pieces_length_;
     std::string pieces_; // pieces hash
