@@ -5,12 +5,18 @@ namespace Core
   PeerDriver::PeerDriver()
   { }
 
-  PeerDriver::PeerDriver(std::vector<Network::Peer> peers, Torrent *torrent)
+  PeerDriver::PeerDriver(Torrent *torrent)
     : torrent_(torrent)
     , fileManager_(torrent_)
   {
-    waitingPeers_ = peers;
-    epfd_ = epoll_create(350);
+    if (!fileManager_.isDone())
+    {
+      std::cout << "Torrent not fully downloaded. Starting peerdriver..." << std::endl;
+      Network::Announcer announcer(torrent);
+      waitingPeers_ = announcer.announce();
+      epfd_ = epoll_create(350);
+      startLeeching();
+    }
   }
 
   PeerDriver::~PeerDriver()

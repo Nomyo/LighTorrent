@@ -51,18 +51,18 @@ namespace Network
 
     expectReceived_ = computeLength(msg.substr(0, 4));
 
-    std::cout << "length " << expectReceived_ << std::endl;
+    //std::cout << "length " << expectReceived_ << std::endl;
 
     for (unsigned i = 0; i < msg.size(); ++i)
     {
       uint8_t j = msg[i];
-      printf("%x\n", j);
+      //printf("%x\n", j);
     }
 
     unsigned int i = 0;
     memcpy(&i, msg.c_str(), sizeof(i));
 
-    std::cout << "bitset : " << htons(i) << std::endl;
+    /*std::cout << "bitset : " << htons(i) << std::endl;
     if (msg.length() < 5)
       std::cout << "Message: keep alive" << std::endl;
     else if (msg.length() == 5)
@@ -76,6 +76,7 @@ namespace Network
       else if (msg[4] == 6)
         std::cout << "REQUEST messages" << std::endl;
     }
+    */
   }
 
   void Peer::tryHandshake()

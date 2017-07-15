@@ -232,4 +232,9 @@ namespace Core
   {
     return pieces_;
   }
+
+  bool FileManager::isDone()
+  {
+    return std::all_of(pieces_.begin(), pieces_.end(), [](Blocks &b) { return b.isFull(); });
+  }
 } // namespace Core

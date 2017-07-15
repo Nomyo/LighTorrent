@@ -28,8 +28,8 @@ namespace Core
 
     //Core::URLUtils url;
     //std::string urlGenerated = url.generateURL(torrent_);
-    Network::Announcer announcer(&torrent_);
-    PeerDriver peerDriver(announcer.announce(), &torrent_);
+    //Network::Announcer announcer(&torrent_);
+    PeerDriver peerDriver(&torrent_);
 
   }
 } // namespace Network

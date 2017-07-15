@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <algorithm>
 #include <stddef.h>
 #include <bitset>
 #include <string.h>
@@ -38,6 +39,7 @@ namespace Core
 
     // Getter
     std::vector<Blocks> getPieces();
+    bool isDone();
 
   private:
     void initDirectory(); // /!\ heavy I/O

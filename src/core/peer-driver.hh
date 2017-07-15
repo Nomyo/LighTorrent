@@ -30,7 +30,7 @@ namespace Core
   public:
     // Ctor & Dtor
     PeerDriver();
-    PeerDriver(std::vector<Network::Peer> peers, Torrent *torrent);
+    PeerDriver(Torrent *torrent);
     ~PeerDriver();
 
     void startLeeching();
